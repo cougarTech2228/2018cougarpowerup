@@ -1,0 +1,60 @@
+
+UNDERSTAND THE CONCEPT OF BRANCHING THE REPOSITORY (all code developers):
+  - clone the repository 2018cougarpowerup from CougarTech 2228 github
+  - select, right click, choose team->Switch to->New Branch
+  - call your branch your name and 0.1 
+  - any changes you make to your branch you can commit to github without having to merge
+  
+VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
+ done - update the RoboRio with the latest firmware and confirm version # on DriverStation
+  - connect to the RoboRio with a browser (internet explorer? silverlight?) and confirm components appear
+  - update the firmware on one CANTalon and confirm with self-test on RoboRio webpage
+  - add a TalonSRX to the Robot.java and confirm you can turn it on
+  - attach a motor to the TalonSRX (some available in a box in top shelf of software cabinet) and confirm it moves
+  - update the other three CANTalons
+  - create a WPILib RobotDrive with the four Talons and confirm it will drive with a controller
+  - inform mechanical the Robox is available for use (to test "drive base in a day")
+  
+VERIFY THE RADIO CONFIGURATION TOOL
+  - download the latest tool
+  - program the radio
+  - confirm that the drive station can connect
+  - confirm that eclipse can download code wirelessly
+  
+VERIFY AUTONOMOUS STRATEGY
+  - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
+    + pass a string name
+    + print the name in initialize, execute, and end (uniquely in each function)
+  - Instantiate (create by calling new StringCommand) a string command in autonomousInit and call .start()
+  - in autonomousPeriodic call Scheduler.getInstance().run()
+  - download your code to the robox, and enter autonomous
+  - confirm you see your print lines
+  - create a second StringCommand with a different name
+  - instantiate a CommandGroup (WPI)
+  - call <your group name>.addSequential(firstStringCommand)
+         <your group name>.addSequential(secondStringCommand);
+  - confirm you see the first one's print lines and then the second one's print lines
+  - change Sequential to Parallel, confirm you see both object print lines at once
+  
+FINE TUNING THE LOGGER
+  - download FileZilla
+  - add the DebugLogger from CougarTechSoftware github
+  - add some debug lines to be called (examples in 2018DriveBase, Chester is familiar with this)
+  - open FileZilla and connect to the RoboRio 10.22.22.105 with no user name or password
+  - move to /home/lvusr/log directory
+  - copy over the latest log to your own log directory
+  - confirm your prints are there
+  - floats print with too many decimal places, investigate how to limit this to a few digits
+  
+DRIVE STATION DATA
+  - get the DriveStation class in the Robot.java
+  - find the string we expect to display on the driveStation during the match in the game manual
+  - call the function that gets the string and print it to the console
+  - confirm you can change the string and it prints out using the Robox
+  - get the alliance from the DriveStation (red vs. blue)
+  - change the alliance on the drive station and confirm the code can retrieve it
+  
+  
+  
+
+        
