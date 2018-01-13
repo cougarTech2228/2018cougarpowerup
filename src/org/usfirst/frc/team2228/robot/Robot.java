@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,16 +17,20 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
-
+	private XboxController xbox;
+	private TestDriveBase base;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	
 	@Override
 	public void robotInit() {
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
+		xbox = new XboxController(1);
+		base = new TestDriveBase(xbox);
 	}
 
 	/**
@@ -68,6 +73,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		base.teleopPeriodic();
 	}
 
 	/**
@@ -76,5 +82,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
+				
 }
 
