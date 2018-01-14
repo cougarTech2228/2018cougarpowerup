@@ -24,6 +24,7 @@ public class Robot extends IterativeRobot {
 	private XboxController xbox;
 	private TestDriveBase base;
 	private StringCommand command;
+	private CubeManipulator cube;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -36,6 +37,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", chooser);
 		xbox = new XboxController(1);
 		base = new TestDriveBase(xbox);
+		cube = new CubeManipulator(xbox);
 	}
 
 	/**
@@ -82,6 +84,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		base.teleopPeriodic();
+		cube.teleopPeriodic();
 	}
 
 	/**
