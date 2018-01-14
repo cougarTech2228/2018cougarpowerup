@@ -15,7 +15,6 @@ public class TestDriveBase {
 	public WPI_TalonSRX left2;
 	public XboxController xbox;
 	private DifferentialDrive drive;
-	
 
 	public TestDriveBase(XboxController _xbox) {
 		xbox = _xbox;
@@ -24,10 +23,10 @@ public class TestDriveBase {
 		left1 = new WPI_TalonSRX(RobotMap.CAN_ID_3);
 		left2 = new WPI_TalonSRX(RobotMap.CAN_ID_4);
 		drive = new DifferentialDrive(left1, right1);
-//		LiveWindow.addActuator("rtM", "RightMaster", right1);
-//		LiveWindow.addActuator("rtF", "RightFollower", right2);
-//		LiveWindow.addActuator("lftM", "LeftMaster", left1);
-//		LiveWindow.addActuator("lftF", "LeftFollower", left2);
+		// LiveWindow.addActuator("rtM", "RightMaster", right1);
+		// LiveWindow.addActuator("rtF", "RightFollower", right2);
+		// LiveWindow.addActuator("lftM", "LeftMaster", left1);
+		// LiveWindow.addActuator("lftF", "LeftFollower", left2);
 		/*
 		 * Set right/left masters and right/left followers
 		 */
@@ -38,7 +37,6 @@ public class TestDriveBase {
 		right2.set(ControlMode.Follower, right1.getDeviceID());
 
 		// Set follower motor to follow master
-
 
 		// Set left master to percentVbus mode
 		left1.set(ControlMode.PercentOutput, 0);
