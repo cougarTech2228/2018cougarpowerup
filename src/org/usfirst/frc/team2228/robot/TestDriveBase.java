@@ -50,6 +50,6 @@ public class TestDriveBase {
 	}
 
 	public void teleopPeriodic() {
-		drive.arcadeDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight));
+		drive.curvatureDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight), true);
 	}
 }

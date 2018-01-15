@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class CubeManipulator {
+	public XboxIF xboxIF;
 	public XboxController xbox;
 	private WPI_TalonSRX left;
 	private WPI_TalonSRX right;
@@ -20,6 +21,7 @@ public class CubeManipulator {
 	private double cubeReleaseValue = -.1;
 
 	public CubeManipulator(XboxController _xbox) {
+		xboxIF = new XboxIF();
 		xbox = _xbox;
 		collection = false;
 		expulsion = false;
@@ -38,10 +40,11 @@ public class CubeManipulator {
 	public void teleopPeriodic() {
 		//git outta heyah
 		//c ya laytah
-		collection = xbox.getXButton();
-		expulsion = xbox.getBButton();
-		squeezeIn = xbox.getAButton();
-		release = xbox.getYButton();
+		collection = xboxIF.X_BUTTON();
+		expulsion = xboxIF.B_BUTTON();
+		squeezeIn = xboxIF.A_BUTTON();
+		release = xboxIF.Y_BUTTON();
+		
 		right.set(0);
 		left.set(0);
 		squeeze.set(0);

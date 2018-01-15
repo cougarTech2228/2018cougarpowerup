@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 		// defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
 		StringCommand command = new StringCommand(input);
-		command.start();
+		//command.start();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+		//Scheduler.getInstance().run();
 		switch (autoSelected) {
 		case customAuto:
 			// Put custom auto code here
