@@ -21,18 +21,18 @@ public class CubeManipulator {
 
 	public CubeManipulator(XboxController _xbox) {
 		xbox = _xbox;
-//		collection = false;
-//		expulsion = false;
-//		squeezeIn = false;
-//		release = false;
-		WPI_TalonSRX left = new WPI_TalonSRX(RobotMap.CAN_ID_5);
-		WPI_TalonSRX right = new WPI_TalonSRX(RobotMap.CAN_ID_6);
-		WPI_TalonSRX squeeze = new WPI_TalonSRX(RobotMap.CAN_ID_7);
+		collection = false;
+		expulsion = false;
+		squeezeIn = false;
+		release = false;
+		left = new WPI_TalonSRX(RobotMap.CAN_ID_5);
+		right = new WPI_TalonSRX(RobotMap.CAN_ID_6);
+		squeeze = new WPI_TalonSRX(RobotMap.CAN_ID_7);
 //		XboxController xbox = new XboxController();
 		left.set(ControlMode.PercentOutput, 0);
 		right.set(ControlMode.PercentOutput, 0);
 		right.setInverted(true);
-		squeeze.set(ControlMode.PercentOutput, 0.1);
+		squeeze.set(ControlMode.PercentOutput, 0);
 	}
 
 	public void teleopPeriodic() {
@@ -42,21 +42,22 @@ public class CubeManipulator {
 		expulsion = xbox.getBButton();
 		squeezeIn = xbox.getAButton();
 		release = xbox.getYButton();
+		right.set(0);
+		left.set(0);
+		squeeze.set(0);
 		
 		if (collection) {
 			left.set(cubeCollectionValue);
 			right.set(cubeCollectionValue);
-			
 		}
-		else if (expulsion){
+		if (expulsion){
 			left.set(cubeExpulsionValue);
-			right.set(cubeExpulsionValue);
-			
+			right.set(cubeExpulsionValue);	
 		}
-		else if (squeezeIn){
+		if (squeezeIn){
 			squeeze.set(cubeGripValue);
 		}
-		else if(release){
+		if(release){
 			squeeze.set(cubeReleaseValue);
 		}
 	}
