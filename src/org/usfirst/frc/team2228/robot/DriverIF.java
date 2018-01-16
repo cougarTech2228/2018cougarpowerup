@@ -21,10 +21,10 @@ public class DriverIF {
 	public double rightStickY() {
 		return xboxIF.RIGHT_JOYSTICK_Y();
 	}
-	public double rightStickX() {
+	public double Turn() {
 		return xboxIF.RIGHT_JOYSTICK_X();
 	}
-	public double leftStickY() {
+	public double Throttle() {
 		return xboxIF.LEFT_JOYSTICK_Y();
 	}
 	public double leftStickX() {

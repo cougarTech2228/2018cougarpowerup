@@ -12,10 +12,10 @@ public class CubeManipulator {
 	private WPI_TalonSRX left;
 	private WPI_TalonSRX right;
 	private WPI_TalonSRX squeeze;
-	private double cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
-	private double cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
-	private double cubeGripValue = SmartDashboard.getNumber("GripValue", 0.1);
-	private double cubeReleaseValue = SmartDashboard.getNumber("ReleaseValue", -0.1);
+	private double cubeCollectionValue;
+	private double cubeExpulsionValue;
+	private double cubeGripValue;
+	private double cubeReleaseValue;
 
 	public CubeManipulator(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -23,6 +23,12 @@ public class CubeManipulator {
 		right = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		squeeze = new WPI_TalonSRX(RobotMap.CAN_ID_7);
 		// XboxController xbox = new XboxController();
+		SmartDashboard.putNumber("CollectionValue", 0.1);
+		SmartDashboard.putNumber("ExpulsionValue", -0.1);
+		SmartDashboard.putNumber("GripValue", 0.1);
+		SmartDashboard.putNumber("ReleaseValue", -0.1);
+		
+		
 		left.set(ControlMode.PercentOutput, 0);
 		right.set(ControlMode.PercentOutput, 0);
 		right.setInverted(true);
@@ -31,17 +37,21 @@ public class CubeManipulator {
 	}
 
 	public void teleopPeriodic() {
+		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
+		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
+		cubeGripValue = SmartDashboard.getNumber("GripValue", 0.1);
+		cubeReleaseValue = SmartDashboard.getNumber("ReleaseValue", -0.1);
 		right.set(0);
 		left.set(0);
 		squeeze.set(0);
 
 		if (driverIf.collection()) {
 			left.set(cubeCollectionValue);
-			right.set(cubeCollectionValue);
+			right.set(-cubeCollectionValue);
 		}
 		if (driverIf.expulsion()) {
 			left.set(cubeExpulsionValue);
-			right.set(cubeExpulsionValue);
+			right.set(-cubeExpulsionValue);
 		}
 		if (driverIf.squeeze()) {
 			squeeze.set(cubeGripValue);

@@ -27,5 +27,5 @@ public class XboxIF {
 	public double RIGHT_JOYSTICK_X() {return xbox.getX(Hand.kRight);};
 	public double RIGHT_JOYSTICK_Y() {return xbox.getY(Hand.kRight);};
 	public double LEFT_JOYSTICK_X() {return xbox.getX(Hand.kLeft);};
-	public double LEFT_JOYSTICK_Y() {return xbox.getY(Hand.kRight);};
+	public double LEFT_JOYSTICK_Y() {return xbox.getY(Hand.kLeft);};
 }

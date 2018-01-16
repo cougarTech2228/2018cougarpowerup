@@ -24,10 +24,11 @@ public class TestDriveBase {
 		left1 = new WPI_TalonSRX(RobotMap.CAN_ID_3);
 		left2 = new WPI_TalonSRX(RobotMap.CAN_ID_4);
 		drive = new DifferentialDrive(left1, right1);
-		// LiveWindow.addActuator("rtM", "RightMaster", right1);
-		// LiveWindow.addActuator("rtF", "RightFollower", right2);
-		// LiveWindow.addActuator("lftM", "LeftMaster", left1);
-		// LiveWindow.addActuator("lftF", "LeftFollower", left2);
+		
+		 right1.setName("Drive Base", "Right Master");
+		// right2.setName("Drive Base", "Right Follower");
+		 left1.setName("Drive Base", "Left Master");
+		// left2.setName("Drive Base", "Left Follower");
 		/*
 		 * Set right/left masters and right/left followers
 		 */
@@ -50,6 +51,6 @@ public class TestDriveBase {
 	}
 
 	public void teleopPeriodic() {
-		drive.arcadeDrive(driverIf.rightStickX(), driverIf.leftStickX());
+		drive.arcadeDrive(driverIf.Throttle(), driverIf.Turn());
 	}
 }
