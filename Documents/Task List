@@ -22,13 +22,13 @@ DONE - VERIFY THE RADIO CONFIGURATION TOOL
   - confirm that eclipse can download code wirelessly
   
 VERIFY AUTONOMOUS STRATEGY
-  - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
-    + pass a string name
-    + print the name in initialize, execute, and end (uniquely in each function)
-  - Instantiate (create by calling new StringCommand) a string command in autonomousInit and call .start()
-  - in autonomousPeriodic call Scheduler.getInstance().run()
-  - download your code to the robox, and enter autonomous
-  - confirm you see your print lines
+DONE - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
+DONE  + pass a string name
+DONE  + print the name in initialize, execute, and end (uniquely in each function)
+DONE - Instantiate (create by calling new StringCommand) a string command in autonomousInit and call .start()
+DONE - in autonomousPeriodic call Scheduler.getInstance().run()
+DONE - download your code to the robox, and enter autonomous
+DONE - confirm you see your print lines
   - create a second StringCommand with a different name
   - instantiate a CommandGroup (WPI)
   - call <your group name>.addSequential(firstStringCommand)
@@ -53,6 +53,21 @@ DRIVE STATION DATA
   - confirm you can change the string and it prints out using the Robox
   - get the alliance from the DriveStation (red vs. blue)
   - change the alliance on the drive station and confirm the code can retrieve it
+  
+ADD AN AngleIF CLASS
+  - instantiate in Robot and pass to drive base
+  - add functions the drive base uses
+  - add default the implementation the readings from the Roborio ?
+  - add the NavX
+  - add some debug so we can verify functionality
+  
+ADD AN "I see the distance" class
+  - instantiate in robot and pass to drive base
+  - add functions the drive bases uses
+  - default set for no sensor enabled
+  - add the ultra sonic sensor
+  - add debug and test functionality of the sensor
+  
   
   
   
