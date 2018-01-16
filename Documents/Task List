@@ -36,9 +36,17 @@ DONE - confirm you see your print lines
   - confirm you see the first one's print lines and then the second one's print lines
   - change Sequential to Parallel, confirm you see both object print lines at once
   
+CUBINATOR
+  - add stall current shut off function similar to drive base
+  - display motor current on SmartDashboard for investigating where stall current should be
+  - get a stall current from SmartDashboard for testing
+  - test the stall current shut off
+  
 FINE TUNING THE LOGGER
   - download FileZilla
   - add the DebugLogger from CougarTechSoftware github
+  - add an openCsvFile() closeCsvFile() - currently opening in init and needs to be added like fclose()
+  - csv time field needs to have a "," after it (before the data)
   - add some debug lines to be called (examples in 2018DriveBase, Chester is familiar with this)
   - open FileZilla and connect to the RoboRio 10.22.22.105 with no user name or password
   - move to /home/lvusr/log directory
@@ -60,6 +68,7 @@ ADD AN AngleIF CLASS
   - add default the implementation the readings from the Roborio ?
   - add the NavX
   - add some debug so we can verify functionality
+  - add documentation to the end that explains the difference between an accelerometer, gyro, and navx (see Mr. Farnam)
   
 ADD AN "I see the distance" class
   - instantiate in robot and pass to drive base
