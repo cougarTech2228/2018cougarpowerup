@@ -1,20 +1,33 @@
 package org.usfirst.frc.team2228.robot;
 
-public interface DriverIF {
-	/*
+public class DriverIF {
 	XboxIF xboxIF;
-	
-	public default boolean collection() {
-		XboxIF xboxIF = new XboxIF();
+	public DriverIF() {
+		xboxIF = new XboxIF();
+	}
+	public boolean collection() {
 		return xboxIF.X_BUTTON();
 	}
-	public default boolean expulsion() {
+	public boolean expulsion() {
 		return xboxIF.B_BUTTON();
 	}
-	public default boolean squeeze() {
+	public boolean squeeze() {
 		return xboxIF.A_BUTTON();
 	}
-	public default boolean release() {
+	public boolean release() {
 		return xboxIF.Y_BUTTON();
-	}*/
+	}
+	
+	public double rightStickY() {
+		return xboxIF.RIGHT_JOYSTICK_Y();
+	}
+	public double rightStickX() {
+		return xboxIF.RIGHT_JOYSTICK_X();
+	}
+	public double leftStickY() {
+		return xboxIF.LEFT_JOYSTICK_Y();
+	}
+	public double leftStickX() {
+		return xboxIF.LEFT_JOYSTICK_X();
+	}
 }

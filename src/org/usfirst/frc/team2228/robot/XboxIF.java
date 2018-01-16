@@ -3,31 +3,6 @@ package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-/*
-public interface XboxIF {
-	public default void Use() {XboxVars x = new XboxVars();}
-
-	public default boolean A_BUTTON() {return XboxVars.xbox.getAButton();};
-	public default boolean B_BUTTON() {return XboxVars.xbox.getBButton();};
-	public default boolean X_BUTTON() {return XboxVars.xbox.getXButton();};
-	public default boolean Y_BUTTON() {return XboxVars.xbox.getYButton();};
-	
-	public default boolean START_BUTTON() {return XboxVars.xbox.getStartButton();};
-	public default boolean BACK_BUTTON() {return XboxVars.xbox.getBackButton();};
-	public default boolean RB_BUTTON() {return XboxVars.xbox.getBumper(Hand.kRight);};
-	public default boolean LB_BUTTON() {return XboxVars.xbox.getBumper(Hand.kLeft);};
-	public default boolean LS_BUTTON() {return XboxVars.xbox.getStickButton(Hand.kLeft);};
-	public default boolean RS_BUTTON() {return XboxVars.xbox.getStickButton(Hand.kRight);};
-	
-	public default double RIGHT_TRIGGER() {return XboxVars.xbox.getTriggerAxis(Hand.kRight);};
-	public default double LEFT_TRIGGER() {return XboxVars.xbox.getTriggerAxis(Hand.kLeft);};
-	
-	public default double RIGHT_JOYSTICK_X() {return XboxVars.xbox.getX(Hand.kRight);};
-	public default double RIGHT_JOYSTICK_Y() {return XboxVars.xbox.getY(Hand.kRight);};
-	public default double LEFT_JOYSTICK_X() {return XboxVars.xbox.getX(Hand.kLeft);};
-	public default double LEFT_JOYSTICK_Y() {return XboxVars.xbox.getY(Hand.kRight);};
-	
-}*/
 public class XboxIF {
 	private XboxController xbox;
 	public XboxIF() {

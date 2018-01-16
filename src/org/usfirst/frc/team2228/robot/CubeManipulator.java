@@ -4,63 +4,49 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator {
-	public XboxIF xboxIF;
+	public DriverIF driverIf;
 	public XboxController xbox;
 	private WPI_TalonSRX left;
 	private WPI_TalonSRX right;
 	private WPI_TalonSRX squeeze;
-	private boolean collection;
-	private boolean expulsion;
-	private boolean squeezeIn;
-	private boolean release;
-	private double cubeCollectionValue = 1.0;
-	private double cubeExpulsionValue = -1.0;
-	private double cubeGripValue = .1;
-	private double cubeReleaseValue = -.1;
+	private double cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
+	private double cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
+	private double cubeGripValue = SmartDashboard.getNumber("GripValue", 0.1);
+	private double cubeReleaseValue = SmartDashboard.getNumber("ReleaseValue", -0.1);
 
-	public CubeManipulator(XboxController _xbox) {
-		xboxIF = new XboxIF();
-		xbox = _xbox;
-		collection = false;
-		expulsion = false;
-		squeezeIn = false;
-		release = false;
+	public CubeManipulator(DriverIF _driverIf) {
+		driverIf = _driverIf;
 		left = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		right = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		squeeze = new WPI_TalonSRX(RobotMap.CAN_ID_7);
-//		XboxController xbox = new XboxController();
+		// XboxController xbox = new XboxController();
 		left.set(ControlMode.PercentOutput, 0);
 		right.set(ControlMode.PercentOutput, 0);
 		right.setInverted(true);
 		squeeze.set(ControlMode.PercentOutput, 0);
+		// Nice code dude
 	}
 
 	public void teleopPeriodic() {
-		//git outta heyah
-		//c ya laytah
-		collection = xboxIF.X_BUTTON();
-		expulsion = xboxIF.B_BUTTON();
-		squeezeIn = xboxIF.A_BUTTON();
-		release = xboxIF.Y_BUTTON();
-		
 		right.set(0);
 		left.set(0);
 		squeeze.set(0);
-		
-		if (collection) {
+
+		if (driverIf.collection()) {
 			left.set(cubeCollectionValue);
 			right.set(cubeCollectionValue);
 		}
-		if (expulsion){
+		if (driverIf.expulsion()) {
 			left.set(cubeExpulsionValue);
-			right.set(cubeExpulsionValue);	
+			right.set(cubeExpulsionValue);
 		}
-		if (squeezeIn){
+		if (driverIf.squeeze()) {
 			squeeze.set(cubeGripValue);
 		}
-		if(release){
+		if (driverIf.release()) {
 			squeeze.set(cubeReleaseValue);
 		}
 	}

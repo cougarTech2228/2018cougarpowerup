@@ -21,10 +21,11 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
-	private XboxController xbox;
 	private TestDriveBase base;
 	private StringCommand command;
 	private CubeManipulator cube;
+	private DriverIF driverIf;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -32,12 +33,12 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		driverIf = new DriverIF();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
-		xbox = new XboxController(1);
-		base = new TestDriveBase(xbox);
-		cube = new CubeManipulator(xbox);
+		base = new TestDriveBase(driverIf);
+		cube = new CubeManipulator(driverIf);
 	}
 
 	/**

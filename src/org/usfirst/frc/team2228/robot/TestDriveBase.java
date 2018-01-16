@@ -13,12 +13,12 @@ public class TestDriveBase {
 	public WPI_TalonSRX right2;
 	public WPI_TalonSRX left1;
 	public WPI_TalonSRX left2;
-	public XboxController xbox;
 	private DifferentialDrive drive;
+	private DriverIF driverIf;
 	
 
-	public TestDriveBase(XboxController _xbox) {
-		xbox = _xbox;
+	public TestDriveBase(DriverIF _driverIf) {
+		driverIf = _driverIf;
 		right1 = new WPI_TalonSRX(RobotMap.CAN_ID_1);
 		right2 = new WPI_TalonSRX(RobotMap.CAN_ID_2);
 		left1 = new WPI_TalonSRX(RobotMap.CAN_ID_3);
@@ -50,6 +50,6 @@ public class TestDriveBase {
 	}
 
 	public void teleopPeriodic() {
-		drive.curvatureDrive(xbox.getY(Hand.kLeft), xbox.getX(Hand.kRight), true);
+		drive.arcadeDrive(driverIf.rightStickX(), driverIf.leftStickX());
 	}
 }
