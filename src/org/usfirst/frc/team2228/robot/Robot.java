@@ -2,6 +2,7 @@ package org.usfirst.frc.team2228.robot;
 
 import org.usfirst.frc.team2228.commands.StringCommand;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -60,6 +61,24 @@ public class Robot extends IterativeRobot {
 		System.out.println("Auto selected: " + autoSelected);
 		StringCommand command = new StringCommand(input);
 		//command.start();
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		if(gameData.charAt(0) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if(gameData.charAt(1) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if(gameData.charAt(2) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
 	}
 
 	/**
