@@ -63,6 +63,19 @@ DRIVE STATION DATA
   - get the alliance from the DriveStation (red vs. blue)
   - change the alliance on the drive station and confirm the code can retrieve it
   
+ADD AN SRXMotorBase CLASS to be able to operate a single motor with the SRX controller
+  Phase I
+  - Copy SRXDriveBase.java to SRXMtrBase.java
+  - delete leftdrive motor stuff
+  -  rename rightdrive motor stuff
+  - link up all the commands
+  - integrate SRXDriveBaseCfg.java into SRXMtrBase 
+  - Develop set commands to configure SRXMtrBase
+  - Add a motor and debug.
+  Phase II
+  - add feedback encoder and enable feedback control
+  - debug magic motion
+  
  CONTROL A LED Strip with CAN commands from the ROBORIO
   - Go to CAN LED strip web page http://www.mindsensors.com/content/88-cheat-sheet-for-canlight-led-strip-controller-kit-for-frc-robots
   - Load required libraries to eclipse
