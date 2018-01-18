@@ -52,6 +52,7 @@ FINE TUNING THE LOGGER
   - move to /home/lvusr/log directory
   - copy over the latest log to your own log directory
   - confirm your prints are there
+  - remove logging calls showing on the console
   - floats print with too many decimal places, investigate how to limit this to a few digits
   
 DRIVE STATION DATA
@@ -76,20 +77,39 @@ DRIVE STATION DATA
     2 LEDFlash
     3 cycleColor
     4 LEDFade
+    
 ADD AN AngleIF CLASS
-  - instantiate in Robot and pass to drive base
-  - add functions the drive base uses
+  - instantiate in Robot and pass as a parameter to drive base
+  - add functions the drive base uses (setZeroAngle(), getAngle(), getYaw(), getPitch(), getRoll())
   - add default the implementation the readings from the Roborio ?
+  - download the navx libraries https://www.pdocs.kauailabs.com/navx-mxp/software/roborio-libraries/
+  - Suggested reading:
+     - Read yaw document https://www.pdocs.kauailabs.com/navx-mxp/guidance/yaw-drift/
+     - Read code examples https://www.pdocs.kauailabs.com/navx-mxp/examples/field-oriented-drive/
+      - Download code from Githup https://github.com/kauailabs/navxmxp
   - add the NavX
   - add some debug so we can verify functionality
+  - access the NavX hardward and test your class
   - add documentation to the end that explains the difference between an accelerometer, gyro, and navx (see Mr. Farnam)
   
-ADD AN "I see the distance" class
+ADD A DistanceIF class (robot will use this to read distances and perpendicular correction)
   - instantiate in robot and pass to drive base
   - add functions the drive bases uses
+     a. initDistance()
+     b. setCalibrationNear()
+     c. setCalibrationFar()
+     d. getLeftDistance()
+     e. getLeftFilteredDistance() 
+     f. getRightDistance()
+     g. getRightFilteredDistance()
+     h. GetPerpendicularDistanceCorrection() - this uses WPI PIDController (see professor)
   - default set for no sensor enabled
   - add the ultra sonic sensor
+    - uses ultrasonic sensor MB1013-000 from the electrical team 
+    - need two sensors and sensor "horns" that we we used last year
+  - read up on this sensor
   - add debug and test functionality of the sensor
+  - To get distance the sensor needs to be calibrated - need to have calibration software in UltrasonicSensor class.
   
   
   
