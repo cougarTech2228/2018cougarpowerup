@@ -5,6 +5,8 @@ UNDERSTAND THE CONCEPT OF BRANCHING THE REPOSITORY (all code developers):
   - call your branch your name and 0.1 
   - any changes you make to your branch you can commit to github without having to merge
   
+SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -- add JDK
+  
 DONE - VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
  done - update the RoboRio with the latest firmware and confirm version # on DriverStation
  done - connect to the RoboRio with a browser (internet explorer? silverlight?) and confirm components appear
@@ -43,10 +45,10 @@ CUBINATOR
   - test the stall current shut off
   
 FINE TUNING THE LOGGER
-  - download FileZilla
-  - add the DebugLogger from CougarTechSoftware github
-  - add an openCsvFile() closeCsvFile() - currently opening in init and needs to be added like fclose()
-  - csv time field needs to have a "," after it (before the data)
+DONE  - download FileZilla
+DONE  - add the DebugLogger from CougarTechSoftware github
+DONE  - add an openCsvFile() closeCsvFile() - currently opening in init and needs to be added like fclose()
+DONE  - csv time field needs to have a "," after it (before the data)
   - add some debug lines to be called (examples in 2018DriveBase, Chester is familiar with this)
   - open FileZilla and connect to the RoboRio 10.22.22.105 with no user name or password
   - move to /home/lvusr/log directory
