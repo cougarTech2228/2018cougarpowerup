@@ -5,8 +5,12 @@ UNDERSTAND THE CONCEPT OF BRANCHING THE REPOSITORY (all code developers):
   - call your branch your name and 0.1 
   - any changes you make to your branch you can commit to github without having to merge
   
-SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -- add JDK
-  
+SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -
+  - add JDK (Verify the correct version)
+  - add NAVX libraries
+  - add Mindsensor libraries
+  - verify CTRE Libraries are the latest Phoenix version
+    
 DONE - VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
  done - update the RoboRio with the latest firmware and confirm version # on DriverStation
  done - connect to the RoboRio with a browser (internet explorer? silverlight?) and confirm components appear
@@ -18,10 +22,10 @@ DONE - VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
  done - inform mechanical the Robox is available for use (to test "drive base in a day")
   
 DONE - VERIFY THE RADIO CONFIGURATION TOOL
-  - download the latest tool
-  - program the radio
-  - confirm that the drive station can connect
-  - confirm that eclipse can download code wirelessly
+ done - download the latest tool
+ done - program the radio
+ done - confirm that the drive station can connect
+ done - confirm that eclipse can download code wirelessly
   
 VERIFY AUTONOMOUS STRATEGY
 DONE - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
@@ -69,7 +73,7 @@ ADD AN SRXMotorBase CLASS to be able to operate a single motor with the SRX cont
   Phase I
   - Copy SRXDriveBase.java to SRXMtrBase.java
   - delete leftdrive motor stuff
-  -  rename rightdrive motor stuff
+  - rename rightdrive motor stuff
   - link up all the commands
   - integrate SRXDriveBaseCfg.java into SRXMtrBase 
   - Develop set commands to configure SRXMtrBase
