@@ -10,6 +10,7 @@ SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -
   - add NAVX libraries
   - add Mindsensor libraries
   - verify CTRE Libraries are the latest Phoenix version
+  - add the USB RoboRio drivers to the computers.  Need Mr. Clair's log in to install.
     
 DONE - VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
  done - update the RoboRio with the latest firmware and confirm version # on DriverStation
