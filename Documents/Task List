@@ -53,11 +53,11 @@ DONE  - download FileZilla
 DONE  - add the DebugLogger from CougarTechSoftware github
 DONE  - add an openCsvFile() closeCsvFile() - currently opening in init and needs to be added like fclose()
 DONE  - csv time field needs to have a "," after it (before the data)
-  - add some debug lines to be called (examples in 2018DriveBase, Chester is familiar with this)
-  - open FileZilla and connect to the RoboRio 10.22.22.105 with no user name or password
-  - move to /home/lvusr/log directory
-  - copy over the latest log to your own log directory
-  - confirm your prints are there
+DONE  - add some debug lines to be called (examples in 2018DriveBase, Chester is familiar with this)
+DONE  - open FileZilla and connect to the RoboRio 10.22.22.105 with no user name or password
+DONE  - move to /home/lvusr/log directory
+DONE  - copy over the latest log to your own log directory
+DONE  - confirm your prints are there
   - remove logging calls showing on the console
   - floats print with too many decimal places, investigate how to limit this to a few digits
   
@@ -123,8 +123,8 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
      g. getRightFilteredDistance()
      h. GetPerpendicularDistanceCorrection() - this uses WPI PIDController (see professor)
   - default set for no sensor enabled
-  - add the ultra sonic sensor
-    - uses ultrasonic sensor MB1013-000 from the electrical team 
+  - add the ultra sonic sensor (Our Sensor is an Analog Device)
+    - uses ultrasonic sensor HRLV-MaxSonar-EZ MB1013-000 from the electrical team (www.maxbotix.com)
     - need two sensors and sensor "horns" that we we used last year
   - read up on this sensor
   - add debug and test functionality of the sensor
@@ -132,6 +132,9 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   
   ADD A PNEUMATICS CLASS (robot will use this to control the pneumatics) (Used in 2015 robot code on Github)
   - instantiate in Robot
+  - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599707-operating-a-compressor-for-pneumatics
+  - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599708-operating-pneumatic-cylinders-solenoids
+  
   
 
         
