@@ -6,7 +6,7 @@ UNDERSTAND THE CONCEPT OF BRANCHING THE REPOSITORY (all code developers):
   - any changes you make to your branch you can commit to github without having to merge
   
 SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -
-  - add JDK (Verify the correct version)
+  - add JDK (Verify the correct version) (Note: Mr. Clair will need to login with his account to the PC to install this)
   - add NAVX libraries
   - add Mindsensor libraries
   - verify CTRE Libraries are the latest Phoenix version
