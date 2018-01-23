@@ -8,12 +8,10 @@ public class AnalogUltrasonic {
 	double distance;
 
 	public AnalogUltrasonic(AnalogInput sensor) {
-		double voltage = sensor.getVoltage();
 		
 	}
 	public double getDistance(){
 		voltage = sensor.getVoltage();
-		
 		return voltage;
 	}
 }

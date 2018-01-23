@@ -26,6 +26,7 @@ public class Robot extends IterativeRobot {
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIf;
+	private AnalogUltrasonic us;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -34,6 +35,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		
 		driverIf = new DriverIF();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
@@ -103,6 +105,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		SmartDashboard.putNumber("Sonar", us.getDistance());
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
 	}
