@@ -4,12 +4,17 @@ public class SRXDriveBaseCfg {
 	// configuration flags
 		// ===============================================
 		// SRX ESC MODULE
+		//timeoutMS is recommended to be 10 milliseconds for bootup sequence according to the manual (3.1.2.1)
+		public static int kTimeoutMs = 0;
+		public static int kslotIDx = 0;
+		public static int kPIDLoopIDx = 0;
 		
 		// Set motor direction
 		public static boolean isDriveRightMasterMtrReversed = true;
 		public static boolean isDriveRightFollowerMtrReversed = true;
 		public static boolean isDriveLeftMasterMtrReversed = false;
 		public static boolean isDriveLeftFollowerMtrReversed = false;
+		public static double kNeutralDeadBand = 0.08;
 		
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
 		public static boolean isBrakeEnabled = true;
@@ -22,25 +27,22 @@ public class SRXDriveBaseCfg {
 		public static double kdriveRightMstrProportionalGain = 0.3;
 		public static double kdriveRightMstrIntegralGain = 0;
 		public static double kdriveRightMstrDerivativeGain = 0;
-		public static double kdriveRightMstrIzone = 0;
+		public static int kdriveRightMstrIzone = 0;
 		public static int kdriveRightMstrRampRate = 0;
 		public static int kdriveRightMstrProfile = 0;
-		//timeoutMS is recommended to be 10 milliseconds for bootup sequence according to the manual (3.1.2.1)
-		public static int timeoutMS = 10;
-		
 		
 		public static double kdriveLeftMstrFeedForwardGain = 0.025;
 		public static double kdriveLeftMstrProportionalGain = 0.3;
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 0;
-		public static double kdriveleftMstrIzone = 0;
+		public static int kdriveleftMstrIzone = 0;
 		public static int kdriveLeftMstrRampRate = 0;
 		public static int kdriveLeftMstrProfile = 0;
 		
 		public static int kClosedLoopErr = 100;
 		
 		// This sets the velocity calculation time sample
-		public static int kSRXVelocitySample = 16;
+		public static int kSRXVelocitySample = 64;
 		
 		
 		// ======================================
@@ -78,6 +80,7 @@ public class SRXDriveBaseCfg {
 		public static double kRightEncoderCountsPerIn = 1 / kRgtInchesPerCount;
         public static double kSpeedDeadBand = 0.1;
 		
+		
 		//=======================================================
 		// DRIVING STRAIGHT
 		
@@ -89,6 +92,7 @@ public class SRXDriveBaseCfg {
 		public static boolean isHeadingModuleEnabled = false;
 		
 		// Driving straight setup parameters
+		//?? used
 		public static double kTurnValueDeadBand = 0;
         public static double kCorrection_Kp = 0;
         public static double kCorrection_Ki = 0;
@@ -100,24 +104,31 @@ public class SRXDriveBaseCfg {
 		// not used-public static double kRotatePowerLevel = 0.20;
 		// See topRPM calibration procedure for this parameter
 		public static double kTopRPM = 1000;
+		// RPM * 1/60sec * 1/(10 100ms samples/sec) * counts/rev = counts/100ms
+		public static double MaxVel_VelNativeUnits = kTopRPM * (1/60) * (1/10) * kCountsPerRevolution;
 		
 		// Drive train stall paramters
-        public static double kStallCurrent = 16.0;
-        public static double kStallTimeSec = 3.0;
+		public static int kStallCurrentContinuousAmps = 10;
+		public static int kStallCurrentPeakAmps = 100;
+        public static int kStallTimeMs = 1000;
 		
 		public static double kRobotCoastToStopCounts = 0;
 		public static double kStopBrakeValue = 0.05;
         // not used-public static double kMoveToPositionVelCmdLevel = 0.3;
         // not used-public static double kDrivePerpendicularCmdLevel = 0;
         // not used-public static double kturnCmdLevel = 0;
+		
         
 		// ==========================================
 		// TEST METHOD PARAMETERS
 		
 		public static boolean isLowTimeActive = true;
-		public static boolean isSqWaveFnctStartActive = false;
-		public static double kSquareWaveLowerSpeed = 0;
-        public static double kSquareWaveHigherSpeed = 0;
+		public static boolean isPulse_SqWaveFnctStartActive = false;
+		
+		public static double kSquareWaveLowPower = 0.2;
+		public static double kSquareWaveLowPowerTimeSec = 2.0;
+        public static double kSquareWaveHighPower = 0.3;
+		public static double kSquareWaveHighPowerTimeSec = 2.0;
 		
 		//===============================================
 		// MAGIC MOTION SETUP PARAMETERS
