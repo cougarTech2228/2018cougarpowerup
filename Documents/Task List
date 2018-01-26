@@ -131,7 +131,7 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - add debug and test functionality of the sensor
   - To get distance the sensor needs to be calibrated - need to have calibration software in UltrasonicSensor class.
   
-  ADD A PNEUMATICS CLASS (robot will use this to control the pneumatics) (Used in 2015 robot code on Github)
+  DONE - ADD A PNEUMATICS CLASS (robot will use this to control the pneumatics) (Used in 2015 robot code on Github)
   - instantiate in Robot
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599707-operating-a-compressor-for-pneumatics
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599708-operating-pneumatic-cylinders-solenoids
