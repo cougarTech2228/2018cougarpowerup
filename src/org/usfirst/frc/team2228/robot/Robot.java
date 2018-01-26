@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 	private CubeManipulator cube;
 	private DriverIF driverIf;
 	private AnalogUltrasonic us;
+	private PneumaticController pc;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -108,6 +109,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Sonar", us.getDistance());
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
+		pc.teleopPeriodic();
 	}
 
 	/**
