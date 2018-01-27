@@ -6,11 +6,11 @@ UNDERSTAND THE CONCEPT OF BRANCHING THE REPOSITORY (all code developers):
   - any changes you make to your branch you can commit to github without having to merge
   
 SETUP WINDOW DESKTOP PCS WITH THE CORRECT DEVELOPMENT ENVIRONMENT -
-  - add JDK (Verify the correct version) (Note: Mr. Clair will need to login with his account to the PC to install this)
-  - add NAVX libraries
+  done - add JDK (Verify the correct version) (Note: Mr. Clair will need to login with his account to the PC to install this)
+  done - add NAVX libraries
+  done - verify CTRE Libraries are the latest Phoenix version
   - add Mindsensor libraries
-  - verify CTRE Libraries are the latest Phoenix version
-  - add the USB RoboRio drivers to the computers.  Need Mr. Clair's log in to install.
+  - add the USB RoboRio drivers to the computers.  Need Mr. Clair's log in to install.  ?
     
 DONE - VERIFY THE 2018 FIRMWARE AND LIBRARIES WITH THE ROBOX (Nathan leading)
  done - update the RoboRio with the latest firmware and confirm version # on DriverStation
@@ -60,9 +60,11 @@ DONE  - move to /home/lvusr/log directory
 DONE  - copy over the latest log to your own log directory
 DONE  - confirm your prints are there
   - remove logging calls showing on the console
+  - define the string that creates the file in the DebugLogger class so the Robot doesn't have to pass it
+  - add the ability to turn on/off logging to the console from SmartDashboard (put default number and get number)
   - floats print with too many decimal places, investigate how to limit this to a few digits
   
-DRIVE STATION DATA
+DONE - DRIVE STATION DATA
   - get the DriveStation class in the Robot.java
   - find the string we expect to display on the driveStation during the match in the game manual
   - call the function that gets the string and print it to the console
@@ -71,7 +73,7 @@ DRIVE STATION DATA
   - change the alliance on the drive station and confirm the code can retrieve it
   
 ADD AN SRXMotorBase CLASS to be able to operate a single motor with the SRX controller
-  Phase I
+DONE  Phase I
   - Copy SRXDriveBase.java to SRXMtrBase.java
   - delete leftdrive motor stuff
   - rename rightdrive motor stuff
@@ -100,7 +102,7 @@ ADD AN SRXMotorBase CLASS to be able to operate a single motor with the SRX cont
     
 ADD AN AngleIF CLASS
   - instantiate in Robot and pass as a parameter to drive base
-  - add functions the drive base uses (setZeroAngle(), getAngle(), getYaw(), getPitch(), getRoll())
+ DONE - add functions the drive base uses (setZeroAngle(), getAngle(), getYaw(), getPitch(), getRoll())
   - add default the implementation the readings from the Roborio ?
   - download the navx libraries https://www.pdocs.kauailabs.com/navx-mxp/software/roborio-libraries/
   - Suggested reading:
@@ -109,7 +111,7 @@ ADD AN AngleIF CLASS
       - Download code from Githup https://github.com/kauailabs/navxmxp
   - add the NavX
   - add some debug so we can verify functionality
-  - access the NavX hardward and test your class
+  - access the NavX hardware and test your class
   - add documentation to the end that explains the difference between an accelerometer, gyro, and navx (see Mr. Farnam)
   
 ADD A DistanceIF class (robot will use this to read distances and perpendicular correction)
@@ -126,7 +128,7 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - default set for no sensor enabled
   - add the ultra sonic sensor (Our Sensor is an Analog Device)
     - uses ultrasonic sensor HRLV-MaxSonar-EZ MB1013-000 from the electrical team (www.maxbotix.com)
-    - need two sensors and sensor "horns" that we we used last year
+    - need two sensors and sensor "horns" that we we used last year-
   - read up on this sensor
   - add debug and test functionality of the sensor
   - To get distance the sensor needs to be calibrated - need to have calibration software in UltrasonicSensor class.
@@ -135,6 +137,25 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - instantiate in Robot
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599707-operating-a-compressor-for-pneumatics
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599708-operating-pneumatic-cylinders-solenoids
+  
+  UPGRADE STEAMWORKS to 2018
+  - need to be able to drive Lamda with the 2018
+  - upgrade roborio, talon srx, and compile code base 
+  
+  CAMERA and VISION
+  - review how to hook up a camera to drive station, viewed through LabView and SmartDashboard
+  - switch camera stream with an xbox button or SmartDashboard read
+  - power a green light LED ring and capture an image
+  
+  LABELING
+  - robox SRXCANTalons master/follower left and right need to be labeled as CAN id 1 through
+  - label the laptop power adapters with 2228 and which laptop it goes to
+  - every laptop bag should have a usb cable (and an ethernet cable)
+  - drive laptops should have a xbox controller
+  
+  
+  
+  
   
   
 
