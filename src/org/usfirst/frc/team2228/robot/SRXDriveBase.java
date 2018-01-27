@@ -45,7 +45,7 @@ public class SRXDriveBase {
 
 	private DifferentialDrive driveStyle;
 	
-	private int CycleCount = 1;
+	private int cycleCount = 1;
 	
 	private double leftEncoderCounts = 0;
 	private double rightDrvTrainTargetPosSetPt;
@@ -101,10 +101,12 @@ public class SRXDriveBase {
 		driveLeftMasterMtr = new WPI_TalonSRX(RobotMap.CAN_ID_3);
 		driveLeftFollowerMtr = new WPI_TalonSRX(RobotMap.CAN_ID_4);
 
-		LiveWindow.addActuator("rtM", "RightMaster", driveRightMasterMtr);
-		LiveWindow.addActuator("rtF", "RightFollower", driveRightFollowerMtr);
-		LiveWindow.addActuator("lftM", "LeftMaster", driveLeftMasterMtr);
-		LiveWindow.addActuator("lftF", "LeftFollower", driveLeftFollowerMtr);
+		msg("Created Drives");
+//
+//		LiveWindow.addActuator("rtM", "RightMaster", driveRightMasterMtr);
+//		LiveWindow.addActuator("rtF", "RightFollower", driveRightFollowerMtr);
+//		LiveWindow.addActuator("lftM", "LeftMaster", driveLeftMasterMtr);
+//		LiveWindow.addActuator("lftF", "LeftFollower", driveLeftFollowerMtr);
 
 
 		/*
@@ -114,18 +116,14 @@ public class SRXDriveBase {
 		driveRightMasterMtr.set(ControlMode.PercentOutput,0);
 
 		// Set up right follower
-		driveRightFollowerMtr.set(ControlMode.Follower, 0);
+		driveRightFollowerMtr.set(ControlMode.Follower, driveRightMasterMtr.getDeviceID());
 		//driveRightFollowerMtr.enableControl();
-		
-		driveRightFollowerMtr.set(driveRightMasterMtr.getDeviceID());
 
 		// Set left master to percentVbus modeSRXDrive
 		driveLeftMasterMtr.set(ControlMode.PercentOutput,0);
 
 		// Set up left follower
-		driveLeftFollowerMtr.set(ControlMode.Follower, 0);
-		
-		driveLeftFollowerMtr.set(driveLeftMasterMtr.getDeviceID());
+		driveLeftFollowerMtr.set(ControlMode.Follower, driveLeftMasterMtr.getDeviceID());
 	
 		// Invert SRX output to motors if necessary
 		driveRightMasterMtr.setInverted(SRXDriveBaseCfg.isDriveRightMasterMtrReversed);
@@ -146,11 +144,11 @@ public class SRXDriveBase {
 		
 		driveRightFollowerMtr.configPeakOutputForward(1, SRXDriveBaseCfg.kTimeoutMs);
 		driveRightFollowerMtr.configPeakOutputReverse(-1, SRXDriveBaseCfg.kTimeoutMs);
-		
-		driveLeftMasterMtr.configNominalOutputForward(0.0, SRXDriveBaseCfg.kTimeoutMs);
+	
+	    driveLeftMasterMtr.configNominalOutputForward(0.0, SRXDriveBaseCfg.kTimeoutMs);
 		driveLeftMasterMtr.configNominalOutputReverse(0.0, SRXDriveBaseCfg.kTimeoutMs);
-		
-		driveLeftMasterMtr.configPeakOutputForward(1, SRXDriveBaseCfg.kTimeoutMs);
+	
+	    driveLeftMasterMtr.configPeakOutputForward(1, SRXDriveBaseCfg.kTimeoutMs);
 		driveLeftMasterMtr.configPeakOutputReverse(-1, SRXDriveBaseCfg.kTimeoutMs);
 		
 		driveLeftFollowerMtr.configNominalOutputForward(0.0, SRXDriveBaseCfg.kTimeoutMs);
@@ -159,6 +157,7 @@ public class SRXDriveBase {
 		driveLeftFollowerMtr.configPeakOutputForward(1, SRXDriveBaseCfg.kTimeoutMs);
 		driveLeftFollowerMtr.configPeakOutputReverse(-1, SRXDriveBaseCfg.kTimeoutMs);
 		
+		msg("Set voltage levels");
 		/*
 		 * Set Brake-Coast mode to coast
 		 */
@@ -236,7 +235,7 @@ public class SRXDriveBase {
 		// Activate open-Loop velocity
 		driveRightMasterMtr.set(ControlMode.PercentOutput,0);
 		driveLeftMasterMtr.set(ControlMode.PercentOutput,0);
-		
+		msg("Configured drives");
 		/*
 		*  Create drive for WPI arcade usage
 		*/
@@ -252,12 +251,12 @@ public class SRXDriveBase {
 	
 	public void setSRXPercentVbusMode() {
 		// Set Right master to percentVbus mode
-		driveRightMasterMtr.set(ControlMode.PercentOutput, SRXDriveBaseCfg.kTimeoutMs);
+		driveRightMasterMtr.set(ControlMode.PercentOutput, 0);
 		//driveRightMasterMtr.enableControl();
-		driveRightMasterMtr.set(ControlMode.PercentOutput,0);
+		driveRightMasterMtr.set(ControlMode.PercentOutput, 0);
 
 		// Set left master to percentVbus mode
-		driveLeftMasterMtr.set(ControlMode.PercentOutput, SRXDriveBaseCfg.kTimeoutMs);
+		driveLeftMasterMtr.set(ControlMode.PercentOutput, 0);
 		//driveLeftMasterMtr.enableControl();
 		driveLeftMasterMtr.set(ControlMode.PercentOutput,0);
 	}
@@ -606,14 +605,14 @@ public class SRXDriveBase {
 			leftCmdLevel = _throttleValue  +_turnValue;
 			rightCmdLevel = ((_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue);
 		}
-		if (Math.abs(_throttleValue) < .3 && Math.abs(_throttleValue) > .1){
-			if(isAntiSkidBrakeToggle){
-				rightCmdLevel = -(Math.signum(_throttleValue)*(1- Math.abs(_throttleValue)) * SRXDriveBaseCfg.kStopBrakeValue);
-				leftCmdLevel = -(Math.signum(_throttleValue)*(1- Math.abs(_throttleValue)) * SRXDriveBaseCfg.kStopBrakeValue);
-			}
-		}
-		isAntiSkidBrakeToggle = !isAntiSkidBrakeToggle;
-		
+//		if (Math.abs(_throttleValue) < .3 && Math.abs(_throttleValue) > .1){
+//			if(isAntiSkidBrakeToggle){
+//				rightCmdLevel = -(Math.signum(_throttleValue)*(1- Math.abs(_throttleValue)) * SRXDriveBaseCfg.kStopBrakeValue);
+//				leftCmdLevel = -(Math.signum(_throttleValue)*(1- Math.abs(_throttleValue)) * SRXDriveBaseCfg.kStopBrakeValue);
+//			}
+//		}
+//		isAntiSkidBrakeToggle = !isAntiSkidBrakeToggle;
+//		
 		// Output commands to SRX modules
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
 			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
@@ -920,7 +919,7 @@ public class SRXDriveBase {
 	public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel){
 		if (!isTestMoveForStraightCalActive){
 			isTestMoveForStraightCalActive = true;
-			CycleCount = 0;
+			cycleCount = 0;
 			leftEncoderCounts = _testDistanceIn / SRXDriveBaseCfg.kLftInchesPerCount;
 			leftCmdLevel = _pwrLevel;
 			rightCmdLevel = _pwrLevel + SmartDashboard.getNumber("Right Correction Factor", SRXDriveBaseCfg.kDriveStraightCorrection); 
@@ -959,7 +958,7 @@ public class SRXDriveBase {
 		public boolean testDriveStraight(double _testDistanceIn1, double _pwrLevel1){
 		if (!isTestMoveForStraightActive){
 			isTestMoveForStraightActive = true;
-			CycleCount = 0;
+			cycleCount = 0;
 			leftEncoderCounts = _testDistanceIn1 / SRXDriveBaseCfg.kLftInchesPerCount;
 			leftCmdLevel = _pwrLevel1;
 			rightCmdLevel = _pwrLevel1; 
