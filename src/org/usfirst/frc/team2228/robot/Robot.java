@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIf;
-	private AnalogUltrasonic us;
+	//private AnalogUltrasonic us;
 	private PneumaticController pc;
 	
 	/**
@@ -43,6 +43,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", chooser);
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
+		pc = new PneumaticController(driverIf);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		SmartDashboard.putNumber("Sonar", us.getDistance());
+		//SmartDashboard.putNumber("Sonar", us.getDistance());
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();

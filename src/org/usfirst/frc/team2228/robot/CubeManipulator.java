@@ -23,8 +23,6 @@ public class CubeManipulator {
 		// XboxController xbox = new XboxController();
 		SmartDashboard.putNumber("CollectionValue", 0.1);
 		SmartDashboard.putNumber("ExpulsionValue", -0.1);
-		SmartDashboard.putNumber("GripValue", 0.1);
-		SmartDashboard.putNumber("ReleaseValue", -0.1);
 
 		left.set(ControlMode.PercentOutput, 0);
 		right.set(ControlMode.PercentOutput, 0);
