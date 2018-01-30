@@ -1,10 +1,9 @@
 package org.usfirst.frc.team2228.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TeleopController {
-	private Joystick joystick;
+	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
 
 	private short loggerIterations = 0;
@@ -23,8 +22,8 @@ public class TeleopController {
 	
 	private String lastMsgString = " ";
 
-	public TeleopController(Joystick _joystick, SRXDriveBase _driveBase) {
-		joystick = _joystick;
+	public TeleopController(DriverIF _driverIF, SRXDriveBase _driveBase) {
+		DriverIF = _driverIF;
 		driveBase = _driveBase;
 		System.out.println("Started TeleopController");
 	}
@@ -32,8 +31,8 @@ public class TeleopController {
 		driveBase.setClearActionFlags();
 	}
 	public void teleopPeriodic() {
-		double origThrottle = joystick.getRawAxis(DriverConfig.throttle);
-		double origTurn = joystick.getRawAxis(DriverConfig.turn);
+		double origThrottle = DriverIF.Throttle();
+		double origTurn = DriverIF.Turn();
 
 		double turn = origTurn;
 		double throttle = origThrottle;
@@ -48,31 +47,30 @@ public class TeleopController {
 //		CheckForAdjustSpeedRequest();
 //		driveBase.UpdateSRXDriveDataDisplay();
 //     	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
-//		getButtonA();
-	    getButtonB();
+		getButtonA();
+//      getButtonB();
 	}	
 //====================================================================
 	// button A used as a toggle button
 	private void getButtonA(){
 		if (!isButtonCmdActive){
-			if (joystick.getRawButton(XBoxConfig.A_BUTTON) && !lastButtonRead) {
+			if (DriverIF.driveBaseTestCalibration() && !lastButtonRead) {
 				isButtonCmdActive = true;
 				msg("Button A hit");
 			}
 		}
 		 else if (isButtonCmdActive) {
-			driveBase.SetDriveTrainCmdLevel(0, 0.2);
-			if (joystick.getRawButton(XBoxConfig.A_BUTTON) && !lastButtonRead) {
+			
+			if (!driveBase.testDriveStraightCalibration(100.0, 0.2)) {
 				isButtonCmdActive = false;
-				driveBase.SetDriveTrainCmdLevel(0, 0);
 				msg("Btton A done");
 			}
 		
 		}
-		lastButtonRead = joystick.getRawButton(XBoxConfig.A_BUTTON); 
+		lastButtonRead = DriverIF.driveBaseTestCalibration(); 
 	}
 	private void getButtonB(){
-		if (!joystick.getRawButton(XBoxConfig.B_BUTTON) && lastButtonReadB) {
+		if (DriverIF.cascadeBotton() && lastButtonReadB) {
 					isButtonCmdActiveB = true;	
 					autoCmdSequence = 1;
 		} else if (isButtonCmdActiveB) {
@@ -110,7 +108,7 @@ public class TeleopController {
 			}
 			
 		}
-		lastButtonReadB = joystick.getRawButton(XBoxConfig.B_BUTTON);
+		lastButtonReadB = DriverIF.cascadeBotton();
 	}
 	
 	private void msg(String _msgString){
@@ -119,7 +117,7 @@ public class TeleopController {
 			lastMsgString = _msgString;}
 		}
 	/********************
-	 * Joystick Filtering Functions
+	 * driverIF Filtering Functions
 	 ******************************/
 
 	public double CheckTurnSensitivityFilter(double _turn) {
@@ -194,7 +192,7 @@ public class TeleopController {
 
 	/**
 	 * TippingFilter aka SmoothMove The tipping filter follows the actions of
-	 * the driver with respect to the motion of the throttle joystick. If the
+	 * the driver with respect to the motion of the throttle driverIF. If the
 	 * driver exceeds the limit of robot accel/decel capability, the tipping
 	 * filter slows the response of the throttle to protect the robot. If the
 	 * filter is activated, it will return to driver control as soon as the
@@ -202,7 +200,7 @@ public class TeleopController {
 	 * kMaxDeltaVelocity is determined by testing.
 	 * 
 	 * @param value,
-	 *            is the value of the throttle joystick
+	 *            is the value of the throttle driverIF
 	 */
 	public double CheckSmoothMove(double _throttle) {
 		double fThrottle = _throttle;
@@ -243,34 +241,34 @@ public class TeleopController {
 
 	/**
 	 * TippingFilter Team/Date/Author: The tipping filter follows the actions of
-	 * the driver with respect to the motion of the throtle joystick. If the
+	 * the driver with respect to the motion of the throtle driverIF. If the
 	 * driver exceeds the limit of robot accel/decel capability the tipping
 	 * filter slows the response of the throtle to protect the robot.
 	 *
-	 * There are four changes in value from the last joystick value: 1)
+	 * There are four changes in value from the last driverIF value: 1)
 	 * Transistion from one side of zero to the other side of zero 2) The
-	 * positive side of zero 3) The negative side of zero 4) Within the joystick
+	 * positive side of zero 3) The negative side of zero 4) Within the driverIF
 	 * deadband
 	 *
 	 * Determination of kMaxDeltaVel is determined by testing.
 	 *
-	 * @parm _value, is the value of the throtle joystick
+	 * @parm _value, is the value of the throtle driverIF
 	 */
 	public double CheckTippingFilter(double _value) {
 		double value = _value;
-		// determine change for last joystick read
+		// determine change for last driverIF read
 		double deltaValue = value - previousEMAValue;
 		double timePeriodSF = 0.0;
 
-		// Check joystick value transition from one side of zero to the other
+		// Check driverIF value transition from one side of zero to the other
 		// side of zero
 		if (Math.signum(value) != Math.signum(previousEMAValue)) {
 
-			// If joystick change is large enough to cause a wheelie or cause
+			// If driverIF change is large enough to cause a wheelie or cause
 			// the
 			// robot to start to tip - the robot intervenes to see that this
 			// does
-			// not occur The following limits the change in joystick movement
+			// not occur The following limits the change in driverIF movement
 			if (Math.abs(deltaValue) > TeleopControllerCfg.kTransitionMaxDelta) {
 				smoothFactor = TeleopControllerCfg.kTransitionSmoothFactor;
 			} else {
@@ -295,7 +293,7 @@ public class TeleopController {
 			}
 		}
 
-		// Check if the smoothing filter is within the joystick deadband and put
+		// Check if the smoothing filter is within the driverIF deadband and put
 		// filter in high response gain
 		if (Math.abs(value) < TeleopControllerCfg.ZERO_DEAD_BAND) {
 			value = 0; // not previousValue?

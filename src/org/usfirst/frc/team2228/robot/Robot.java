@@ -22,10 +22,11 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
-	private TestDriveBase base;
+	private SRXDriveBase base;
 	private StringCommand command;
 	private CubeManipulator cube;
-	private DriverIF driverIf;
+	private DriverIF driverIF;
+	private TeleopController chessyDrive;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -34,14 +35,17 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		driverIf = new DriverIF();
+		driverIF = new DriverIF();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
-		base = new TestDriveBase(driverIf);
-		cube = new CubeManipulator(driverIf);
+		base = new SRXDriveBase();
+		cube = new CubeManipulator(driverIF);
+		chessyDrive = new TeleopController(driverIF, base);
+	
 	}
 
+	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -98,13 +102,19 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	public void teleopInit() {
+		System.out.println("teleopInit() fi!");
+		chessyDrive.teleopInit();
+		System.out.println("Teleop Init done");
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		base.teleopPeriodic();
-		cube.teleopPeriodic();
+		chessyDrive.teleopPeriodic();
+		//base.teleopPeriodic();
+		//cube.teleopPeriodic();
 	}
 
 	/**
