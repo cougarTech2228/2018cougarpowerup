@@ -28,7 +28,7 @@ public class TeleopController {
 		System.out.println("Started TeleopController");
 	}
 	public void teleopInit() {
-		driveBase.setClearActionFlags();
+		driveBase.setProgramStateFlagsToFalse();
 	}
 	public void teleopPeriodic() {
 		double origThrottle = DriverIF.Throttle();
@@ -46,9 +46,9 @@ public class TeleopController {
 //		turn = AdjustForControllerDeadBand(turn);
 //		CheckForAdjustSpeedRequest();
 //		driveBase.UpdateSRXDriveDataDisplay();
-//     	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
+//  	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
 		getButtonA();
-//      getButtonB();
+//		getButtonB();
 	}	
 //====================================================================
 	// button A used as a toggle button
@@ -61,7 +61,7 @@ public class TeleopController {
 		}
 		 else if (isButtonCmdActive) {
 			
-			if (!driveBase.testDriveStraightCalibration(100.0, 0.2)) {
+			if (!driveBase.testDriveStraight(100.0, 0.2)) {
 				isButtonCmdActive = false;
 				msg("Btton A done");
 			}
@@ -92,14 +92,14 @@ public class TeleopController {
 				case 3:
 					// move 10 in
 					msg("case 3");
-					if (!driveBase.velMoveToPosition(25, 0.2, true)) {
+					if (!driveBase.velMoveToPosition(10, 0.2, true)) {
 						autoCmdSequence = 4;
 					};
 					break;
 				case 4:
 					// turn left 90 deg
 					msg("case 4");
-					if(!driveBase.turnByEncoderToAngle(-90, 25, .1, false, false )){
+					if(!driveBase.turnByEncoderToAngle(-70, 25, .1, false, false )){
 						isButtonCmdActiveB = false;	
 					};
 					break;	

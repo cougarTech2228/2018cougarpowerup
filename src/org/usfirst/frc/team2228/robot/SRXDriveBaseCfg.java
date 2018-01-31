@@ -67,32 +67,30 @@ public class SRXDriveBaseCfg {
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;
-		
+		public static double kGearRatio = (72/11);
+		public static int kDriveEncoderCyclesPerRev = EncoderCyclesPerRev * (int)kGearRatio;
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
 		// AndyMark tough box mini (50.0/14.0)*(48.0/16.0)
 		// 2018 vex chassis 11:72
-		public static double kGearRatio = (72/11);
 		public static double kMeasuredRgtWheelDiameter = 4.0;
 		public static double kMeasuredLftWheelDiameter = 4.0;
 		public static double kWheelDiameterIn = (kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2;
-		public static double kTrackWidthIn = 23;
-		
-		
-		public static int kDriveEncoderCyclesPerRev = EncoderCyclesPerRev * (int)kGearRatio;
-				
+		public static double kTrackWidthIn = 23;		
 		public static double kMeasuredRgtWheelCircum = kMeasuredRgtWheelDiameter*Math.PI;
 		public static double kMeasuredLftWheelCircum = kMeasuredLftWheelDiameter*Math.PI;
 
+		// ======================================
+		// ENCODER ENCODER CALCULATIONS
+		// inches per revolution / counts per revolution
 		
-		// inches per revolution / counts per revolution ==============================
-		// cnts per rev = quadature(4) * encoder square wave cycles per rev
+		// cnts per rev = quadrature(4) * encoder square wave cycles per rev
 		public static double kCountsPerRevolution = 4*kDriveEncoderCyclesPerRev;
-		public static double kRgtInchesPerCount = kMeasuredRgtWheelCircum/kCountsPerRevolution;
-		public static double kLftInchesPerCount = kMeasuredLftWheelCircum/kCountsPerRevolution;
-		public static double kLeftEncoderCountsPerIn = 1 / kLftInchesPerCount;
-		public static double kRightEncoderCountsPerIn = 1 / kRgtInchesPerCount;
+		public static double kRightInchesPerCount = kMeasuredRgtWheelCircum/kCountsPerRevolution;
+		public static double kLeftInchesPerCount = kMeasuredLftWheelCircum/kCountsPerRevolution;
+		public static double kLeftEncoderCountsPerIn = 1 / kLeftInchesPerCount;
+		public static double kRightEncoderCountsPerIn = 1 / kRightInchesPerCount;
 		
 		//=======================================================
 		// DRIVING STRAIGHT
@@ -101,15 +99,7 @@ public class SRXDriveBaseCfg {
 		public static boolean isDriveStraightAssistEnabled = false;
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 35.0/30.0;
-		public static boolean isHeadingModuleEnabled = false;
-		
-		// Driving straight setup parameters
-		//?? used
-		//public static double kTurnValueDeadBand = 0;
-       // public static double kCorrection_Kp = 0;
-        //public static double kCorrection_Ki = 0;
-        //public static double kCorrection_Kd = 0;
+		public static double kDriveStraightCorrection = 0.957;
 		
 		//===============================================
 		//MOTION METHOD PARAMETERS
@@ -119,11 +109,14 @@ public class SRXDriveBaseCfg {
 		// RPM * 1/60sec * 1/(10 100ms samples/sec) * counts/rev = counts/100ms
 		public static double MaxVel_VelNativeUnits = kTopRPM * (1/60) * (1/10) * kCountsPerRevolution;
 		
-		// Drive train stall paramters
+		//================================================
+		// DRIVE TRAIN STALL PARAMETERS
 		public static int kStallCurrentContinuousAmps = 10;
 		public static int kStallCurrentPeakAmps = 100;
         public static int kStallTimeMs = 6000;
 		
+		//===============================================
+		// BRAKE AND COAST PARAMETERS
 		public static double kRobotCoastToStopCounts = 0;
 		public static double kAutoStopBrakeValue = 0.05;
 		public static double kTeleStopBrakeValue = 0.05;
