@@ -7,9 +7,6 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class DistanceIF extends SampleRobot{
 	AnalogInput sensor = new AnalogInput(1);
-	double voltage;
-	double distance;
-	
 	//temporary return value for the double methods
 	double a;
 	//PIDController to be used for getPerpindicularDistanceCorrection()
@@ -49,10 +46,5 @@ public class DistanceIF extends SampleRobot{
 	
 	public void getPerpendicularDistanceCorrection(){
 		
-	}
-	
-	public double initDistance(){
-		voltage = sensor.getVoltage();
-		return voltage;
 	}
 }

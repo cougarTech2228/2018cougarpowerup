@@ -15,7 +15,6 @@ public class TestDriveBase {
 	public WPI_TalonSRX left2;
 	private DifferentialDrive drive;
 	private DriverIF driverIf;
-	
 
 	public TestDriveBase(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -24,10 +23,10 @@ public class TestDriveBase {
 		left1 = new WPI_TalonSRX(RobotMap.CAN_ID_3);
 		left2 = new WPI_TalonSRX(RobotMap.CAN_ID_4);
 		drive = new DifferentialDrive(left1, right1);
-		
-		 right1.setName("Drive Base", "Right Master");
+
+//		right1.setName("Drive Base", "Right Master");
 		// right2.setName("Drive Base", "Right Follower");
-		 left1.setName("Drive Base", "Left Master");
+//		left1.setName("Drive Base", "Left Master");
 		// left2.setName("Drive Base", "Left Follower");
 		/*
 		 * Set right/left masters and right/left followers

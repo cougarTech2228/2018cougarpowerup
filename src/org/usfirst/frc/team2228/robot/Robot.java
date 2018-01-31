@@ -26,17 +26,18 @@ public class Robot extends IterativeRobot {
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIf;
-	//private AnalogUltrasonic us;
+	private ThingsUpHigh highThings;
+	// private AnalogUltrasonic us;
 	private PneumaticController pc;
-	
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	
+
 	@Override
 	public void robotInit() {
-		
+
 		driverIf = new DriverIF();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
@@ -44,6 +45,7 @@ public class Robot extends IterativeRobot {
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
 		pc = new PneumaticController(driverIf);
+		highThings = new ThingsUpHigh();
 	}
 
 	/**
@@ -64,21 +66,21 @@ public class Robot extends IterativeRobot {
 		// defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
 		StringCommand command = new StringCommand(input);
-		//command.start();
+		// command.start();
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		if(gameData.charAt(0) == 'L') {
+
+		if (gameData.charAt(0) == 'L') {
 			System.out.println("L");
 		} else {
 			System.out.println("R");
 		}
-		if(gameData.charAt(1) == 'L') {
+		if (gameData.charAt(1) == 'L') {
 			System.out.println("L");
 		} else {
 			System.out.println("R");
 		}
-		if(gameData.charAt(2) == 'L') {
+		if (gameData.charAt(2) == 'L') {
 			System.out.println("L");
 		} else {
 			System.out.println("R");
@@ -90,7 +92,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		//Scheduler.getInstance().run();
+		// Scheduler.getInstance().run();
 		switch (autoSelected) {
 		case customAuto:
 			// Put custom auto code here
@@ -107,10 +109,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//SmartDashboard.putNumber("Sonar", us.getDistance());
+		// SmartDashboard.putNumber("Sonar", us.getDistance());
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
+		highThings.teleopPeriodic();
 	}
 
 	/**
@@ -119,6 +122,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
-				
-}
 
+}
