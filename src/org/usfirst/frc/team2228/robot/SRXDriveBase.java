@@ -18,7 +18,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
-
+import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -131,7 +131,7 @@ public class SRXDriveBase {
 		
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
 			driveRightMasterMtr.selectProfileSlot(SRXDriveBaseCfg.kslotIDx, SRXDriveBaseCfg.kPIDLoopIDx);
-			driveRightMasterMtr.configAllowableClosedloopError(SRXDriveBaseCfg.kClosedLoopErr, SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kTimeoutMs);
+			driveRightMasterMtr.configAllowableClosedloopError(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kClosedLoopErr, SRXDriveBaseCfg.kTimeoutMs);
 			driveRightMasterMtr.config_kF(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveRightMstrFeedForwardGain, SRXDriveBaseCfg.kTimeoutMs);
 			driveRightMasterMtr.config_kP(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveRightMstrProportionalGain, SRXDriveBaseCfg.kTimeoutMs);
 			driveRightMasterMtr.config_kI(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveRightMstrIntegralGain, SRXDriveBaseCfg.kTimeoutMs); 
@@ -186,7 +186,7 @@ public class SRXDriveBase {
 		
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
 			driveLeftMasterMtr.selectProfileSlot(SRXDriveBaseCfg.kslotIDx, SRXDriveBaseCfg.kPIDLoopIDx);
-			driveLeftMasterMtr.configAllowableClosedloopError(SRXDriveBaseCfg.kClosedLoopErr, SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kTimeoutMs);
+			driveLeftMasterMtr.configAllowableClosedloopError(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kClosedLoopErr, SRXDriveBaseCfg.kTimeoutMs);
 			driveLeftMasterMtr.config_kF(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveLeftMstrFeedForwardGain, SRXDriveBaseCfg.kTimeoutMs);
 			driveLeftMasterMtr.config_kP(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveLeftMstrProportionalGain, SRXDriveBaseCfg.kTimeoutMs);
 			driveLeftMasterMtr.config_kI(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveLeftMstrIntegralGain, SRXDriveBaseCfg.kTimeoutMs); 
@@ -272,7 +272,7 @@ public class SRXDriveBase {
 		isTestMoveForStraightCalActive = false;
 		isDelayActive = false;
 		isDriveTrainMoving = false;
-		isConsoleDataEnabled = true;
+		isConsoleDataEnabled = false;
 		isLoggingDataEnabled = false;
 		islogSRXDriveActive = false;
 		isMotorCurrentBrakeToggle = false;
@@ -474,8 +474,8 @@ public class SRXDriveBase {
 		leftCmdLevel = _leftCMDLevel;
 		rightCmdLevel *= SRXDriveBaseCfg.kDriveStraightCorrection;
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
-			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
-			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
 		} else {
 			driveRightMasterMtr.set(ControlMode.PercentOutput,rightCmdLevel);
 			driveLeftMasterMtr.set(ControlMode.PercentOutput,leftCmdLevel);
@@ -527,6 +527,7 @@ public class SRXDriveBase {
 		
 		// Output commands to SRX modules set as [% from (-1 to 1)] x MaxVel_VelNativeUnits
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
+			msg("TopRPM" + SRXDriveBaseCfg.kTopRPM + "Cycles Per Rev" + SRXDriveBaseCfg.kDriveEncoderCyclesPerRev + "CNT-PER-REV" + SRXDriveBaseCfg.kCountsPerRevolution + "MaxRPM" +SRXDriveBaseCfg.MaxVel_VelNativeUnits);
 			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
 			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
 		} else {
@@ -595,8 +596,8 @@ public class SRXDriveBase {
 			
 		}
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
-			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
-			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
 		} else {
 			driveRightMasterMtr.set(ControlMode.PercentOutput,rightCmdLevel);
 			driveLeftMasterMtr.set(ControlMode.PercentOutput,leftCmdLevel);
@@ -664,8 +665,8 @@ public class SRXDriveBase {
 			}		
 		}
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
-			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits));
-			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits));
+			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits));
+			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits));
 		} else {
 			driveRightMasterMtr.set(ControlMode.PercentOutput,rightCmdLevel);
 			driveLeftMasterMtr.set(ControlMode.PercentOutput,leftCmdLevel);
@@ -730,8 +731,8 @@ public class SRXDriveBase {
 			}
 		}
 		if (SRXDriveBaseCfg.isSRXClosedLoopEnabled) {
-			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
-			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel*SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveRightMasterMtr.set(ControlMode.Velocity, (rightCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
+			driveLeftMasterMtr.set(ControlMode.Velocity, (leftCmdLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits ));
 		} else {
 			driveRightMasterMtr.set(ControlMode.PercentOutput,rightCmdLevel);
 			driveLeftMasterMtr.set(ControlMode.PercentOutput,leftCmdLevel);

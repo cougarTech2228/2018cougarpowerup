@@ -24,18 +24,18 @@ public class SRXDriveBaseCfg {
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
 		
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		
-		public static double kdriveRightMstrFeedForwardGain = 0.025;
-		public static double kdriveRightMstrProportionalGain = 0.3;
+		public static double kdriveRightMstrFeedForwardGain = 1.58;
+		public static double kdriveRightMstrProportionalGain = 0.0;
 		public static double kdriveRightMstrIntegralGain = 0;
 		public static double kdriveRightMstrDerivativeGain = 0;
 		public static int kdriveRightMstrIzone = 0;
 		public static int kdriveRightMstrRampRate = 0;
 		public static int kdriveRightMstrProfile = 0;
 		
-		public static double kdriveLeftMstrFeedForwardGain = 0.025;
-		public static double kdriveLeftMstrProportionalGain = 0.3;
+		public static double kdriveLeftMstrFeedForwardGain = 1.58;
+		public static double kdriveLeftMstrProportionalGain = 0.0;
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 0;
 		public static int kdriveleftMstrIzone = 0;
@@ -86,7 +86,7 @@ public class SRXDriveBaseCfg {
 		// inches per revolution / counts per revolution
 		
 		// cnts per rev = quadrature(4) * encoder square wave cycles per rev
-		public static double kCountsPerRevolution = 4*kDriveEncoderCyclesPerRev;
+		public static int kCountsPerRevolution = 4*kDriveEncoderCyclesPerRev;
 		public static double kRightInchesPerCount = kMeasuredRgtWheelCircum/kCountsPerRevolution;
 		public static double kLeftInchesPerCount = kMeasuredLftWheelCircum/kCountsPerRevolution;
 		public static double kLeftEncoderCountsPerIn = 1 / kLeftInchesPerCount;
@@ -105,9 +105,9 @@ public class SRXDriveBaseCfg {
 		//MOTION METHOD PARAMETERS
 		
 		// See topRPM calibration procedure for this parameter
-		public static double kTopRPM = 1000;
+		public static double kTopRPM = 647.0;
 		// RPM * 1/60sec * 1/(10 100ms samples/sec) * counts/rev = counts/100ms
-		public static double MaxVel_VelNativeUnits = kTopRPM * (1/60) * (1/10) * kCountsPerRevolution;
+		public static double MaxVel_VelNativeUnits = ((kTopRPM/60)/10) * kCountsPerRevolution;
 		
 		//================================================
 		// DRIVE TRAIN STALL PARAMETERS

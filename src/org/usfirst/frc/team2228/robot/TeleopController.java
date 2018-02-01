@@ -46,8 +46,8 @@ public class TeleopController {
 //		turn = AdjustForControllerDeadBand(turn);
 //		CheckForAdjustSpeedRequest();
 //		driveBase.UpdateSRXDriveDataDisplay();
-//  	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
-		getButtonA();
+    	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
+//		getButtonA();
 //		getButtonB();
 	}	
 //====================================================================
@@ -61,7 +61,7 @@ public class TeleopController {
 		}
 		 else if (isButtonCmdActive) {
 			
-			if (!driveBase.testDriveStraight(100.0, 0.2)) {
+			if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.2, false, false)) {
 				isButtonCmdActive = false;
 				msg("Btton A done");
 			}
