@@ -1,9 +1,5 @@
 package org.usfirst.frc.team2228.robot;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator {
@@ -12,8 +8,6 @@ public class CubeManipulator {
 	private Spark right;
 	private double cubeCollectionValue;
 	private double cubeExpulsionValue;
-	private double cubeGripValue;
-	private double cubeReleaseValue;
 
 	public CubeManipulator(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -22,8 +16,6 @@ public class CubeManipulator {
 		
 		SmartDashboard.putNumber("CollectionValue", 0.25);
 		SmartDashboard.putNumber("ExpulsionValue", -0.25);
-		SmartDashboard.putNumber("GripValue", 0.1);
-		SmartDashboard.putNumber("ReleaseValue", -0.1);
 		
 		// positive is clockwise, negative is counter clockwise
 		left.set(0);
@@ -35,8 +27,6 @@ public class CubeManipulator {
 	public void teleopPeriodic() {
 		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
 		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
-		cubeGripValue = SmartDashboard.getNumber("GripValue", 0.1);
-		cubeReleaseValue = SmartDashboard.getNumber("ReleaseValue", -0.1);
 
 		if (driverIf.collection()) {
 			left.set(cubeCollectionValue);

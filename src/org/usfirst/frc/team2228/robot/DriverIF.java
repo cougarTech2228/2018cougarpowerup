@@ -14,6 +14,14 @@ public class DriverIF {
 	public boolean lowerElevator() {
 		return xboxIF.LB_BUTTON();
 	}
+
+	public boolean portalBackPlatform() {
+		return xboxIF.LS_BUTTON();
+	}
+
+	public boolean elevatorFrontPlatform() {
+		return xboxIF.RS_BUTTON();
+	}
 	
 	public boolean liftCube() {
 		return xboxIF.START_BUTTON();
@@ -53,5 +61,17 @@ public class DriverIF {
 
 	public double leftStickX() {
 		return xboxIF.LEFT_JOYSTICK_X();
+	}
+	public boolean LeftTrigger() {
+		if(xboxIF.LEFT_TRIGGER() > 0.6)
+			return true;
+		else
+			return false;
+	}
+	public boolean RightTrigger() {
+		if(xboxIF.RIGHT_TRIGGER() > 0.6)
+			return true;
+		else
+			return false;
 	}
 }

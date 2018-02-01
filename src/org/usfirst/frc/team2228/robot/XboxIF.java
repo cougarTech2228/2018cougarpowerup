@@ -1,12 +1,14 @@
 package org.usfirst.frc.team2228.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-//import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 public class XboxIF {
 	private XboxController xbox;
 	public XboxIF() {
 		xbox = new XboxController(1);
+	
 	}
 	
 	public boolean A_BUTTON() {return xbox.getAButton();};
@@ -28,4 +30,7 @@ public class XboxIF {
 	public double RIGHT_JOYSTICK_Y() {return xbox.getY(Hand.kRight);};
 	public double LEFT_JOYSTICK_X() {return xbox.getX(Hand.kLeft);};
 	public double LEFT_JOYSTICK_Y() {return xbox.getY(Hand.kLeft);};
+	
+	//public int D_PAD_VERTICAL() {return }
+	//public int D_PAD_HORIZONTAL() {(GenericHID)xbox}
 }

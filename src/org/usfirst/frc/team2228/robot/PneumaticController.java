@@ -9,8 +9,10 @@ public class PneumaticController {
 	boolean off = false;
 	public DriverIF driverIF;
 	public Compressor c = new Compressor(RobotMap.CAN_ID_10);
+	
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
+	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
 
 	public PneumaticController(DriverIF _driverIF) {

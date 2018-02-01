@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
 		pc = new PneumaticController(driverIf);
-		highThings = new ThingsUpHigh();
+		highThings = new ThingsUpHigh(driverIf);
 	}
 
 	/**
