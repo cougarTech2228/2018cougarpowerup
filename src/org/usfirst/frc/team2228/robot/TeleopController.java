@@ -46,8 +46,8 @@ public class TeleopController {
 //		turn = AdjustForControllerDeadBand(turn);
 //		CheckForAdjustSpeedRequest();
 //		driveBase.UpdateSRXDriveDataDisplay();
-    	driveBase.setThrottleTurn((-throttle * .7), (turn * .7), false);
-//		getButtonA();
+//    	driveBase.setThrottleTurn(-throttle, (Math.signum(turn)*(turn * turn)), false);
+		getButtonA();
 //		getButtonB();
 	}	
 //====================================================================
@@ -60,8 +60,20 @@ public class TeleopController {
 			}
 		}
 		 else if (isButtonCmdActive) {
-			
-			if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.2, false, false)) {
+			//public boolean testMotorPulse_SquareWave(double _pulseLowPower, double _pulseHighPower, double _pulseTimeSec, boolean _isTestForRightDrive) 
+			//if (!driveBase.testMotorPulse_SquareWave(.2, .3, 5, true)){
+				
+			//public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
+			if(!driveBase.testDriveStraightCalibration(30.0, .1)){
+				
+			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
+			//if (!velMoveToPosition(10, .2, false)){
+				
+			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
+			//if (!driveBase.rotateToAngle(90, .2)){
+				
+			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
+			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.2, false, false)) {
 				isButtonCmdActive = false;
 				msg("Btton A done");
 			}
