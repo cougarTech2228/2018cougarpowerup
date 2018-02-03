@@ -6,29 +6,27 @@ public class DriverIF {
 	public DriverIF() {
 		xboxIF = new XboxIF();
 	}
-
-	public boolean raiseElevator() {
+	public boolean BackConveyorForwards() {
 		return xboxIF.POV_UP();
 	}
 
-	public boolean BackConveyorForwards() {
+	public boolean BackConveyorBackwards() {
 		return xboxIF.POV_DOWN();
 	}
 
-	public boolean BackConveyorBackwards() {
-		return xboxIF.LS_BUTTON();
+	public boolean FrontConveyorForwards() {
+		return xboxIF.POV_RIGHT();
 	}
-
-	public boolean elevatorFrontPlatform() {
-		return xboxIF.RS_BUTTON();
+	public boolean FrontConveyorBackwards() {
+		return xboxIF.POV_LEFT();
 	}
 	
 	public boolean liftCube() {
-		return xboxIF.START_BUTTON();
+		return xboxIF.RS_BUTTON();
 	}
 	
 	public boolean lowerCube() {
-		return xboxIF.BACK_BUTTON();
+		return xboxIF.LS_BUTTON();
 	}
 
 	public boolean collection() {
@@ -62,13 +60,13 @@ public class DriverIF {
 	public double leftStickX() {
 		return xboxIF.LEFT_JOYSTICK_X();
 	}
-	public boolean LeftTrigger() {
+	public boolean LowerElevator() {
 		if(xboxIF.LEFT_TRIGGER() > 0.6)
 			return true;
 		else
 			return false;
 	}
-	public boolean RightTrigger() {
+	public boolean RaiseElevator() {
 		if(xboxIF.RIGHT_TRIGGER() > 0.6)
 			return true;
 		else

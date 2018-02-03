@@ -23,16 +23,18 @@ public class ThingsUpHigh {
 		elevator.set(0);
 		
 		SmartDashboard.putNumber("back conveyor:", 0);
+		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 	}
 
 	public void teleopPeriodic() {
-		double b = SmartDashboard.getNumber("Elevator Speed:", 0);
+		double b = 1; 
+				//SmartDashboard.getNumber("Elevator Speed:", 0);
 		//b is the speed of the 
 		
-		if (driverIF.LeftTrigger()) {
+		if (driverIF.RaiseElevator()) {
 			elevator.set(b);
-		} else if (driverIF.RightTrigger()) {
+		} else if (driverIF.LowerElevator()) {
 			elevator.set(-b);
 		}
 		else{
@@ -40,19 +42,36 @@ public class ThingsUpHigh {
 		}
 		
 		
-		double d = SmartDashboard.getNumber("back conveyor:", 0);
+		double d = 1;
+				//SmartDashboard.getNumber("back conveyor:", 0);
 		//d is the speed of the elevator motors
 		
 		if(driverIF.BackConveyorForwards()) {
 			conveyor1.set(d);
-			System.out.println(d);
+			System.out.println("BACKFOR");
 		}
 		else if(driverIF.BackConveyorBackwards()) {
 			conveyor1.set(-d);
-			System.out.println(-d);
+			System.out.println("BACKBACK");
 		}
 		else {
 			conveyor1.set(0);
+		}
+		
+		double e = 1; 
+				//SmartDashboard.getNumber("front conveyor:", 0);
+		//hya
+		
+		if(driverIF.FrontConveyorForwards()) {
+			conveyor2.set(e);
+			System.out.println("FRONTFOR");
+		}
+		else if(driverIF.FrontConveyorBackwards()) {
+			conveyor2.set(-e);
+			System.out.println("FRONTBACK");
+		}
+		else {
+			conveyor2.set(0);
 		}
 	}
 
