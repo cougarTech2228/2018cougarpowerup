@@ -28,6 +28,7 @@ public class ThingsUpHigh {
 
 	public void teleopPeriodic() {
 		double b = SmartDashboard.getNumber("Elevator Speed:", 0);
+		//b is the speed of the 
 		
 		if (driverIF.LeftTrigger()) {
 			elevator.set(b);
@@ -40,12 +41,13 @@ public class ThingsUpHigh {
 		
 		
 		double d = SmartDashboard.getNumber("back conveyor:", 0);
+		//d is the speed of the elevator motors
 		
-		if(driverIF.raiseElevator()) {
+		if(driverIF.BackConveyorForwards()) {
 			conveyor1.set(d);
 			System.out.println(d);
 		}
-		else if(driverIF.lowerElevator()) {
+		else if(driverIF.BackConveyorBackwards()) {
 			conveyor1.set(-d);
 			System.out.println(-d);
 		}

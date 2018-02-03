@@ -8,14 +8,14 @@ public class DriverIF {
 	}
 
 	public boolean raiseElevator() {
-		return xboxIF.RB_BUTTON();
+		return xboxIF.POV_UP();
 	}
 
-	public boolean lowerElevator() {
-		return xboxIF.LB_BUTTON();
+	public boolean BackConveyorForwards() {
+		return xboxIF.POV_DOWN();
 	}
 
-	public boolean portalBackPlatform() {
+	public boolean BackConveyorBackwards() {
 		return xboxIF.LS_BUTTON();
 	}
 
