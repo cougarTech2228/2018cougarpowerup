@@ -1,6 +1,11 @@
 package org.usfirst.frc.team2228.robot;
 
+import org.usfirst.frc.team2228.commands.StringCommand;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,20 +17,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	private String input = "";
 	final String defaultAuto = "Default";
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
+	private TestDriveBase base;
+	private StringCommand command;
+	private CubeManipulator cube;
+	private DriverIF driverIf;
+	private ThingsUpHigh highThings;
+	// private AnalogUltrasonic us;
+	private PneumaticController pc;
+	private AnalogUltrasonic au;
 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+
 	@Override
 	public void robotInit() {
+
+		driverIf = new DriverIF();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
+		base = new TestDriveBase(driverIf);
+		cube = new CubeManipulator(driverIf);
+		//pc = new PneumaticController(driverIf);
+		highThings = new ThingsUpHigh(driverIf);
+		au = new AnalogUltrasonic();
 	}
 
 	/**
@@ -45,6 +67,26 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
+		StringCommand command = new StringCommand(input);
+		// command.start();
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+
+		if (gameData.charAt(0) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if (gameData.charAt(1) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if (gameData.charAt(2) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
 	}
 
 	/**
@@ -52,6 +94,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		// Scheduler.getInstance().run();
 		switch (autoSelected) {
 		case customAuto:
 			// Put custom auto code here
@@ -68,6 +111,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		// SmartDashboard.putNumber("Sonar", us.getDistance());
+		base.teleopPeriodic();
+		cube.teleopPeriodic();
+		//pc.teleopPeriodic();
+		highThings.teleopPeriodic();
+		au.roundTo(0.0001);
+		System.out.println(au.getDistance());
 	}
 
 	/**
@@ -76,5 +126,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
-}
 
+}
