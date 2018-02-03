@@ -29,6 +29,7 @@ public class Robot extends IterativeRobot {
 	private ThingsUpHigh highThings;
 	// private AnalogUltrasonic us;
 	private PneumaticController pc;
+	private AnalogUltrasonic au;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,8 +45,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", chooser);
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
-		pc = new PneumaticController(driverIf);
+		//pc = new PneumaticController(driverIf);
 		highThings = new ThingsUpHigh(driverIf);
+		au = new AnalogUltrasonic();
 	}
 
 	/**
@@ -112,8 +114,10 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
-		pc.teleopPeriodic();
+		//pc.teleopPeriodic();
 		highThings.teleopPeriodic();
+		au.roundTo(0.0001);
+		System.out.println(au.getDistance());
 	}
 
 	/**

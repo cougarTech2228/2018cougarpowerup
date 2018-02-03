@@ -4,14 +4,25 @@ import edu.wpi.first.wpilibj.AnalogInput;
 
 public class AnalogUltrasonic {
 	AnalogInput sensor = new AnalogInput(1);
-	double voltage;
+	public double voltage;
 	double distance;
+	private double round;
 
-	public AnalogUltrasonic(AnalogInput sensor) {
+	public AnalogUltrasonic() {
 		
 	}
-	public double getDistance(){
+
+	public double getDistance() {
 		voltage = sensor.getVoltage();
-		return voltage;
+		distance = ((voltage * 5000.0) / 4.85) / 25.4 + 4;//distance in inches
+		return round(distance);
+	}
+	
+	public void roundTo(double d) {
+		round = d;
+	}
+	
+	private double round(double d) {
+		return (int)((d + 0.5) / round) * round;
 	}
 }
