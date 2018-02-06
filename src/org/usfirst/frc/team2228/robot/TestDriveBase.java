@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestDriveBase {
 	public WPI_TalonSRX right1;
@@ -50,6 +51,8 @@ public class TestDriveBase {
 	}
 
 	public void teleopPeriodic() {
-		drive.arcadeDrive(driverIf.Throttle(), driverIf.Turn());
+		SmartDashboard.putNumber("Turn positivity", 1);
+		//made it negative for mu
+		drive.arcadeDrive(driverIf.Throttle(), SmartDashboard.getNumber("Turn positivity", 1)/*added for making robot turn correct direction */ * driverIf.Turn());
 	}
 }
