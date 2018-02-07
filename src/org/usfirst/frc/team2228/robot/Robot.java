@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
 	private CubeManipulator cube;
 	private DriverIF driverIF;
 	private TeleopController chessyDrive;
+	private AutoMaster auto;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -68,21 +69,10 @@ public class Robot extends IterativeRobot {
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
-		if(gameData.charAt(0) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(1) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(2) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
+		
+		char[] startPositions = gameData.toCharArray();
+		
+		auto = new AutoMaster(startPositions, base);
 	}
 
 	/**
@@ -90,16 +80,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		//Scheduler.getInstance().run();
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			break;
-		}
+		auto.update(autoSelected);
 	}
 
 	public void teleopInit() {
