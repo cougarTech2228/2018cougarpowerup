@@ -1,7 +1,8 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+// 
 public class TeleopController {
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
@@ -29,6 +30,7 @@ public class TeleopController {
 	}
 	public void teleopInit() {
 		driveBase.setProgramStateFlagsToFalse();
+		driveBase.setDriveTrainRamp(2);
 	}
 	public void teleopPeriodic() {
 		double origThrottle = DriverIF.Throttle();
@@ -38,16 +40,16 @@ public class TeleopController {
 		double throttle = origThrottle;
 		throttle = AdjustForControllerDeadBand(throttle);
 		turn = AdjustForControllerDeadBand(turn);
-//		turn = CheckTurnSensitivityFilter(limit(turn));
+		turn = CheckTurnSensitivityFilter(limit(turn));
 //		throttle = CheckThrottleSensitivity(limit(throttle));
-//		throttle = CheckSmoothMove(limit(throttle));
-
+		throttle = CheckAccelFilter(limit(throttle));
+		
 //		throttle = AdjustForControllerDeadBand(throttle);
 //		turn = AdjustForControllerDeadBand(turn);
 //		CheckForAdjustSpeedRequest();
 //		driveBase.UpdateSRXDriveDataDisplay();
-//    	driveBase.setThrottleTurn(-throttle, (Math.signum(turn)*(turn * turn)), false);
-		getButtonA();
+		driveBase.setThrottleTurn(-(Math.signum(throttle)*(throttle * throttle)), (Math.signum(turn)*(turn * turn)), false);
+//		getButtonA();
 //		getButtonB();
 	}	
 //====================================================================
@@ -56,6 +58,10 @@ public class TeleopController {
 		if (!isButtonCmdActive){
 			if (DriverIF.driveBaseTestCalibration() && !lastButtonRead) {
 				isButtonCmdActive = true;
+				driveBase.setRightSensorPositionToZero();
+				//TODO
+				driveBase.setLeftSensorPositionToZero();	
+				Timer.delay(1);
 				msg("Button A hit");
 			}
 		}
@@ -64,7 +70,7 @@ public class TeleopController {
 			//if (!driveBase.testMotorPulse_SquareWave(.2, .3, 5, true)){
 				
 			//public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
-			if(!driveBase.testDriveStraightCalibration(30.0, .1)){
+			if(!driveBase.testDriveStraightCalibration(50.0, .3)){
 				
 			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
 			//if (!velMoveToPosition(10, .2, false)){
@@ -81,6 +87,10 @@ public class TeleopController {
 		}
 		lastButtonRead = DriverIF.driveBaseTestCalibration(); 
 	}
+	private void delay(int i) {
+	// TODO Auto-generated method stub
+	
+}
 	private void getButtonB(){
 		if (DriverIF.cascadeBotton() && lastButtonReadB) {
 					isButtonCmdActiveB = true;	
@@ -186,7 +196,7 @@ public class TeleopController {
 			break;
 
 		case Squared:
-			fThrottle = (Math.pow(_throttle, 2));
+			fThrottle = Math.signum(_throttle) * Math.pow(_throttle, 2);
 			break;
 
 		case Cubed:
@@ -202,86 +212,86 @@ public class TeleopController {
 		return fThrottle;
 	}
 
+
+	// /**
+	 // * TippingFilter aka SmoothMove The tipping filter follows the actions of
+	 // * the driver with respect to the motion of the throttle driverIF. If the
+	 // * driver exceeds the limit of robot accel/decel capability, the tipping
+	 // * filter slows the response of the throttle to protect the robot. If the
+	 // * filter is activated, it will return to driver control as soon as the
+	 // * driver is controlling within robot limits. Determination of
+	 // * kMaxDeltaVelocity is determined by testing.
+	 // * 
+	 // * @param value,
+	 // *            is the value of the throttle driverIF
+	 // */
+	// public double CheckSmoothMove(double _throttle) {
+		// double fThrottle = _throttle;
+		// double deltaValue = fThrottle - previousEMAValue;
+
+		// // if (driver.GetSmoothMoveEnabled()) {
+		// if ((fThrottle > 0) && (previousEMAValue < -TeleopControllerCfg.ZERO_DEAD_BAND)) // ||
+																							// // ((value
+																							// // <
+																							// // 0)
+																							// // &&
+		// // (oldEMA > 0))){
+		// {
+			// // we're tipping!!
+			// fThrottle = 0;
+			// timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
+			// // System.out.println("Tipping forward");
+		// } else if ((fThrottle < 0) && (previousEMAValue > TeleopControllerCfg.ZERO_DEAD_BAND)) {// we're
+																								// // tipping!!
+			// fThrottle = 0;
+			// timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
+			// // System.out.println("tipping backward");
+		// }
+
+		// double smoothFactor = 2.0 / (timePeriodSF + 1);
+		// fThrottle = previousEMAValue + smoothFactor * (fThrottle - previousEMAValue);
+
+		// if (Math.abs(previousEMAValue) < TeleopControllerCfg.ZERO_DEAD_BAND) {
+			// timePeriodSF = TeleopControllerCfg.kLowSmoothPeriod;
+		// }
+
+		// previousEMAValue = fThrottle;
+
+		// // SmartDashboard.putNumber("smooth", value);
+
+		// return fThrottle;
+	// }
+
 	/**
-	 * TippingFilter aka SmoothMove The tipping filter follows the actions of
-	 * the driver with respect to the motion of the throttle driverIF. If the
-	 * driver exceeds the limit of robot accel/decel capability, the tipping
-	 * filter slows the response of the throttle to protect the robot. If the
-	 * filter is activated, it will return to driver control as soon as the
-	 * driver is controlling within robot limits. Determination of
-	 * kMaxDeltaVelocity is determined by testing.
-	 * 
-	 * @param value,
-	 *            is the value of the throttle driverIF
-	 */
-	public double CheckSmoothMove(double _throttle) {
-		double fThrottle = _throttle;
-		double deltaValue = fThrottle - previousEMAValue;
-
-		// if (driver.GetSmoothMoveEnabled()) {
-		if ((fThrottle > 0) && (previousEMAValue < -TeleopControllerCfg.ZERO_DEAD_BAND)) // ||
-																							// ((value
-																							// <
-																							// 0)
-																							// &&
-		// (oldEMA > 0))){
-		{
-			// we're tipping!!
-			fThrottle = 0;
-			timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
-			// System.out.println("Tipping forward");
-		} else if ((fThrottle < 0) && (previousEMAValue > TeleopControllerCfg.ZERO_DEAD_BAND)) {// we're
-																								// tipping!!
-			fThrottle = 0;
-			timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
-			// System.out.println("tipping backward");
-		}
-
-		double smoothFactor = 2.0 / (timePeriodSF + 1);
-		fThrottle = previousEMAValue + smoothFactor * (fThrottle - previousEMAValue);
-
-		if (Math.abs(previousEMAValue) < TeleopControllerCfg.ZERO_DEAD_BAND) {
-			timePeriodSF = TeleopControllerCfg.kLowSmoothPeriod;
-		}
-
-		previousEMAValue = fThrottle;
-
-		// SmartDashboard.putNumber("smooth", value);
-
-		return fThrottle;
-	}
-
-	/**
-	 * TippingFilter Team/Date/Author: The tipping filter follows the actions of
-	 * the driver with respect to the motion of the throtle driverIF. If the
-	 * driver exceeds the limit of robot accel/decel capability the tipping
-	 * filter slows the response of the throtle to protect the robot.
-	 *
-	 * There are four changes in value from the last driverIF value: 1)
-	 * Transistion from one side of zero to the other side of zero 2) The
-	 * positive side of zero 3) The negative side of zero 4) Within the driverIF
-	 * deadband
+	* AccelFilter
+	*The accel filter follows the actions of
+	* the driver with respect to the motion of the throttle driverIF. If the
+	* driver exceeds the limit of robot accel/decel capability the tipping
+	* filter slows the response of the throttle to protect the robot.
+	*
+	* There are four changes in value from the last driverIF value:
+	* 1)Transition from one side of zero to the other side of zero 
+	* 2) The positive side of zero 
+	* 3) The negative side of zero 
+	* 4) Within the driverIF deadband
 	 *
 	 * Determination of kMaxDeltaVel is determined by testing.
 	 *
-	 * @parm _value, is the value of the throtle driverIF
+	 * @parm _value, is the value of the throttle driverIF
 	 */
-	public double CheckTippingFilter(double _value) {
-		double value = _value;
+	public double CheckAccelFilter(double _AccelFltrThrottleValue) {
+		double AccelFltrThrottleValue = _AccelFltrThrottleValue;
 		// determine change for last driverIF read
-		double deltaValue = value - previousEMAValue;
+		double deltaAccelFltrThrottleValue = AccelFltrThrottleValue - previousEMAValue;
 		double timePeriodSF = 0.0;
 
-		// Check driverIF value transition from one side of zero to the other
-		// side of zero
-		if (Math.signum(value) != Math.signum(previousEMAValue)) {
+		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
+		if (Math.signum(AccelFltrThrottleValue) != Math.signum(previousEMAValue)) {
 
-			// If driverIF change is large enough to cause a wheelie or cause
-			// the
-			// robot to start to tip - the robot intervenes to see that this
-			// does
+			// If driverIF change is large enough to cause a wheelie or cause the
+			// robot to start to tip - the robot intervenes to see that this does
 			// not occur The following limits the change in driverIF movement
-			if (Math.abs(deltaValue) > TeleopControllerCfg.kTransitionMaxDelta) {
+			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kTransitionMaxDelta) {
 				smoothFactor = TeleopControllerCfg.kTransitionSmoothFactor;
 			} else {
 
@@ -290,13 +300,13 @@ public class TeleopController {
 			}
 		}
 
-		// Determine if the sign of value and oldEMA are the same
-		else if (Math.signum(value) == Math.signum(previousEMAValue)) {
+		// Determine if the sign of _AccelFltrThrottleValue and oldEMA are the same
+		else if (Math.signum(AccelFltrThrottleValue) == Math.signum(previousEMAValue)) {
 
-			// Check for large deltaValue that may cause a wheelie or
+			// Check for large delta_AccelFltrThrottleValue that may cause a wheelie or
 			// rotation torque to a high Center of gravity on decel
 
-			if (Math.abs(deltaValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
+			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
 				smoothFactor = TeleopControllerCfg.kHighSmoothFactor;
 			} else {
 
@@ -307,8 +317,8 @@ public class TeleopController {
 
 		// Check if the smoothing filter is within the driverIF deadband and put
 		// filter in high response gain
-		if (Math.abs(value) < TeleopControllerCfg.ZERO_DEAD_BAND) {
-			value = 0; // not previousValue?
+		if (Math.abs(AccelFltrThrottleValue) < TeleopControllerCfg.ZERO_DEAD_BAND) {
+			AccelFltrThrottleValue = 0; 
 			smoothFactor = TeleopControllerCfg.klowSmoothFactor;
 		}
 		// Run through smoothing filter
@@ -317,16 +327,15 @@ public class TeleopController {
 		 * change it's gain to address filter response
 		 * 
 		 * Range of smoothFactor is 0 to 1; where smoothFactor = 0 (no
-		 * smoothing) smoothFactor = .99999 high smoothing Typical smoothFactor
-		 * = 1-(2.0 / (timePeriodSF + 1)) where user decides on aprox number of
-		 * cycles for output = input. Time period on iterative robot class is
-		 * aprox 20ms
+		 * smoothing) smoothFactor = .99999 high smoothing 
+		 * Typical smoothFactor = 1-(2.0 / (timePeriodSF + 1)) where user decides on aprox number of
+		 * cycles for output = input. Time period on iterative robot class is aprox 20ms
 		 */
 
-		value = previousEMAValue + smoothFactor * (value - previousEMAValue);
-		previousEMAValue = value;
+		AccelFltrThrottleValue = previousEMAValue + smoothFactor * (AccelFltrThrottleValue - previousEMAValue);
+		previousEMAValue = AccelFltrThrottleValue;
 
-		return value;
+		return AccelFltrThrottleValue;
 	}
 
 	public double ApplySineFunction(double _turn) {

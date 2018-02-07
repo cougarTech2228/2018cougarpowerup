@@ -32,9 +32,9 @@ public class TeleopControllerCfg {
 	// Typical smooth factor = 2.0/ (timePeriodSF + 1) where user decides
 	// on approx number of cycles for output == input.  Time period on 
 	// iterative robot class is 20+ ms
-	public static final double klowSmoothFactor = 0.3333;
-	public static final double kHighSmoothFactor = 0.05556;
-	public static final double kTransitionSmoothFactor = 0.05556;
+	public static final double klowSmoothFactor = 0.2;
+	public static final double kHighSmoothFactor = 0.7;
+	public static final double kTransitionSmoothFactor = 0.5;
 	
 	// determination of max delta values are determined by testing
 	public static final double kMaxDeltaVelocity = 0.2;
