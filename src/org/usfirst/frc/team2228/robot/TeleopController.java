@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TeleopController {
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
-
+//we are col
 	private short loggerIterations = 0;
 	private short loggerThreshold = 20;
 	

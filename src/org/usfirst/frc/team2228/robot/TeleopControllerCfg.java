@@ -11,7 +11,7 @@ public class TeleopControllerCfg {
     public static boolean isTurnSensitivityEnabled = true;
     public static boolean isLowSpeedFactorEnabled = true;
     public static final double kTurnSensitivityHighGain = 0.7; // 0.1 to 1.0 used for chezy turn control
-    
+    //gponmsfd m88888
     public enum ThrottleSensitivity {
 		Linear,
 		Sine,
