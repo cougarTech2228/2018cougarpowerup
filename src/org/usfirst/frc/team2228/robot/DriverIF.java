@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 public class DriverIF {
 	XboxIF xboxIF;
 	public DriverIF() {
@@ -35,5 +37,8 @@ public class DriverIF {
 	}
 	public boolean cascadeBotton(){
 		return xboxIF.LB_BUTTON();
+	}
+	public boolean Xbutton() {
+		return xboxIF.START_BUTTON();
 	}
 }

@@ -86,13 +86,13 @@ public class SRXDriveBaseCfg {
 		
 		public static double kTrackWidthIn = 23;
 		
-		public static double kMeasuredRgtWheelDiameter = 4.0;
-		public static double kMeasuredLftWheelDiameter = 4.0;
+		public static double kMeasuredRgtWheelDiameter = 4.035;
+		public static double kMeasuredLftWheelDiameter = 4.035;
 		//(kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2
-		public static double kWheelDiameterIn = 4.0;
+		public static double kWheelDiameterIn = 4.035;
 		// WheelDiameter * Math.PI
-		public static double kMeasuredRgtWheelCircum = 9.425;
-		public static double kMeasuredLftWheelCircum = 9.425;
+		public static double kMeasuredRgtWheelCircum = 12.678;
+		public static double kMeasuredLftWheelCircum = 12.678;
 
 		// ======================================
 		// ENCODER ENCODER CALCULATIONS
@@ -101,13 +101,13 @@ public class SRXDriveBaseCfg {
 		// cnts per rev = quadrature(4) * encoder square wave cycles per rev
 		public static double kCountsPerRevolution = 523.63;
 		// Wheel circumference / counts per revolution
-		public static double kRightInchesPerCount = 0.023;
+		public static double kRightInchesPerCount = 0.0242;
 		//old 0.01799;
-		public static double kLeftInchesPerCount = 0.023;
+		public static double kLeftInchesPerCount = 0.0242;
 		//old 0.01799;
-		public static double kLeftEncoderCountsPerIn = 43.07;
+		public static double kLeftEncoderCountsPerIn = 41.302;
 		//old 55.586;
-		public static double kRightEncoderCountsPerIn = 43.07;
+		public static double kRightEncoderCountsPerIn = 41.302;
 		//old 55.586;
 		
 		//=======================================================
@@ -117,7 +117,7 @@ public class SRXDriveBaseCfg {
 		public static boolean isDriveStraightAssistEnabled = false;
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 0.96; 
+		public static double kDriveStraightCorrection = 0.93; 
 				// Hard floor correction 0.87;
 		
 		//===============================================
