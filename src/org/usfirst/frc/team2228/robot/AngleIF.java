@@ -12,7 +12,7 @@ public class AngleIF {
 
 	public AngleIF() {
 		try {
-			ahrs = new AHRS(SerialPort.Port.kUSB);
+			ahrs = new AHRS(Port.kOnboard);
 		} catch (RuntimeException ex) {
 			System.out.println("Error starting the navx");
 		}
@@ -35,5 +35,9 @@ public class AngleIF {
 
 	public double getRoll() {
 		return ahrs.getRoll();
+	}
+
+	public double getBaroPressure() {
+		return ahrs.getBarometricPressure();
 	}
 }
