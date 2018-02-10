@@ -17,21 +17,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	private String input = "";
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser<String> chooser = new SendableChooser<>();
-	//private TestDriveBase base;
-	private StringCommand command;
-	//private CubeManipulator cube;
-	private DriverIF driverIf;
-	//private ThingsUpHigh highThings;
-	//private AnalogUltrasonic us;
-	//private PneumaticController pc;
-	//private AnalogUltrasonic au;
-	private CANLED LED;
 
+	private SRXDriveBase base;
+	private StringCommand command;
+	private CubeManipulator cube;
+	private DriverIF driverIF;
+	private TeleopController chessyDrive;
+	private AutoMaster auto;
+	private ThingsUpHigh highThings;
+	private AnalogUltrasonic us;
+	private PneumaticController pc;
+	private AnalogUltrasonic au;
+	private CANLED LED;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -40,19 +38,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 
-		driverIf = new DriverIF();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
-		//base = new TestDriveBase(driverIf);
-		//cube = new CubeManipulator(driverIf);
-		//pc = new PneumaticController(driverIf);
-		//highThings = new ThingsUpHigh(driverIf);
-		//au = new AnalogUltrasonic();
+		driverIF = new DriverIF();
+		base = new SRXDriveBase();
+		cube = new CubeManipulator(driverIF);
+		chessyDrive = new TeleopController(driverIF, base);
+		auto = new AutoMaster(base);
+		pc = new PneumaticController(driverIF);
+		highThings = new ThingsUpHigh(driverIF);
+		au = new AnalogUltrasonic();
 		LED = new CANLED();
 		LED.colorInit();
 	}
 
+	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -66,30 +64,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-		StringCommand command = new StringCommand(input);
-		// command.start();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-		if (gameData.charAt(0) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if (gameData.charAt(1) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if (gameData.charAt(2) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
+		auto.init();
 	}
 
 	/**
@@ -97,30 +72,27 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		// Scheduler.getInstance().run();
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			break;
-		}
+		auto.run();
 	}
 
+	public void teleopInit() {
+		System.out.println("teleopInit() fi!");
+		chessyDrive.teleopInit();
+		System.out.println("Teleop Init done");
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
-		//base.teleopPeriodic();
-		//cube.teleopPeriodic();
-		//pc.teleopPeriodic();
-		//highThings.teleopPeriodic();
-		//LED.allianceColorLED();
-//		LED.autonomousColorInit();
+		chessyDrive.teleopPeriodic();
+		cube.teleopPeriodic();
+		pc.teleopPeriodic();
+		highThings.teleopPeriodic();
+		LED.allianceColorLED();
+		LED.autonomousColorInit();
 		LED.rainbowShift();
 		//au.roundTo(0.0001);
 		//System.out.println(au.getDistance());
