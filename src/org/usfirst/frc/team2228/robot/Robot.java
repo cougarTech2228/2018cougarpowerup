@@ -22,14 +22,15 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
-	private TestDriveBase base;
+	//private TestDriveBase base;
 	private StringCommand command;
-	private CubeManipulator cube;
+	//private CubeManipulator cube;
 	private DriverIF driverIf;
-	private ThingsUpHigh highThings;
-	// private AnalogUltrasonic us;
-	private PneumaticController pc;
-	private AnalogUltrasonic au;
+	//private ThingsUpHigh highThings;
+	//private AnalogUltrasonic us;
+	//private PneumaticController pc;
+	//private AnalogUltrasonic au;
+	private CANLED LED;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -43,11 +44,13 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
-		base = new TestDriveBase(driverIf);
-		cube = new CubeManipulator(driverIf);
+		//base = new TestDriveBase(driverIf);
+		//cube = new CubeManipulator(driverIf);
 		//pc = new PneumaticController(driverIf);
-		highThings = new ThingsUpHigh(driverIf);
-		au = new AnalogUltrasonic();
+		//highThings = new ThingsUpHigh(driverIf);
+		//au = new AnalogUltrasonic();
+		LED = new CANLED();
+		LED.colorInit();
 	}
 
 	/**
@@ -112,12 +115,15 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
-		base.teleopPeriodic();
-		cube.teleopPeriodic();
+		//base.teleopPeriodic();
+		//cube.teleopPeriodic();
 		//pc.teleopPeriodic();
-		highThings.teleopPeriodic();
-		au.roundTo(0.0001);
-		System.out.println(au.getDistance());
+		//highThings.teleopPeriodic();
+		//LED.allianceColorLED();
+//		LED.autonomousColorInit();
+		LED.rainbowShift();
+		//au.roundTo(0.0001);
+		//System.out.println(au.getDistance());
 	}
 
 	/**

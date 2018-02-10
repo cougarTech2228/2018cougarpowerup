@@ -31,6 +31,7 @@ public class ThingsUpHigh {
 		double b = 1; 
 				//SmartDashboard.getNumber("Elevator Speed:", 0);
 		//b is the speed of the 
+		System.out.println(driverIF.liftCube());
 		
 		if (driverIF.RaiseElevator()) {
 			elevator.set(b);

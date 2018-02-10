@@ -31,9 +31,11 @@ public class PneumaticController {
 			squeezies.set(off);
 		}
 		if(driverIF.liftCube()){
+			System.out.println("HYA");
 			lift.set(on);
 		}
 		else if (driverIF.lowerCube()){
+			System.out.println("HYADOS");
 			lift.set(off);
 		}
 	}
