@@ -86,16 +86,16 @@ DONE  Phase I
   - debug magic motion
   
  CONTROL A LED Strip with CAN commands from the ROBORIO
-  - Go to CAN LED strip web page http://www.mindsensors.com/content/88-cheat-sheet-for-canlight-led-strip-controller-kit-for-frc-robots
-  - Load required libraries to eclipse
-  - Read "Guides - Full Tutorial on the mindsensors Configuration Tool"
-  - Download configuration tool 
-  - Read "Guides - The Complete Guide on Getting Started with CANLight"
-  - Read "Documentation - Java" document
-  - Read "Guides - C++/Java Library Installation and Examples"
-  - Create a new project with iterative robot 
-  - Create a CANLED class with the following methods
-    1 basicColor
+  Done - Go to CAN LED strip web page http://www.mindsensors.com/content/88-cheat-sheet-for-canlight-led-strip-controller-kit-for-frc-robots
+  Done - Load required libraries to eclipse
+  Done - Read "Guides - Full Tutorial on the mindsensors Configuration Tool"
+  Done - Download configuration tool 
+  Done - Read "Guides - The Complete Guide on Getting Started with CANLight"
+  Done - Read "Documentation - Java" document
+  Done- Read "Guides - C++/Java Library Installation and Examples"
+  Done- Create a new project with iterative robot 
+  Done - Create a CANLED class with the following methods
+    1 basicColor  Alliance Color
     2 LEDFlash
     3 cycleColor
     4 LEDFade
