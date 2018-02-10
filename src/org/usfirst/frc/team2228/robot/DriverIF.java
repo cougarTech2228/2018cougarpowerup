@@ -22,11 +22,11 @@ public class DriverIF {
 	}
 	
 	public boolean liftCube() {
-		return xboxIF.RS_BUTTON();
+		return xboxIF.RB_BUTTON();
 	}
 	
 	public boolean lowerCube() {
-		return xboxIF.LS_BUTTON();
+		return xboxIF.LB_BUTTON();
 	}
 
 	public boolean collection() {
