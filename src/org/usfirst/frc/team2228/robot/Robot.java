@@ -17,11 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	private String input = "";
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser<String> chooser = new SendableChooser<>();
 	private SRXDriveBase base;
 	private StringCommand command;
 	private CubeManipulator cube;
@@ -37,12 +32,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		driverIF = new DriverIF();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
+		auto = new AutoMaster(base);
 	
 	}
 
@@ -60,19 +53,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-		StringCommand command = new StringCommand(input);
-		//command.start();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		
-		char[] startPositions = gameData.toCharArray();
-		
-		auto = new AutoMaster(startPositions, base);
+		auto.init();
 	}
 
 	/**
@@ -80,7 +61,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		auto.update(autoSelected);
+		auto.run();
 	}
 
 	public void teleopInit() {

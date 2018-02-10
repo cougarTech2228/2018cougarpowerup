@@ -9,9 +9,10 @@ public class RotateTo extends Command {
 	private SRXDriveBase base;
 	private double ToAngle, PowerLvl;
 	
-	public RotateTo(double _ToAngle, double _PowerLvl) {
+	public RotateTo(SRXDriveBase base, double _ToAngle, double _PowerLvl) {
 		ToAngle = _ToAngle;
 		PowerLvl = _PowerLvl;
+		this.base = base;
 	}
 	
 	protected void initialize() {

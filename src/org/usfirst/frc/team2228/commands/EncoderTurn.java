@@ -9,12 +9,13 @@ public class EncoderTurn extends Command {
 	private SRXDriveBase base;
 	private double a,b,c;
 	
-	public EncoderTurn(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn ) {
+	public EncoderTurn(SRXDriveBase base, double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn ) {
 		a = _turnAngleDeg;
 		b = _turnRadiusIn;
 		c = _turnPowerLevel;
 		d = _isDirectionReverse;
 		e = _isCascadeTurn;
+		this.base = base;
 	}
 	
 	protected void initialize() {
