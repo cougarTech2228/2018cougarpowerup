@@ -69,8 +69,8 @@ public class SRXDriveBase {
 	private double leftSensorPositionRead = 0;
 	
 	//private double EncoderHeadingRate = 0;
-	private double Kp_encoderHeadingPID = 0.07;
-	private double Ki_encoderHeadingPID = 0.005;
+	private double Kp_encoderHeadingPID = 0.1;
+	private double Ki_encoderHeadingPID = 0;
 	private double Kd_encoderHeadingPID = 0;
 	private double encoderHeading_IAccumMax = 10;
 	private double Ki_PIDHeadingAccum = 0;
@@ -79,6 +79,7 @@ public class SRXDriveBase {
 	private double previousEncoderHeadingDeg = 0;
 	private double encoderHeadingDeg = 0;
 	private double EncoderHeadingCorrection = 0;
+	private double EncoderHeadingRate = 0;
 	
 	// Calibrate parameters
 	// TODO for smartDashBoard
@@ -928,99 +929,101 @@ public double EncoderHeadingPID(double _encoderHeadingError, double _encoderHead
 	}
 
 	//future TODO
-//	public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
-//			if (!isTestMoveForStraightCalActive){
-//				isTestMoveForStraightCalActive = true;
-//
-//				leftSensorStartPositionRead = getLeftSensorPosition();
-//				rightSensorStartPositionRead = getRightSensorPosition();
-//
-//				previousEncoderHeadingDeg = 0;
-//				Ki_PIDHeadingAccum = 0;
-//
-//				leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount) + leftSensorStartPositionRead;
-//				if(_pwrLevel < 0){
-//					_pwrLevel = 0;
-//				}
-//				//leftCmdLevel = _pwrLevel;
-//				//rightCmdLevel = (_pwrLevel * SRXDriveBaseCfg.kDriveStraightCorrection); 
-//				
-//				if (isConsoleDataEnabled){
-//					System.out.printf("StopCnt: %-8.3f++LftEncStrt: %-8.2f==RgtEncStrt: %-8.2f==LeftVel:%-8.2f==LeftErr:%-8.2f%n",
-//						leftEncoderStopCount,
-//						leftSensorStartPositionRead,
-//						rightSensorStartPositionRead,
-//						getLeftSensorVelocity(),
-//						getLeftCloseLoopError());
-//				}
-//			} else if (getLeftSensorPosition() >= leftEncoderStopCount) {
-//				
-//				// Apply power level in opposite direction for 1 second to brake
-//				rightCmdLevel = -SRXDriveBaseCfg.kAutoMoveStopBrakeValue;
-//				leftCmdLevel = -SRXDriveBaseCfg.kAutoMoveStopBrakeValue;
-//				if (!delay(1)) {
-//					isTestMoveForStraightCalActive = false;
-//					rightCmdLevel = 0;
-//					leftCmdLevel = 0;
-//					
-//				}	
-//			}
-//
-//			leftSensorPositionRead = getLeftEncoderPosition();
-//			rightSensorPositionRead = getRightEncoderPosition();
-//			
-//			calCorrectionFactor = (leftSensorPositionRead - leftSensorPositionRead) / (rightSensorPositionRead - rightSensorPositionRead);
-//
-//			encoderHeadingDeg = (leftSensorPositionRead - rightSensorPositionRead) / SRXDriveBaseCfg.kTrackWidthIn;
-//
-//			//headingRate = ((currentHeading - previousHeading) / timeElapsed[this is taken care of in Kd);
-//			EncoderHeadingRate = encoderHeadingDeg - previousEncoderHeadingDeg;
-//			
-//			//headingError = heading(=0) - currentHeading;
-//			EncoderHeadingCorrection = EncoderHeadingPID(-encoderHeadingDeg, EncoderHeadingRate);
-//
-//			if(isTestMoveForStraightCalActive){
-//				leftCmdLevel =_pwrLevel;
+	public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
+			leftSensorPositionRead = getLeftSensorPosition();
+			rightSensorPositionRead = getRightSensorPosition();
+			
+			if (!isTestMoveForStraightCalActive){
+				isTestMoveForStraightCalActive = true;
 
-//				// (+)heading needs RgtSpeed(+) and (-) Heading needs RgtSpeed(-)
-//				rightCmdLevel = _pwrLevel - EncoderHeadingCorrection;
-//				if(rightCmdLevel > 1){
-//					rightCmdLevel = 1;
-//				}
-//				if(rightCmdLevel < 0){
-//					rightCmdLevel = 0;
-//				}
-//			}		
-//          SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
-//
-//			previousEncoderHeadingDeg = encoderHeadingDeg;
+				
+
+				previousEncoderHeadingDeg = 0;
+				Ki_PIDHeadingAccum = 0;
+
+				leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount) + leftSensorStartPositionRead;
+				if(_pwrLevel < 0){
+					_pwrLevel = 0;
+				}
+				leftCmdLevel = _pwrLevel;
+				rightCmdLevel = (_pwrLevel * SRXDriveBaseCfg.kDriveStraightCorrection); 
+				
+				if (isConsoleDataEnabled){
+					System.out.printf("StopCnt: %-8.3f++LftEncStrt: %-8.2f==RgtEncStrt: %-8.2f==LeftVel:%-8.2f==LeftErr:%-8.2f%n",
+						leftEncoderStopCount,
+						leftSensorStartPositionRead,
+						rightSensorStartPositionRead,
+						getLeftSensorVelocity(),
+						getLeftCloseLoopError());
+				}
+			} else if (leftSensorPositionRead >= leftEncoderStopCount) {
+				
+				// Apply power level in opposite direction for 1 second to brake
+				rightCmdLevel = -SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue;
+				leftCmdLevel = -SRXDriveBaseCfg.kAutoLeftMoveStopBrakeValue;
+				if (!delay(1)) {
+					isTestMoveForStraightCalActive = false;
+					rightCmdLevel = 0;
+					leftCmdLevel = 0;
+					
+				}	
+			}
+
+			//leftSensorPositionRead = getLeftEncoderPosition();
+			//rightSensorPositionRead = getRightEncoderPosition();
+			
+			calCorrectionFactor = leftSensorPositionRead / rightSensorPositionRead;
+
+			encoderHeadingDeg = (leftSensorPositionRead - rightSensorPositionRead) / SRXDriveBaseCfg.kTrackWidthIn;
+
+			//headingRate = ((currentHeading - previousHeading) / timeElapsed[this is taken care of in Kd);
+			EncoderHeadingRate = encoderHeadingDeg - previousEncoderHeadingDeg;
+			
+			//headingError = heading(=0) - currentHeading;
+			EncoderHeadingCorrection = EncoderHeadingPID(-encoderHeadingDeg, EncoderHeadingRate);
+
+			if(isTestMoveForStraightCalActive){
+				leftCmdLevel =_pwrLevel;
+
+				// (+)heading needs RgtSpeed(+) and (-) Heading needs RgtSpeed(-)
+				rightCmdLevel = _pwrLevel - EncoderHeadingCorrection;
+				if(rightCmdLevel > 1){
+					rightCmdLevel = 1;
+				}
+				if(rightCmdLevel < 0){
+					rightCmdLevel = 0;
+				}
+			}		
+          SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
+
+			previousEncoderHeadingDeg = encoderHeadingDeg;
+			
+			if (isLoggingDataEnabled) {
+				String outputString = String.format("%8.0f,%8.4f,%8.0f,%8.0f,%8.4f", 
+											leftEncoderStopCount,
+											leftSensorPositionRead,
+											rightSensorPositionRead,
+											encoderHeadingDeg,
+											EncoderHeadingRate,
+											calCorrectionFactor);
+				//Log data
+				DebugLogger.data(outputString);
+			}
+			
+			//Print on console data
+			if (isConsoleDataEnabled){
+				System.out.printf("StopCnt: %-8.0f==LftPos: %-8.0f==RgtPos: %-8.0f==Heading: %-8.3f===HeadRate: %-8.3f==HeadCor: %-8.3f==CorFact:%-8.3f%n", 
+									leftEncoderStopCount,
+									leftSensorPositionRead,
+									rightSensorPositionRead,
+									encoderHeadingDeg,
+									EncoderHeadingRate,
+									EncoderHeadingCorrection,
+									calCorrectionFactor);
+			}
+			return isTestMoveForStraightCalActive;
 //			
-//			if (isLoggingDataEnabled) {
-//				String outputString = String.format("%8.0f,%8.4f,%8.0f,%8.0f,%8.4f", 
-//											leftEncoderStopCount,
-//											leftSensorPositionRead,
-//											rightSensorPositionRead,
-//											encoderHeadingDeg,
-//											EncoderHeadingRate,
-//											calCorrectionFactor);
-//				//Log data
-//				DebugLogger.data(outputString);
-//			}
-//			
-//			//Print on console data
-//			if (isConsoleDataEnabled){
-//				System.out.printf("StopCnt: %-8.0f==LftPos: %-8.3f==RgtPos: %-8.0f==Heading: %-8.0f===HeadRate: %-8.3f==HeadCor: %-8.3f==CorFact:%-8.3f%n", 
-//									leftEncoderStopCount,
-//									leftSensorPositionRead,
-//									rightSensorPositionRead,
-//									encoderHeadingDeg,
-//									EncoderHeadingRate,
-//									encoderHeadingCorrection,
-//									calCorrectionFactor);
-//			}
-//			return isTestMoveForStraightCalActive;
-//			
-//	}
+	}
 		public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel){
 			if (!isTestMoveForStraightCalActive){
 				

@@ -64,9 +64,10 @@ public class TeleopController {
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
+		
 			getButtonA();
 		//	getButtonB();
-		//	getButtonC();
+		//	getButtonX();
 
 		// ============================================
 		// Teleop control
@@ -305,9 +306,12 @@ public class TeleopController {
 				
 			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
 			//if (!driveBase.rotateToAngle(90, .2)){
+			
+			// public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
+			if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
-			if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
+			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
 				isButtonCmdActiveA = false;
 				msg("++Button A done");
 			}
@@ -357,7 +361,7 @@ public class TeleopController {
 		lastButtonReadB = DriverIF.cascadeBotton();
 	}
 	
-	private void getButtonC(){
+	private void getButtonX(){
 		if (!isButtonCmdActiveX){
 			if (DriverIF.Xbutton() && !lastButtonReadX) {
 				isButtonCmdActiveX = true;
