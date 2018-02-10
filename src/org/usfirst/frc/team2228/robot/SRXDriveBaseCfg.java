@@ -23,9 +23,15 @@ public class SRXDriveBaseCfg {
 		
 		public static double kRobotCoastToStopCounts = 0;
 		public static double kTeleStopBrakeValue = 0.05;		
-		public static double kAutoMoveStopBrakeValue = 0.05;
-		public static double kAutoRotateStopBrakeValue = 0.05;
-		public static double kAutoTurnStopBrakeValue = 0.05;
+		public static double kAutoRightMoveStopBrakeValue = 0.04;
+		public static double kAutoLeftMoveStopBrakeValue = 0.05;
+		
+		public static double kAutoRightRotateStopBrakeValue = 0.09;
+		public static double kAutoLeftRotateStopBrakeValue = 0.08;
+		
+		public static double kAutoRightTurnStopBrakeValue = 0.05;
+		public static double kAutoLeftTurnStopBrakeValue = 0.1;
+		
 		public static double SecToMaxPower = 2;
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
@@ -84,7 +90,7 @@ public class SRXDriveBaseCfg {
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
-		public static double kTrackWidthIn = 23;
+		public static double kTrackWidthIn = 22.875;
 		
 		public static double kMeasuredRgtWheelDiameter = 4.035;
 		public static double kMeasuredLftWheelDiameter = 4.035;

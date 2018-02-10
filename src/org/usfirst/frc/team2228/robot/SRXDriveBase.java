@@ -82,20 +82,20 @@ public class SRXDriveBase {
 	
 	// Calibrate parameters
 	// TODO for smartDashBoard
-	private double CalParm_DriveStraightCorrection = SRXDriveBaseCfg.kDriveStraightCorrection;
-	private double CalParm_RobotCoastToStopCounts = SRXDriveBaseCfg.kRobotCoastToStopCounts;
-	private double CalParm_AutoStopBrakeValue = SRXDriveBaseCfg.kAutoMoveStopBrakeValue;
-	private double CalParm_AutoRotateStopBrakeValue = SRXDriveBaseCfg.kAutoRotateStopBrakeValue;
-	private double CalParm_AutoTurnStopBrakeValue = SRXDriveBaseCfg.kAutoTurnStopBrakeValue;
+//	private double CalParm_DriveStraightCorrection = SRXDriveBaseCfg.kDriveStraightCorrection;
+//	private double CalParm_RobotCoastToStopCounts = SRXDriveBaseCfg.kRobotCoastToStopCounts;
+//	private double CalParm_AutoStopBrakeValue = SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue;
+//	private double CalParm_AutoRotateStopBrakeValue = SRXDriveBaseCfg.kAutoRotateStopBrakeValue;
+//	private double CalParm_AutoTurnStopBrakeValue = SRXDriveBaseCfg.kAutoTurnStopBrakeValue;
 	
 	
 	
 	
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = false;
+	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
-	
 	private boolean islogSRXDriveActive = false;
+	
 	private boolean isVelMoveToPositionActive = false;
 	private boolean isRotateToAngleActive = false;
 	private boolean isTurnToAngleActive = false;
@@ -629,8 +629,8 @@ public class SRXDriveBase {
 						setDriveTrainRamp(0);
 						
 						// Apply power level in opposite direction to brake
-						rightCmdLevel = -(Math.signum(_MoveToPositionIn) * SRXDriveBaseCfg.kAutoMoveStopBrakeValue);
-						leftCmdLevel = -(Math.signum(_MoveToPositionIn) * SRXDriveBaseCfg.kAutoMoveStopBrakeValue);
+						rightCmdLevel = -(Math.signum(_MoveToPositionIn) * SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue);
+						leftCmdLevel = -(Math.signum(_MoveToPositionIn) * SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue);
 						
 					// Delay in sec
 					if (!delay(1)) {
@@ -685,6 +685,8 @@ public class SRXDriveBase {
 */
 	public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel) {
 		// direction(true)-rotates right, direction(false)-rotates left
+		leftSensorPositionRead = getLeftSensorPosition();
+		rightSensorPositionRead = getRightSensorPosition();
 		if (!isRotateToAngleActive) {
 			isRotateToAngleActive = true;
 			
@@ -697,7 +699,7 @@ public class SRXDriveBase {
 			leftCmdLevel = Math.signum(_rotateToAngle) * _rotatePowerLevel;
 			
 			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
-			rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kLeftEncoderCountsPerIn * (_rotateToAngle / 360)) + getLeftEncoderPosition();
+			rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kLeftEncoderCountsPerIn * (_rotateToAngle / 360)) + leftSensorPositionRead;
 			
 			if (isConsoleDataEnabled){
 					SmartDashboard.putNumber("Rotate/rightCmdLevel:", rightCmdLevel);
@@ -708,12 +710,12 @@ public class SRXDriveBase {
 				}
 			
 		// use left encoder to mark rotation distance
-		} else if (getLeftEncoderPosition() >= rotationEncoderStopCount) {
-			
+		} else if (leftSensorPositionRead >= rotationEncoderStopCount) {
+			System.out.println(leftSensorPositionRead);
 				setDriveTrainRamp(0);
 				// Apply power level in opposite direction to brake
-				rightCmdLevel = (Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoRotateStopBrakeValue);
-				leftCmdLevel = -(Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoRotateStopBrakeValue);
+				rightCmdLevel = (Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoRightRotateStopBrakeValue);
+				leftCmdLevel = -(Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoLeftRotateStopBrakeValue);
 			if (!delay(1)) {
 				isRotateToAngleActive = false;
 				msg("++Rotate to angle is done");
@@ -721,8 +723,8 @@ public class SRXDriveBase {
 				leftCmdLevel = 0;
 			}		
 		}
-		leftSensorPositionRead = getLeftSensorPosition();
-		rightSensorPositionRead = getRightSensorPosition();
+		//leftSensorPositionRead = getLeftSensorPosition();
+		//rightSensorPositionRead = getRightSensorPosition();
 		
 		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
 		
@@ -736,14 +738,20 @@ public class SRXDriveBase {
 	} 
 
 	public boolean turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn ) {
+		boolean isStopingTurn = false;
+		leftSensorPositionRead = getLeftSensorPosition();
+		rightSensorPositionRead = getRightSensorPosition();
 		if (!isTurnToAngleActive) {
 			isTurnToAngleActive = true;
-			
-			leftSensorPositionRead = getLeftSensorPosition();
-			rightSensorPositionRead = getRightSensorPosition();
+			isStopingTurn = false;
 			
 			// Calculations
 			wheelToCenterDistanceIn = (SRXDriveBaseCfg.kTrackWidthIn / 2);
+			
+			// Check turn radius add 4 inches is less than 1/2 wheelbase
+			if(_turnRadiusIn < wheelToCenterDistanceIn){
+				_turnRadiusIn = wheelToCenterDistanceIn +4;
+			}
 			
 			//radius is the distance from the center of the robot to a point outside the robot
 			speedRatio =(_turnRadiusIn + wheelToCenterDistanceIn) / (_turnRadiusIn - wheelToCenterDistanceIn);
@@ -775,8 +783,9 @@ public class SRXDriveBase {
 				}
 			
 		// Active state -  check for end of encoder count
-		} else if ((_turnAngleDeg >= 0 && (getLeftSensorPosition() > outerDistanceStopCnt))
-					|| (_turnAngleDeg <= 0 && (getRightSensorPosition() > outerDistanceStopCnt))) {
+		} else if ((_turnAngleDeg >= 0 && (leftSensorPositionRead > outerDistanceStopCnt))
+					|| (_turnAngleDeg <= 0 && (rightSensorPositionRead > outerDistanceStopCnt))) {
+				isStopingTurn = true;
 				if (_isCascadeTurn) {
 					isTurnToAngleActive = false;
 					
@@ -786,8 +795,8 @@ public class SRXDriveBase {
 					
 				setDriveTrainRamp(0);	
 				// Apply power level in opposite direction for 1 second to brake
-				rightCmdLevel = -(Math.signum(_turnAngleDeg) * SRXDriveBaseCfg.kAutoTurnStopBrakeValue);
-				leftCmdLevel = -(Math.signum(_turnAngleDeg) * SRXDriveBaseCfg.kAutoTurnStopBrakeValue);
+				rightCmdLevel = -(Math.signum(_turnAngleDeg) * SRXDriveBaseCfg.kAutoRightTurnStopBrakeValue);
+				leftCmdLevel = -(Math.signum(_turnAngleDeg) * SRXDriveBaseCfg.kAutoLeftTurnStopBrakeValue);
 				if (!delay(1)) {
 					isTurnToAngleActive = false;
 					rightCmdLevel = 0;
@@ -795,17 +804,18 @@ public class SRXDriveBase {
 				}
 			}
 		}
-		leftSensorPositionRead = getLeftSensorPosition();
-		rightSensorPositionRead = getRightSensorPosition();
+		//leftSensorPositionRead = getLeftSensorPosition();
+		//rightSensorPositionRead = getRightSensorPosition();
 		
 		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
 		
 		if (isConsoleDataEnabled){
-			System.out.printf("SpeedRatio: %-8.3f ===StopCnt: %-8.2f ===LftEnc: %-8.2f ===RgtEnc: %-8.2f%n",
+			System.out.printf("SpeedRatio: %-8.3f ===StopCnt: %-8.2f ===LftEnc: %-8.2f ===RgtEnc: %-8.2f IsStoping: %b%n",
 									speedRatio,
 									outerDistanceStopCnt,
 									leftSensorPositionRead, 
-									rightSensorPositionRead);
+									rightSensorPositionRead,
+									isStopingTurn);
 		}
 		return isTurnToAngleActive;
 	}
@@ -1025,7 +1035,7 @@ public double EncoderHeadingPID(double _encoderHeadingError, double _encoderHead
 				leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount);
 				
 				leftCmdLevel = _pwrLevel;
-				leftCmdLevel = (_pwrLevel * SRXDriveBaseCfg.kDriveStraightCorrection); 
+				rightCmdLevel = (_pwrLevel * SRXDriveBaseCfg.kDriveStraightCorrection); 
 				
 				//if (isConsoleDataEnabled){
 					SmartDashboard.putNumber("Straight Cal/rightCmdLevel:", rightCmdLevel);
@@ -1050,8 +1060,8 @@ public double EncoderHeadingPID(double _encoderHeadingError, double _encoderHead
 				
 				setDriveTrainRamp(0);
 				// Apply power level in opposite direction for 1 second to brake
-				rightCmdLevel = -SRXDriveBaseCfg.kAutoMoveStopBrakeValue;
-				leftCmdLevel = -SRXDriveBaseCfg.kAutoMoveStopBrakeValue;
+				rightCmdLevel = -SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue;
+				leftCmdLevel = -SRXDriveBaseCfg.kAutoRightMoveStopBrakeValue;
 				if (!delay(1)) {
 					
 					msg("++end testDriveStraightCalibration");

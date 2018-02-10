@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // 
 public class TeleopController {
+	
+	private boolean isTeleopConsoleDataEnabled = false;
+	
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
 
@@ -17,19 +20,20 @@ public class TeleopController {
 	private static double test = 0;
 	private double smoothFactor = 0;
 	
-	private boolean isTeleopConsoleDataEnabled = true;
-	private boolean lastButtonReadA = false; 
 	private boolean isButtonCmdActiveA = false;
+	private boolean lastButtonReadA = false;
 	private boolean isButtonCmdActiveB = false;
 	private boolean lastButtonReadB = false;
 	private boolean isButtonCmdActiveX = false;
 	private boolean lastButtonReadX = false;
-	
+	private boolean isStopCheckToggleActive = false;
 
 	private double deltaThrottleForStopCheck =0;
 	private double previousThrottleForStopCheck =0;
 	private double stopAccum = 0;
 	private double previousStopAccum = 0;
+	private double EMAThrottleValue = 0;
+	private double previousEMAThottleValue = 0; 
 	
 	private String lastMsgString = " ";
 
@@ -37,12 +41,14 @@ public class TeleopController {
 		DriverIF = _driverIF;
 		driveBase = _driveBase;
 		System.out.println("Started TeleopController");
+		
 	}
 	public void teleopInit() {
 		// clear drivebase and teleop flags
 		driveBase.setProgramStateFlagsToFalse();
-		lastButtonReadA = false; 
+		// Clear button flags
 		isButtonCmdActiveA = false;
+		lastButtonReadA = false; 
 		isButtonCmdActiveB = false;
 		lastButtonReadB = false;
 		isButtonCmdActiveX = false;
@@ -58,7 +64,7 @@ public class TeleopController {
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
-		//	getButtonA();
+			getButtonA();
 		//	getButtonB();
 		//	getButtonC();
 
@@ -67,11 +73,11 @@ public class TeleopController {
 		// ============================================
 
 		// Check and limit range of throttle and turn
-		throttle = limit(throttle);
+	/*	throttle = limit(throttle);
 		turn = limit(turn);
 		
 		if(turn != 0){
-			turn = CheckTurnSensitivityFilter(limit(turn));
+			turn = CheckTurnSensitivityFilter(limit(throttle), limit(turn));
 		}
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(limit(throttle));
@@ -84,21 +90,22 @@ public class TeleopController {
 		
 		driveBase.setThrottleTurn(throttle, turn, false);
 		if (isTeleopConsoleDataEnabled){
-			System.out.printf("OrTh:%-6.2fTh:%-6.2fOrigTurn:%-6.2fTurn:%-6.2f%n", 
+			System.out.printf("OrThottle: %-8.2f==Throttle: %-8.2f ==OrigTurn: %-8.2f ==Turn: %-8.2f%n", 
 				origThrottle,
 				throttle,
 				origTurn,
 				turn);
 		}
-		
+	*/
 	}	
-		
+
 // ===========================================
 // DriverIF Filtering Functions
 // ===========================================
 
-	public double CheckTurnSensitivityFilter(double _turn) {
+	public double CheckTurnSensitivityFilter(double _throttle, double _turn) {
 		
+		double fThrottle = _throttle;
 		double fTurn = _turn;
 		
 		switch (TeleopControllerCfg.turnSensitivitySet) {
@@ -113,6 +120,9 @@ public class TeleopController {
 			break;
 		case Squared:
 			fTurn = Math.signum(fTurn) * Math.pow(fTurn, 2);
+			break;
+		case ThrottleLimited:
+			fTurn = (1- fThrottle) * (Math.signum(fTurn) * Math.pow(fTurn, 2));
 			break;
 		default:
 			break;
@@ -170,18 +180,22 @@ public class TeleopController {
 	}
 	
 	public double CheckDriverStopping(double _throttleForStopCheck){
-		deltaThrottleForStopCheck = _throttleForStopCheck - previousThrottleForStopCheck;
-		previousThrottleForStopCheck = _throttleForStopCheck;
+		// check every two scans
+		if(isStopCheckToggleActive){
+			deltaThrottleForStopCheck = _throttleForStopCheck - previousThrottleForStopCheck;
+			previousThrottleForStopCheck = _throttleForStopCheck;
+		}
+		isStopCheckToggleActive = !isStopCheckToggleActive;
 		
 		// check if decelerating
 		if((_throttleForStopCheck > 0) && (deltaThrottleForStopCheck < 0 ) ||
 					(_throttleForStopCheck < 0) && (deltaThrottleForStopCheck > 0 )){
 				
-			// Decelerating below 20% power level
+			// Decelerating
 			if(Math.abs(_throttleForStopCheck) < 0.5) {
 				_throttleForStopCheck = _throttleForStopCheck - Math.signum(_throttleForStopCheck)*stopAccum;
-				// add .5 of delta to stopAccum
-				stopAccum = previousStopAccum + deltaThrottleForStopCheck;
+				// add delta to stopAccum
+				stopAccum = previousStopAccum + Math.abs(deltaThrottleForStopCheck);
 				limit(stopAccum);
 				previousStopAccum = stopAccum;
 			}
@@ -201,19 +215,18 @@ public class TeleopController {
 	
 	// There are four changes in value from the last driverIF value:
 	// 1)Transition from one side of zero to the other side of zero 
-	// 2) The positive side of zero 
-	// 3) The negative side of zero 
-	// 4) Within the driverIF deadband
+	// 2) The positive/negative side of zero 
+	// 3) Within the driverIF deadband - reset filter
 	// Determination of kMaxDeltaVel is determined by testing.
 	
-	public double CheckAccelFilter(double _AccelFltrThrottleValue) {
-		double AccelFltrThrottleValue = _AccelFltrThrottleValue;
+	public double CheckAccelFilter(double _ThrottleValue) {
+		double AccelFltrCheckThrottleValue = _ThrottleValue;
 		
 		// determine change for last driverIF read
-		double deltaAccelFltrThrottleValue = AccelFltrThrottleValue - previousEMAValue;
+		double deltaAccelFltrThrottleValue = AccelFltrCheckThrottleValue - EMAThrottleValue;
 
 		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
-		if (Math.signum(AccelFltrThrottleValue) != Math.signum(previousEMAValue)) {
+		if (Math.signum(AccelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
 
 			// If driverIF change is large enough to cause a wheelie or cause the
 			// robot to start to tip - the robot intervenes to see that this does
@@ -223,35 +236,32 @@ public class TeleopController {
 			} else {
 
 				// If driver behaves
-				smoothFactor = TeleopControllerCfg.klowSmoothFactor;
+				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
 			}
 		}
 
-		// Determine if the sign of AccelFltrThrottleValue and oldEMA are the same "sign"
-		else if (Math.signum(AccelFltrThrottleValue) == Math.signum(previousEMAValue)) {
-
-			// Check for large delta value that may cause a wheelie or rotation torque to a high Center of gravity on decel
-			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
+		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
+		else if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
 				smoothFactor = TeleopControllerCfg.kHighSmoothFactor;
 			} else {
 				// If driver behaves
-				smoothFactor = TeleopControllerCfg.klowSmoothFactor;
+				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
 			}
-		}
+		
 
 		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
-		if (Math.abs(AccelFltrThrottleValue) < TeleopControllerCfg.kJoyStickDeadBand) {
-			AccelFltrThrottleValue = 0; 
-			smoothFactor = TeleopControllerCfg.klowSmoothFactor;
+		if (Math.abs( AccelFltrCheckThrottleValue) < TeleopControllerCfg.kJoyStickDeadBand) {
+			 AccelFltrCheckThrottleValue = 0; 
+			smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
 		}
 		// Run through smoothing filter
 		
 		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
-		// newAverage = alpha*presentValue + (1-alpha)*lastValue  
-		AccelFltrThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
-		previousEMAValue = AccelFltrThrottleValue;
+		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
+		EMAThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
+		previousEMAThottleValue = EMAThrottleValue;
 		
-		return AccelFltrThrottleValue;
+		return  AccelFltrCheckThrottleValue;
 	}
 
 	//helper function to keep inside of acceptable %power range
@@ -288,16 +298,16 @@ public class TeleopController {
 		 else if (isButtonCmdActiveA) {
 				
 			//public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
-			if(!driveBase.testDriveStraightCalibration(50.0, .3)){
+			//if(!driveBase.testDriveStraightCalibration(50.0, .3)){
 				
 			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
-			//if (!velMoveToPosition(10, .2, false)){
+			//if (!driveBase.velMoveToPosition(30, .3, false)){
 				
 			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
 			//if (!driveBase.rotateToAngle(90, .2)){
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
-			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.2, false, false)) {
+			if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
 				isButtonCmdActiveA = false;
 				msg("++Button A done");
 			}

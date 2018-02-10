@@ -12,7 +12,8 @@ public class TeleopControllerCfg {
      public enum TurnSensitivity {
 		Linear,
 		Sine,
-		Squared
+		Squared,
+		ThrottleLimited
 	}
     public enum ThrottleSensitivity {
 		Linear,
@@ -28,9 +29,9 @@ public class TeleopControllerCfg {
     
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	// factor =(1 - 1/#sampleTimes)) minSampleTimes-2
-	public static double klowSmoothFactor = 0.5;
+	public static double kLowSmoothFactor = 0.5;
 	public static double kHighSmoothFactor = 0.95;
-	public static double kTransitionSmoothFactor = 0.5;
+	public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max delta values are determined by testing
 	public static double kMaxDeltaVelocity = 0.2;
