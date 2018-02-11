@@ -13,6 +13,13 @@ public class DriverIF {
 	public boolean BackConveyorBackwards() {
 		return xboxIF.POV_DOWN();
 	}
+	public boolean hookForward(){
+		return xboxIF.LB_BUTTON();
+	}
+	
+	public boolean hookBackward(){
+		return xboxIF.RB_BUTTON();
+}
 
 	public boolean FrontConveyorForwards() {
 		return xboxIF.POV_RIGHT();

@@ -37,6 +37,9 @@ public class PneumaticController {
 			lift.set(off);
 		}
 	}
+	public void liftSet(boolean state){
+		lift.set(state);
+	}
 	// beep bop boopedy beep beep
 
 }

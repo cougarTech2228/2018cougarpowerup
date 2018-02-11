@@ -16,6 +16,7 @@ public class ThingsUpHigh {
 	WPI_TalonSRX winch;
 	Relay hook;
 	Spark hookDown;
+	PneumaticController pneu = new PneumaticController(driverIF);
 
 	public ThingsUpHigh(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -40,9 +41,9 @@ public class ThingsUpHigh {
 		//b is the speed of the 
 		
 		if (driverIF.hookForward()) {
-			hookDown.set(b);
+			hookDown.set(.4);
 		} else if (driverIF.hookBackward()) {
-			hookDown.set(-b);
+			hookDown.set(-.4);
 		}
 		else{
 			hookDown.set(0);
@@ -51,6 +52,7 @@ public class ThingsUpHigh {
 		if (driverIF.RaiseElevator()) {
 			elevator.set(b);
 		} else if (driverIF.LowerElevator()) {
+			pneu.liftSet(off);
 			elevator.set(-b);
 		}
 		else{
