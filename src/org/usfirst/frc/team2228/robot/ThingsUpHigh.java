@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Relay;
 
 public class ThingsUpHigh {
 	boolean on = true, off = false;
@@ -13,6 +14,8 @@ public class ThingsUpHigh {
 	WPI_TalonSRX elevator;
 	DMC60 conveyor1, conveyor2;
 	WPI_TalonSRX winch;
+	Relay hook;
+	Spark hookDown;
 
 	public ThingsUpHigh(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -21,16 +24,29 @@ public class ThingsUpHigh {
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
 		elevator.set(0);
-		
+		hook = new Relay(0, Relay.Direction.kForward);
+		hook.set(Relay.Value.kForward);
+		hookDown = new Spark(RobotMap.PWM_PORT_4);
+		hookDown.set(0);
 		SmartDashboard.putNumber("back conveyor:", 0);
 		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
+		SmartDashboard.putNumber("Launch:", 0);
 	}
 
 	public void teleopPeriodic() {
 		double b = 1; 
 				//SmartDashboard.getNumber("Elevator Speed:", 0);
 		//b is the speed of the 
+		
+		if (driverIF.hookForward()) {
+			hookDown.set(b);
+		} else if (driverIF.hookBackward()) {
+			hookDown.set(-b);
+		}
+		else{
+			hookDown.set(0);
+		}
 		
 		if (driverIF.RaiseElevator()) {
 			elevator.set(b);
@@ -40,7 +56,6 @@ public class ThingsUpHigh {
 		else{
 			elevator.set(0);
 		}
-		
 		
 		double d = 1;
 				//SmartDashboard.getNumber("back conveyor:", 0);
@@ -73,6 +88,11 @@ public class ThingsUpHigh {
 		else {
 			conveyor2.set(0);
 		}
+		double LaunchValue = SmartDashboard.getNumber("Launch:", 1);
+		if (LaunchValue == 1){
+			hook.set(Relay.Value.kOff);
+		}
+			
 	}
 
 }
