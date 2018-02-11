@@ -37,8 +37,6 @@ public class AngleIF implements PIDOutput {
         _PIDController.setAbsoluteTolerance(kToleranceDegrees);
         _PIDController.setContinuous(true);
         SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
-        
-        
 	}
 
 	public void setZeroAngle(double gyro) {
@@ -62,8 +60,6 @@ public class AngleIF implements PIDOutput {
 	public double getBaroPressure() {
 		
 		return ahrs.getBarometricPressure();
-		
-		
 		
 	}
 
