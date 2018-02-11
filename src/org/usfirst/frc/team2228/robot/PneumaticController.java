@@ -12,6 +12,7 @@ public class PneumaticController {
 	
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
+	public Solenoid brake = new Solenoid(RobotMap.PCM_PORT_3);
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
 

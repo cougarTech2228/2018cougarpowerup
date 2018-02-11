@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2228.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DMC60;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +19,8 @@ public class ThingsUpHigh {
 	Relay hook;
 	Spark hookDown;
 	PneumaticController pneu = new PneumaticController(driverIF);
+	DigitalInput limitSwitch;
+	FeedbackDevice encoder;
 
 	public ThingsUpHigh(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -24,6 +28,7 @@ public class ThingsUpHigh {
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
+		limitSwitch = new DigitalInput(1);
 		elevator.set(0);
 		hook = new Relay(0, Relay.Direction.kForward);
 		hook.set(Relay.Value.kForward);
@@ -33,6 +38,7 @@ public class ThingsUpHigh {
 		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 		SmartDashboard.putNumber("Launch:", 0);
+		elevator.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 	}
 
 	public void teleopPeriodic() {
@@ -51,9 +57,17 @@ public class ThingsUpHigh {
 		
 		if (driverIF.RaiseElevator()) {
 			elevator.set(b);
+			if(elevator.getSelectedSensorPosition(0) == -1){
+				elevator.set(0);
+				
+			}
+			
 		} else if (driverIF.LowerElevator()) {
 			pneu.liftSet(off);
 			elevator.set(-b);
+			if(limitSwitch.get()){
+				elevator.set(0);
+			}
 		}
 		else{
 			elevator.set(0);
