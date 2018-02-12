@@ -33,7 +33,8 @@ public class TeleopController {
 	private double stopAccum = 0;
 	private double previousStopAccum = 0;
 	private double EMAThrottleValue = 0;
-	private double previousEMAThottleValue = 0; 
+	private double previousEMAThottleValue = 0;
+	private double PowerCorrectionRatio = .3;
 	
 	private String lastMsgString = " ";
 
@@ -120,10 +121,14 @@ public class TeleopController {
 			fTurn = ApplySineFunction(fTurn);
 			break;
 		case Squared:
-			fTurn = Math.signum(fTurn) * Math.pow(fTurn, 2);
+			fTurn = (Math.signum(fTurn) * Math.pow(fTurn, 2));
 			break;
-		case ThrottleLimited:
-			fTurn = (1- fThrottle) * (Math.signum(fTurn) * Math.pow(fTurn, 2));
+		case ThrottlePowerLimited:
+			fTurn = (Math.signum(fTurn) * Math.pow(fTurn, 2));
+			// Cap turn with respect to throttle power
+			if(Math.abs(fTurn) > (Math.abs(fThrottle) * PowerCorrectionRatio)){
+				fTurn = Math.signum(fTurn)*(Math.abs(fThrottle) * PowerCorrectionRatio);
+			}
 			break;
 		default:
 			break;
@@ -308,17 +313,15 @@ public class TeleopController {
 			//if (!driveBase.rotateToAngle(90, .2)){
 			
 			// public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
-			if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
+			//(deleted)if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
 			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
 				isButtonCmdActiveA = false;
 				msg("++Button A done");
 			}
-		
-		}
 		lastButtonReadA = DriverIF.driveBaseTestCalibration(); 
-	}
+		}
 
 	private void getButtonB(){
 		if (DriverIF.cascadeBotton() && lastButtonReadB) {

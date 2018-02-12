@@ -13,7 +13,7 @@ public class TeleopControllerCfg {
 		Linear,
 		Sine,
 		Squared,
-		ThrottleLimited
+		ThrottlePowerLimited
 	}
     public enum ThrottleSensitivity {
 		Linear,
@@ -21,7 +21,7 @@ public class TeleopControllerCfg {
 		Squared,
 		Cubed
 	}
-	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.Squared;
+	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.ThrottlePowerLimited;
 	public static ThrottleSensitivity throttleSensitivitySet = ThrottleSensitivity.Squared;
 	
     // used to vary the affect when using cubed sensitivity
