@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 public class DriverIF {
 	XboxIF xboxIF;
 
@@ -71,5 +73,8 @@ public class DriverIF {
 			return true;
 		else
 			return false;
+	}
+	public boolean Xbutton() {
+		return xboxIF.START_BUTTON();
 	}
 }
