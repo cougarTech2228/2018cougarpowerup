@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TestDriveBase {
 	public WPI_TalonSRX right1;
@@ -15,6 +16,7 @@ public class TestDriveBase {
 	public WPI_TalonSRX left2;
 	private DifferentialDrive drive;
 	private DriverIF driverIf;
+	private double turnPos;
 
 	public TestDriveBase(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -24,9 +26,9 @@ public class TestDriveBase {
 		left2 = new WPI_TalonSRX(RobotMap.CAN_ID_4);
 		drive = new DifferentialDrive(left1, right1);
 
-//		right1.setName("Drive Base", "Right Master");
+		// right1.setName("Drive Base", "Right Master");
 		// right2.setName("Drive Base", "Right Follower");
-//		left1.setName("Drive Base", "Left Master");
+		// left1.setName("Drive Base", "Left Master");
 		// left2.setName("Drive Base", "Left Follower");
 		/*
 		 * Set right/left masters and right/left followers
@@ -49,7 +51,13 @@ public class TestDriveBase {
 
 	}
 
+	public void teleopInit() {
+		SmartDashboard.putNumber("Turn positivity", 1);
+	}
+
 	public void teleopPeriodic() {
-		drive.arcadeDrive(driverIf.Throttle(), driverIf.Turn());
+		turnPos = SmartDashboard.getNumber("Turn positivity", 1);
+		drive.arcadeDrive(driverIf.Throttle(), -1 * driverIf.Turn());
+		/* added turnPos for making robot turn correct direction */
 	}
 }

@@ -19,17 +19,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	private SRXDriveBase base;
-	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
-	private ThingsUpHigh highThings;
-	private AnalogUltrasonic us;
+	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
 	private CANLED LED;
-	
+	//private AngleIF angle;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -44,10 +43,11 @@ public class Robot extends IterativeRobot {
 		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
 		pc = new PneumaticController(driverIF);
-		highThings = new ThingsUpHigh(driverIF);
+		elevator = new Elevator(driverIF, pc);
 		au = new AnalogUltrasonic();
 		LED = new CANLED();
 		LED.colorInit();
+		//angle = new AngleIF();
 	}
 
 	
@@ -90,12 +90,16 @@ public class Robot extends IterativeRobot {
 		chessyDrive.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
-		highThings.teleopPeriodic();
+		elevator.teleopPeriodic();
+		
 		LED.allianceColorLED();
 		LED.autonomousColorInit();
 		LED.rainbowShift();
-		//au.roundTo(0.0001);
-		//System.out.println(au.getDistance());
+		au.roundTo(0.0001);
+//		System.out.println(au.getDistance1());
+		SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+		//angle.getAngle();
 	}
 
 	/**

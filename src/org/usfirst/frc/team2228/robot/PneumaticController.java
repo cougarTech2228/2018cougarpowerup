@@ -12,16 +12,18 @@ public class PneumaticController {
 	
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
+	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
 
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
+		brakeSet(false);
 	}
 
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
-
+		//System.out.println(brake.get());
 		if (driverIF.squeeze()) {
 			squeezies.set(on);
 			System.out.println("squeeze");
@@ -38,6 +40,12 @@ public class PneumaticController {
 			System.out.println("HYADOS");
 			lift.set(off);
 		}
+	}
+	public void liftSet(boolean state){
+		lift.set(state);
+	}
+	public void brakeSet(boolean state){
+		brake.set(state);
 	}
 	// beep bop boopedy beep beep
 
