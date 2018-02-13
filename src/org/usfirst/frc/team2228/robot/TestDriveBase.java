@@ -57,7 +57,7 @@ public class TestDriveBase {
 
 	public void teleopPeriodic() {
 		turnPos = SmartDashboard.getNumber("Turn positivity", 1);
-		drive.arcadeDrive(driverIf.Throttle(), turnPos * driverIf.Turn());
+		drive.arcadeDrive(driverIf.Throttle(), -1 * driverIf.Turn());
 		/* added turnPos for making robot turn correct direction */
 	}
 }

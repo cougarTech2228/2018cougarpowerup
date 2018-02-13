@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 	// private AnalogUltrasonic us;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	private AngleIF angle;
+	//private AngleIF angle;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -47,9 +47,9 @@ public class Robot extends IterativeRobot {
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
 		pc = new PneumaticController(driverIf);
-		elevator = new Elevator(driverIf);
+		elevator = new Elevator(driverIf, pc);
 		au = new AnalogUltrasonic();
-		angle = new AngleIF();
+		//angle = new AngleIF();
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class Robot extends IterativeRobot {
 //		System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
-		angle.getAngle();
+		//angle.getAngle();
 	}
 
 	/**

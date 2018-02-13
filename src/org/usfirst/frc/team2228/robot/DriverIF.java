@@ -79,4 +79,12 @@ public class DriverIF {
 		else
 			return false;
 	}
+	public boolean winchWind(){
+		if(xboxIF.START_BUTTON()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }

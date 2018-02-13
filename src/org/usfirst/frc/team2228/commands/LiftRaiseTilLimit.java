@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2228.commands;
 
-import org.usfirst.frc.team2228.robot.ThingsUpHigh;
+import org.usfirst.frc.team2228.robot.Elevator;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -8,13 +8,14 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class LiftRaiseTilLimit extends Command {
-	ThingsUpHigh up;
+	Elevator elevator;
+	
 
-    public LiftRaiseTilLimit(ThingsUpHigh high) {
+    public LiftRaiseTilLimit(Elevator high) {
     	
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	up = high;
+    	elevator = high;
     }
 
     // Called just before this Command runs the first time

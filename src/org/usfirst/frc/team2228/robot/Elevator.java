@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DMC60;
@@ -18,17 +19,18 @@ public class Elevator {
 	WPI_TalonSRX winch;
 	Relay hook;
 	Spark hookDown;
-	PneumaticController pneu = new PneumaticController(driverIF);
+	PneumaticController pneu;
 	DigitalInput limitSwitch;
 	FeedbackDevice encoder;
 
-	public Elevator(DriverIF _driverIF) {
+	public Elevator(DriverIF _driverIF, PneumaticController _pneu) {
+		pneu = _pneu;
 		driverIF = _driverIF;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
-		limitSwitch = new DigitalInput(0);
+		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		elevator.set(0);
 		hook = new Relay(0, Relay.Direction.kForward);
 		hook.set(Relay.Value.kForward);
@@ -39,6 +41,7 @@ public class Elevator {
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 		SmartDashboard.putNumber("Launch:", 0);
 		elevator.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		elevator.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void teleopPeriodic() {
@@ -56,7 +59,7 @@ public class Elevator {
 		}
 		
 		if (driverIF.RaiseElevator()) {
-			pneu.brakeSet(off);
+			pneu.brakeSet(true);
 			elevator.set(b);
 //			if(elevator.getSelectedSensorPosition(0) == -1){
 //				elevator.set(0);
@@ -64,16 +67,17 @@ public class Elevator {
 //			}
 			
 		} else if (driverIF.LowerElevator()) {
-			pneu.brakeSet(off);
+			pneu.brakeSet(true);
 			pneu.liftSet(off);
 			elevator.set(-b);
-			if(limitSwitch.get()){
+			if(!limitSwitch.get()){
+				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
 			}
 		}
 		else{
 			elevator.set(0);
-			pneu.brakeSet(on);
+			pneu.brakeSet(false);
 		}
 		
 		double d = 1;
@@ -107,9 +111,12 @@ public class Elevator {
 		else {
 			conveyor2.set(0);
 		}
-		double LaunchValue = SmartDashboard.getNumber("Launch:", 1);
+		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
 		if (LaunchValue == 1){
 			hook.set(Relay.Value.kOff);
+		}
+		if(driverIF.winchWind()){
+			winch.set(.5);
 		}
 			
 	}
