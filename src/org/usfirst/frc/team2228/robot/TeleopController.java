@@ -47,6 +47,7 @@ public class TeleopController {
 	public void teleopInit() {
 		// clear drivebase and teleop flags
 		driveBase.setProgramStateFlagsToFalse();
+		driveBase.DisplayChangeParmeters();
 		// Clear button flags
 		isButtonCmdActiveA = false;
 		lastButtonReadA = false; 
@@ -62,6 +63,7 @@ public class TeleopController {
 
 		double turn = origTurn;
 		double throttle = origThrottle;
+		//driveBase.testMethodSelection();
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
@@ -314,6 +316,10 @@ public class TeleopController {
 			
 			// public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
 			//(deleted)if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
+			 
+			 //public boolean autoTuneCorrectionFactor(double _autoTunepowerLevel){
+			 if (!driveBase.autoTuneCorrectionFactor(.2)){
+			 
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
 			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
@@ -322,6 +328,7 @@ public class TeleopController {
 			}
 		lastButtonReadA = DriverIF.driveBaseTestCalibration(); 
 		}
+	}
 
 	private void getButtonB(){
 		if (DriverIF.cascadeBotton() && lastButtonReadB) {
