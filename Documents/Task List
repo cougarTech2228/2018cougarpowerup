@@ -28,14 +28,14 @@ DONE - VERIFY THE RADIO CONFIGURATION TOOL
  done - confirm that the drive station can connect
  done - confirm that eclipse can download code wirelessly
   
-VERIFY AUTONOMOUS STRATEGY
-DONE - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
-DONE  + pass a string name
-DONE  + print the name in initialize, execute, and end (uniquely in each function)
-DONE - Instantiate (create by calling new StringCommand) a string command in autonomousInit and call .start()
-DONE - in autonomousPeriodic call Scheduler.getInstance().run()
-DONE - download your code to the robox, and enter autonomous
-DONE - confirm you see your print lines
+DONE - VERIFY AUTONOMOUS STRATEGY
+ - Create a StringCommand file (reference or copy the one in CougarTechSoftware github
+  + pass a string name
+  + print the name in initialize, execute, and end (uniquely in each function)
+  - Instantiate (create by calling new StringCommand) a string command in autonomousInit and call .start()
+  - in autonomousPeriodic call Scheduler.getInstance().run()
+  - download your code to the robox, and enter autonomous
+  - confirm you see your print lines
   - create a second StringCommand with a different name
   - instantiate a CommandGroup (WPI)
   - call <your group name>.addSequential(firstStringCommand)
@@ -85,7 +85,7 @@ DONE  Phase I
   - add feedback encoder and enable feedback control
   - debug magic motion
   
- CONTROL A LED Strip with CAN commands from the ROBORIO
+DONE CONTROL A LED Strip with CAN commands from the ROBORIO
   Done - Go to CAN LED strip web page http://www.mindsensors.com/content/88-cheat-sheet-for-canlight-led-strip-controller-kit-for-frc-robots
   Done - Load required libraries to eclipse
   Done - Read "Guides - Full Tutorial on the mindsensors Configuration Tool"
@@ -138,14 +138,17 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599707-operating-a-compressor-for-pneumatics
   - Read - https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599708-operating-pneumatic-cylinders-solenoids
   
-  UPGRADE STEAMWORKS to 2018
-  - need to be able to drive Lamda with the 2018
-  - upgrade roborio, talon srx, and compile code base 
-  
   CAMERA and VISION
   - review how to hook up a camera to drive station, viewed through LabView and SmartDashboard
   - switch camera stream with an xbox button or SmartDashboard read
   - power a green light LED ring and capture an image
+  
+  AUTONOMOUS
+   - add choice for straight baseline, straight switch & score, cube to scale
+   
+  SMARTDASHBOARD
+    - group test components, debug missing components
+    - try adding command buttons
   
   LABELING
   - robox SRXCANTalons master/follower left and right need to be labeled as CAN id 1 through
