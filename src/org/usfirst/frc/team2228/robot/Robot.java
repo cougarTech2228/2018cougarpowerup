@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIf;
-	private ThingsUpHigh highThings;
+	private Elevator elevator;
 	// private AnalogUltrasonic us;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 		base = new TestDriveBase(driverIf);
 		cube = new CubeManipulator(driverIf);
 		pc = new PneumaticController(driverIf);
-		highThings = new ThingsUpHigh(driverIf);
+		elevator = new Elevator(driverIf);
 		au = new AnalogUltrasonic();
 		angle = new AngleIF();
 	}
@@ -117,7 +117,7 @@ public class Robot extends IterativeRobot {
 		base.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
-		highThings.teleopPeriodic();
+		elevator.teleopPeriodic();
 		au.roundTo(0.0001);
 //		System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());

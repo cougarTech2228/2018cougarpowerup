@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Relay;
 
-public class ThingsUpHigh {
+public class Elevator {
 	boolean on = true, off = false;
 	DriverIF driverIF;
 	WPI_TalonSRX elevator;
@@ -22,13 +22,13 @@ public class ThingsUpHigh {
 	DigitalInput limitSwitch;
 	FeedbackDevice encoder;
 
-	public ThingsUpHigh(DriverIF _driverIF) {
+	public Elevator(DriverIF _driverIF) {
 		driverIF = _driverIF;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
-		limitSwitch = new DigitalInput(1);
+		limitSwitch = new DigitalInput(0);
 		elevator.set(0);
 		hook = new Relay(0, Relay.Direction.kForward);
 		hook.set(Relay.Value.kForward);
@@ -56,13 +56,15 @@ public class ThingsUpHigh {
 		}
 		
 		if (driverIF.RaiseElevator()) {
+			pneu.brakeSet(off);
 			elevator.set(b);
-			if(elevator.getSelectedSensorPosition(0) == -1){
-				elevator.set(0);
-				
-			}
+//			if(elevator.getSelectedSensorPosition(0) == -1){
+//				elevator.set(0);
+//				
+//			}
 			
 		} else if (driverIF.LowerElevator()) {
+			pneu.brakeSet(off);
 			pneu.liftSet(off);
 			elevator.set(-b);
 			if(limitSwitch.get()){
@@ -71,6 +73,7 @@ public class ThingsUpHigh {
 		}
 		else{
 			elevator.set(0);
+			pneu.brakeSet(on);
 		}
 		
 		double d = 1;

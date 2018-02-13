@@ -41,6 +41,9 @@ public class PneumaticController {
 	public void liftSet(boolean state){
 		lift.set(state);
 	}
+	public void brakeSet(boolean state){
+		brake.set(state);
+	}
 	// beep bop boopedy beep beep
 
 }
