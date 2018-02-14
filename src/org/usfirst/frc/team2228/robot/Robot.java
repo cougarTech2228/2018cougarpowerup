@@ -39,14 +39,14 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		cube = new CubeManipulator(driverIF);
-		chessyDrive = new TeleopController(driverIF, base);
+//		cube = new CubeManipulator(driverIF);
+//		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
-		pc = new PneumaticController(driverIF);
-		elevator = new Elevator(driverIF, pc);
-		au = new AnalogUltrasonic();
-		LED = new CANLED();
-		LED.colorInit();
+//		pc = new PneumaticController(driverIF);
+//		elevator = new Elevator(driverIF, pc);
+//		au = new AnalogUltrasonic();
+//		LED = new CANLED();
+//		LED.colorInit();
 		//angle = new AngleIF();
 	}
 
@@ -75,11 +75,11 @@ public class Robot extends IterativeRobot {
 		auto.run();
 	}
 
-	public void teleopInit() {
-		System.out.println("teleopInit() fi!");
-		chessyDrive.teleopInit();
-		System.out.println("Teleop Init done");
-	}
+//	public void teleopInit() {
+//		System.out.println("teleopInit() fi!");
+//		chessyDrive.teleopInit();
+//		System.out.println("Teleop Init done");
+//	}
 	/**
 	 * This function is called periodically during operator control
 	 */

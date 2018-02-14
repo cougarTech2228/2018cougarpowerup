@@ -12,48 +12,63 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoMaster {
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
+	final String defaultAuto = "Baseline";
+	final String customAuto = "Switch";
 	private char[] positions;
 	private SRXDriveBase base;
 	private String autoSelected;
 	private String input = "";
 	private CommandGroup Cg;
 	private SendableChooser<String> chooser = new SendableChooser<>();
+	private String robotSide = "Right";
 	
 	public AutoMaster(SRXDriveBase srxdb) {
 		base = srxdb;
 		
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
+		chooser.addDefault("Baseline", defaultAuto);
+		chooser.addObject("Switch", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		//BOOP BEEP BOP BEEPEDIE BOOP BOP 
 		
 		
-		autoSelected = chooser.getSelected();
+		
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
 		StringCommand command = new StringCommand(input);
 		//command.start();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		
-		positions = gameData.toCharArray();
+
 	}
 	public void init() {
-		base.setRightPositionToZero();
-		base.setLeftPositionToZero();
+		base.setRightEncPositionToZero();
+		base.setLeftEncPositionToZero();
 		
 		Cg = new CommandGroup();
 		
-		Cg.addSequential(new MoveTo(base, 12, 0.2, true));
-		Cg.addSequential(new RotateTo(base, 180, 0.2));
 		
+		autoSelected = chooser.getSelected();
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		positions = gameData.toCharArray();
+		System.out.println("Auto selected: " + autoSelected);
+		if(gameData.charAt(0) == 'L'){
+			System.out.println("L");
+		}else{
+			System.out.println("R");
+	}
+		switch (autoSelected) {
+			case "Baseline":
+				System.out.println("Baseline selected");
+				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				break;
+				
+			case "Switch":
+				System.out.println("Switch selected");
+				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				if (robotSide == "Left" && L) || (robotSide == "Right" && R)
+				// Scale cube command
+				break;
+		}
 		Cg.start();
-		
-		
 	}
 	public void run() {
 		Scheduler.getInstance().run();

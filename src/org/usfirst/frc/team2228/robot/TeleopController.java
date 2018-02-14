@@ -64,7 +64,7 @@ public class TeleopController {
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
-			getButtonA();
+		//	getButtonA();
 		//	getButtonB();
 		//	getButtonC();
 

@@ -9,10 +9,12 @@ public class Dimensions {
 	 *  Link to source: https://firstfrc.blob.core.windows.net/frc2018/Manual/Sections/03-Arcade.pdf
 	 */
 
+	//Robot dimensions
+	public static final double LENGTH_OF_ROBOT = 27 + 2 * 3.75;
 	
 	//Field dimensions
 	public static final double AUTOLINE_WIDTH = 2;
-	public static final double AUTOLINE_TO_ALIENCE = 120;
+	public static final double AUTOLINE_TO_ALLIANCE = 120;
 	public static final double EXCHANGEZONE_WIDTH = 36;
 	public static final double EXCHANGEZONE_LENGTH = 48;
 	public static final double ALL_TAPE_WIDTH = 2;
