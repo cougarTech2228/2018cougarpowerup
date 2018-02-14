@@ -46,8 +46,9 @@ public class TeleopController {
 	}
 	public void teleopInit() {
 		// clear drivebase and teleop flags
-		driveBase.setProgramStateFlagsToFalse();
+		driveBase.setSRXDriveBaseInitialization();
 		driveBase.DisplayChangeParmeters();
+		driveBase.setDriveTrainRamp(0);
 		// Clear button flags
 		isButtonCmdActiveA = false;
 		lastButtonReadA = false; 
@@ -58,17 +59,18 @@ public class TeleopController {
 	
 	}
 	public void teleopPeriodic() {
-		double origThrottle = -DriverIF.Throttle();
-		double origTurn = DriverIF.Turn();
+		//double origThrottle = -DriverIF.Throttle();
+		//double origTurn = DriverIF.Turn();
 
-		double turn = origTurn;
-		double throttle = origThrottle;
-		//driveBase.testMethodSelection();
+		//double turn = origTurn;
+		//double throttle = origThrottle;
+		Timer.delay(.05);
+		driveBase.testMethodSelection();
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
 		
-			getButtonA();
+		//	getButtonA();
 		//	getButtonB();
 		//	getButtonX();
 

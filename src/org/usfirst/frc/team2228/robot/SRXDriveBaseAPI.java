@@ -14,12 +14,12 @@ package org.usfirst.frc.team2228.robot;
 * PROGRAM CONFIGURATION
 *=============================================
 1 - Using Iterative Robot the Robot Init will create the SRXDriveBase Instance which is passed to autonomous and teleop
-2 - In autonomousInit and teleopInit the user needs to call setClearActionFlags(). (It was found that during testing
+2 - In autonomousInit and teleopInit the user needs to call "setProgramStateFlagsToFalse()". (It was found that during testing
     disabling in the middle of SRXBaseDrive method execution did not reset action flags)
 3 - In teleop a teleopController class will interface with a user interface(game controller), define all teleop commands and 
     interface with the SRXDriveBase
 3 - Standard input for left/right or throttle/turn is -1 to 1
-4 - Standard "sign" of input values: Left/Right viewed from back of robot to front of robot, Forward/Reverse - Positive/Negative, 
+4 - Standard "sign" of input values: Left/Right viewed from back of robot to front of robot, Forward(Positive)/Reverse(Negative), 
      angle right - Positive, angle left - Negative
 
 *==========================================
@@ -28,12 +28,32 @@ package org.usfirst.frc.team2228.robot;
 1 - Wire up two motor on each side (left/Right). Encoder should be placed on one motor on each side
 2 - Test that the user interface provides a left drive cmd and right drive cmd (-1 to 1)
 3 - Power up RoboRio and using Internet Explorer with Silverlight bring up RoboRio WebDashboard
-4 - using "self test" check CAN ID, 
+4 - Using "self test" check with robot disabled
+    a - CAN ID
+    b - Encoder direction - move left/right wheel in forward direction and check encoder value - if negative reverse in "SRXDriveBaseCfg"
+	    Note: this will not change in Webdashboard
+        public static boolean isRightEncoderSensorReversed = false;
+		public static boolean isLeftEncoderSensorReversed = true;	
 5 - Using SRXDriveBase: method "SetDriveTrainCmdLevel" move left and right side to see that motor are rotating correctly and in the 
-    correct direction - switch motor output if needed to have the motor on one side rotate in the correct direction
-6 - Connect encoders and with robot disabled turn wheels for forward motion and change sensor direction to have encoders increase in value 
-    when wheels are rotated to have robot move forward.	
-7 - Using calibration method "testDriveStraightCalibration" determine drive straight calibration
+    correct direction - switch motor output in "SRXDriveBaseCfg" if needed to have the motor on one side rotate in the correct direction.
+	Note: This does not change forward in code just changes output of SRX module
+		// SET MOTOR DIRECTION
+		public static boolean isDriveRightMasterMtrReversed = false;
+		public static boolean isDriveRightFollowerMtrReversed = false;
+		public static boolean isDriveLeftMasterMtrReversed = true;
+		public static boolean isDriveLeftFollowerMtrReversed = true;
+6 - Using shuffleboard, console display to calibrate driving straight
+	a - use "isConsoleDataEnabled = true;" or "setEnableConsoleData(boolean _consoleData)" from teleopInit
+	    to display method data to display
+	b - from teleop call "testMethodSelection()" and open shuffleboard 
+		If shuffleboard does not work close down and manually start: "c:\"users\public\Public documents\FRC\shuffleboard.jar"
+    Using calibration method "testDriveStraightCalibration"  to determine:
+    a - drive straight factor for right drive (left drive is master for robot). 
+	    First use "autoTuneCorrectionFactor" for cut at drive straight factor
+	b - brake values for forward movement
+	c - coast values for robot coast after braking
+7 - Calibration - auto move distance
+	a - Use shuffleboard and console display
 8 - Enable feedback control and using method "testMotorPulse_SquareWave" determing PID values
 
 
@@ -49,14 +69,17 @@ public class SRXDriveBaseAPI {
 	public void setRightEncPositionToZero() {
 		// clear right master encoder counter to zero
 	}
-	public void setRightPositionToZero() {
+	public void setRightSensorPositionToZero() {
 		// this will also clear the encoder counter to zero
 	}
 	public void setLeftEncPositionToZero() {
 		// clear the left master encoder counter to zero
 	}
-	public void setLeftPositionToZero() {
+	public void setLeftSensorPositionToZero() {
 		// this will also clear the encoder counter to zero 
+	}
+	public void setCorrectionSensor(int _CorrectionSensorSelect){
+		//
 	}
 	public void setBrakeMode(boolean isBrakeEnabled) {
 		// this set the brake mode true-brake, false-coast
@@ -70,10 +93,10 @@ public class SRXDriveBaseAPI {
 	public void setEnableLoggingData(boolean _loggingData){
 		// true - enables data logging to a csv file - needs filezilla to get file from the roborio
 	}
-	public void setClearActionFlags() {
+	public void setProgramStateFlagsToFalse() {
 		// this clears program paths in methods - this is required in teleinit and autoinit
 	}
-	public void setDriveTrainRamping (double _SecToMaxPower) {
+	public void setDriveTrainRamp(double _SecToMaxPower) {
 		// this sets ramp rate in SRX - defined as seconds to max power
 	}
 	
@@ -82,17 +105,17 @@ public class SRXDriveBaseAPI {
 * SRXBaseDrive GET METHODS
 * =======================================================================================
 
-	public double getRawRightEncoder(){
-		// gets the right master raw encoder
-	}
 	public double getRightEncoderPosition() {
+		// This is updated every 160ms
 		// gets the right master encoder value with corrected sign for forward
 	}
 	public double getRightEncoderVelocity() {
+		// This is updated every 160ms
 		// gets encoder velocity - counts / 100ms
 	}
-	public double getRightClosedLoopPosition(){
-		// gets the closed loop position 
+	public double getRightSensorPosition(){
+		// This value is updated every 20ms
+		// gets the sensor position 
 	}
 	public double getRightMstrMtrCurrent() {
 		// gets the right master motor current
@@ -100,26 +123,33 @@ public class SRXDriveBaseAPI {
 	public double getRightFollowerMtrCurrent() {
 		// gets the right follower motor current
 	}
-	public double getRightClosedLoopVelocity() {
-			// gets the right master motor velocity - counts / 100ms
+	public double getRightSensorVelocity() {
+		// This value is updated every 20ms
+		// gets the right master motor velocity - counts / 100ms
 	}
 	public double getRightCloseLoopError() {
 		// gets the right master motor close loop error - counts / 100ms
 	}
 	//========================== Left Master
-	public double getRawLeftEncoder() {
-		// gets the raw data from the left encoder counts
-	}
+	
 	public double getLeftEncoderPosition() {
+		// This value is updated every 160ms
 		// gets the encoder count with corrected sign for forward
 	}
-	public double getLeftClosedLoopPosition(){
+	public double getLeftEncoderVelocity(){
+		// This value is updated every 160ms
+	}
+	public double getLeftSensorPosition(){
+		// This value is updated every 20ms
 		// gets the left closed loop position
+	}
+	public double getLeftMstrMtrCurrent() {
+		// gets left master motor current
 	}
 	public double getLeftFollowerMtrCurrent() {
 		// gets left follower motor current
 	}
-	public double getLeftClosedLoopVelocity() {
+	public double getLeftSensorVelocity() {
 		// gets left master motor velocity
 	}
 	public double getLeftCloseLoopError() {
@@ -128,7 +158,10 @@ public class SRXDriveBaseAPI {
 	public double getBusVoltage() {
 		// gets the bus voltage
 	}
-	public boolean getIsMoving {
+	public double getDriveStraightCorrection(){
+		// gets drive straight correction from encoder, IMU, DistanceSensor
+	}
+	public boolean IsDriveMoving {
 		// This method returns true is the robot is moving
 	}
 *
@@ -154,8 +187,7 @@ public class SRXDriveBaseAPI {
 * =======================================================================================
 *
 	
-	public void SetDriveTrainCmdLevel(	double _rightCMDLevel, 
-										double _leftCMDLevel) {
+	public void SetDriveTrainCmdLevel(	double _rightCMDLevel, double _leftCMDLevel) {
 		
 		 // Note: left drive is master drive axis for the robot - the right drive
 		 // will be modified for driving straight
@@ -189,10 +221,6 @@ public class SRXDriveBaseAPI {
 		// 	_isDrivingPerpendicular -(true): assists drive to have robot move perpendicular into a wall						
 	}
 	
-	public void setFastTurn(boolean _isFastTurnRight) {
-		// future TODO
-		// If robot blocked by another robot Fast turn turns robot 180 deg to escape
-	}
 
 *
 * =======================================================================================
@@ -227,19 +255,24 @@ public class SRXDriveBaseAPI {
 * SRXDriveBase TEST METHODS
 * =======================================================================================
 *
-	public void testMotorPulse_SquareWave(boolean isTestMotorPulse_SquareWaveContinuous, 
-											boolean _isTestForRightDrive) {
+	public void testMethodSelection(){
+		//This uses Shuffleboard to test all methods
+	}
+	public boolean testMotorPulse_SquareWave(double _pulseLowPower, double _pulseHighPower, double _pulseTimeSec, boolean _isTestForRightDrive) {
+		//
 	}
 
 	public boolean testDriveStraightCalibration(double _testDistanceIn, 
 												double _pwrLevel){
+		//
 	} 
-	public boolean testDriveStraight(double _testDistanceIn1, double _pwrLevel1) {
-		
-	}
 	
-	public boolean delay(double _seconds){
+	public boolean autoTuneCorrectionFactor(double _autoTunepowerLevel){
+		// This will automatically sequence the correction factor decimal digits to determine right wheel correction factor 
+	}
 		
+	public boolean delay(double _seconds){
+		// This delay is looked at each scan so delay = seconds + scan(~20ms) 
 	}
 	
 *

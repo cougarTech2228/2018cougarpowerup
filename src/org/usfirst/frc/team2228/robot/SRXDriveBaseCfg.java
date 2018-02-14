@@ -40,7 +40,7 @@ public class SRXDriveBaseCfg {
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
 		
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		
 		public static double kdriveRightMstrFeedForwardGain = 1.58;
 		public static double kdriveRightMstrProportionalGain = 0.05;
