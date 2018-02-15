@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AngleIF implements PIDOutput {
 	private AHRS ahrs;
-	private PIDController _PIDController;
-	static final double kP = 0.03;
+//	private PIDController _PIDController;
+	static final double AngleSP = 0.0;
+	static double rate = 0;
+	static double kP = 0.03;
 	static final double kI = 0.00;
 	static final double kD = 0.00;
 	
@@ -31,11 +33,13 @@ public class AngleIF implements PIDOutput {
 			System.out.println("Error starting the navx");
 		}
 		ahrs.reset();
-		PIDController _PIDController = new PIDController(kP, kI, kD, kF, pidSource, pidOutput);
-        _PIDController.setInputRange(-180.0f,  180.0f);
-        _PIDController.setOutputRange(-1.0, 1.0);
-        _PIDController.setAbsoluteTolerance(kToleranceDegrees);
-        _PIDController.setContinuous(true);
+//		PIDController _PIDController = new PIDController(kP, kI, kD, kF, pidSource, pidOutput);
+//        _PIDController.setInputRange(-180.0f,  180.0f);
+//        _PIDController.setOutputRange(-1.0, 1.0);
+//        _PIDController.setAbsoluteTolerance(kToleranceDegrees);
+//        _PIDController.setContinuous(true);
+        SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
+        SmartDashboard.putNumber("kP", getBaroPressure());
         SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
 	}
 
@@ -56,13 +60,6 @@ public class AngleIF implements PIDOutput {
 	public double getRoll() {
 		return ahrs.getRoll();
 	}
-
-	public double getBaroPressure() {
-		
-		return ahrs.getBarometricPressure();
-		
-	}
-
 	public void zeroYaw() {
 		ahrs.zeroYaw();
 	}
@@ -72,6 +69,11 @@ public class AngleIF implements PIDOutput {
 		error = getYaw() - angle;
 		return kP * error;
 
+	}
+	public double getAngleCorrection() {
+		double error;
+		error = AngleSP - getYaw();
+		return (kP * error) - (kD * rate);
 	}
 
 	@Override

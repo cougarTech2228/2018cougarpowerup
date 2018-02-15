@@ -21,6 +21,7 @@ public class Robot extends IterativeRobot {
 	private SRXDriveBase base;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
+	private AngleIF angleIF;
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
 	private Elevator elevator;
@@ -42,6 +43,7 @@ public class Robot extends IterativeRobot {
 //		cube = new CubeManipulator(driverIF);
 //		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
+		angleIF = new AngleIF();
 //		pc = new PneumaticController(driverIF);
 //		elevator = new Elevator(driverIF, pc);
 //		au = new AnalogUltrasonic();
@@ -84,6 +86,11 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	@Override
+	public void telopInit() {
+		
+	}
+	
+	@Override
 	public void teleopPeriodic() {
 		
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
@@ -97,8 +104,14 @@ public class Robot extends IterativeRobot {
 		LED.rainbowShift();
 		au.roundTo(0.0001);
 //		System.out.println(au.getDistance1());
-		SmartDashboard.putNumber("Sensor1", au.getDistance1());
-		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+		SmartDashboard.putNumber("Angle", angleIF.getAngle());
+		SmartDashboard.putNumber("Yaw", angleIF.getYaw());
+		SmartDashboard.putNumber("Roll", angleIF.getRoll());
+		SmartDashboard.putNumber("Correction", angleIF.getAngleCorrection());
+		
+		
+		//SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		//SmartDashboard.putNumber("Sensor2", au.getDistance2());
 		//angle.getAngle();
 	}
 
