@@ -8,6 +8,8 @@ import org.sgl.Vector;
 public class Runner extends Game {
 	private G2D g;
 	private Timer t;
+	public int redScore = 0;
+	public int blueScore = 0;
 	
 	public Runner() {
 		super(700, 600, "no");
@@ -20,19 +22,24 @@ public class Runner extends Game {
 		g = new G2D();
 		setBack(Color.white);
 		g.setColor(Color.black);
-		setFont("Arial", "Bold", 50);
+		setFont("Papyrus", "Italics", 20);
+		g.printFontList();
+		t.Start();
 	}
 	public void update() {
-
-		t.Start();
+		g.setColor(Color.RED);
+		g.drawText("Red score " + redScore, new Vector(100, 50));
+		g.setColor(Color.BLUE);
+		g.drawText("Blue Score: " + blueScore, new Vector(400, 50));
+		
 		if(t.isDone()) {
 			System.out.println("hi");
+			t = new Timer(1000);
+			t.Start();
 		}
-		System.out.println("test");
-		g.setColor(Color.yellow);
-		g.drawRect(new Vector(0, 100), new Vector(100, 200));
-		g.setColor(Color.black);
-		g.drawText(getKeys(), new Vector(0, 100));
+		g.setColor(Color.GREEN);
+		g.drawText(getKeys(), new Vector(50, 100));
 		
 	}
+
 }
