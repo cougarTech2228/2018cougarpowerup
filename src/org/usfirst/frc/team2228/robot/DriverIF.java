@@ -4,9 +4,12 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class DriverIF {
 	XboxIF xboxIF;
+	AngleIF angleIF;
+	public boolean isTurning;
 
-	public DriverIF() {
+	public DriverIF(AngleIF angleIf) {
 		xboxIF = new XboxIF();
+		angleIF = angleIf;
 	}
 	public boolean BackConveyorForwards() {
 		return xboxIF.POV_UP();
@@ -55,7 +58,15 @@ public class DriverIF {
 	}
 
 	public double Turn() {
-		return xboxIF.RIGHT_JOYSTICK_X();
+		double out = xboxIF.RIGHT_JOYSTICK_X();
+		if(out < 0.3 && out > -0.3) {
+			if(isTurning)
+				angleIF.zeroYaw();
+			isTurning = false;
+		}
+		else
+			isTurning = true;
+		return out;
 	}
 
 	public double Throttle() {

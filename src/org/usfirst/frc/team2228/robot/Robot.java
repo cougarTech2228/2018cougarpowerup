@@ -38,12 +38,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 
-		driverIF = new DriverIF();
+		angleIF = new AngleIF();
+		driverIF = new DriverIF(angleIF);
 		base = new SRXDriveBase();
 //		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
-		angleIF = new AngleIF();
 //		pc = new PneumaticController(driverIF);
 //		elevator = new Elevator(driverIF, pc);
 		au = new AnalogUltrasonic();
@@ -103,10 +103,13 @@ public class Robot extends IterativeRobot {
 //		LED.allianceColorLED();
 //		LED.autonomousColorInit();
 //		LED.rainbowShift();
-		au.roundTo(0.0001);
-//		System.out.println(au.getDistance1());
+		au.roundTo(3);
+		au.updateSensors();
+		
+		System.out.println(au.getDistance1() + " " + au.getDistance2());
+
 		SmartDashboard.putNumber("Angle", angleIF.getAngle());
-		SmartDashboard.putNumber("Yaw", angleIF.getYaw());
+		SmartDashboard.putNumber("Yaw", angleIF.round(angleIF.getYaw(), 3));
 		SmartDashboard.putNumber("Roll", angleIF.getRoll());
 		SmartDashboard.putNumber("Correction", angleIF.getAngleCorrection());
 				
