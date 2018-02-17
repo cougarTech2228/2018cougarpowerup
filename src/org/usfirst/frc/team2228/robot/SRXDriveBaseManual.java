@@ -127,7 +127,7 @@ NOTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			"kAutoMoveCoastToStopCounts"
 			"kAutoRightMoveStopBrakeValue"
 			"kAutoLeftMoveStopBrakeValue"
-			
+			REEEEEEEEE
 +=====
 + CALIBRATE MOVE
 +=====
