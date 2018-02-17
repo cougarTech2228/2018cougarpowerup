@@ -7,8 +7,9 @@ import java.awt.GraphicsEnvironment;
 public class G2D {
 	protected static Graphics2D g;
 	private String[] data;
+
 	public G2D() {
-		
+
 	}
 	public void setColor(Color c) {
 		g.setColor(c);
@@ -34,11 +35,12 @@ public class G2D {
 	}
 	public void drawText(String text, Vector start) {
 		g.drawString(text, start.x, start.y + g.getFont().getSize() / 2);
+		
 	}
 	
 	
 	public void printFontList() {
 		for(String s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames())
-		System.out.println();
+		System.out.println(s);
 	}
 }

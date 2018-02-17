@@ -11,7 +11,6 @@ public class Timer extends Thread {
 			Thread.sleep((long)time);
 		} catch (Exception e) {}
 		finished = true;
-		System.out.println("dunzo");
 	}
 	public boolean isDone() {
 		if(finished) {

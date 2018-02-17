@@ -8,6 +8,7 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
 public abstract class Game extends JFrame implements KeyListener {
+	
 	private ArrayList<Integer> KeyList = new ArrayList<Integer>();
 	private String keydata = "";
 	//private static Game game;
