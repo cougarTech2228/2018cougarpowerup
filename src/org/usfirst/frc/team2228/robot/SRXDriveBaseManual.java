@@ -94,6 +94,9 @@ SETUP MOTOR CAN ID, MOTOR DIRECTION, AND ENCODER DIRECTION
 		"isConsoleDataEnabled = true;"  
 	b - Open shuffleboard application from eclipse wpilib menu 
 	c - In "teleopPeriodic()" call "driveBase.testMethodSelection()" 
+	
+NOTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ - CAL_ values have been removed presently - need to change values in config files
 
 +=====
 + TEST LEFT AND RIGHT DRIVES
@@ -151,9 +154,10 @@ SETUP MOTOR CAN ID, MOTOR DIRECTION, AND ENCODER DIRECTION
 	"CAL_kAutoLeftRotateStopBrakeValue", "CAL_kAutoRotateCoastToStopCounts"
 3 - UPDATE! UPDATE! - SRXBaseDriveCfg constants
 	a - CAL default values are loaded from SRXBaseDriveCfg when you reload a new compile!!!!!!!!
-			kAutoRotateCoastToStopCounts
-			kAutoRightRotateStopBrakeValue
-			kAutoLeftRotateStopBrakeValue
+			"kRoatateDriveStraightCorrection"
+			"kAutoRotateCoastToStopCounts"
+			"kAutoRightRotateStopBrakeValue"
+			"kAutoLeftRotateStopBrakeValue"
 +=====
 + CALIBRATE TURN
 +=====		
@@ -305,7 +309,7 @@ public class SRXDriveBaseAPI {
 + =======================================================================================
 +
 	public void loadShuffleBoardParmeters() {
-		- displays on shuffleboardvalues that are changed for tuning
+		- method buttons and shuffleboard values that are changed for calibrating
 	}
 	public void UpdateSRXDriveDataDisplay() {
 		- Reads encoder, velocity, current, error, and displays on smartdashboard	
@@ -362,6 +366,13 @@ public class SRXDriveBaseAPI {
 + AUTONOMOUG METHODS
 + =======================================================================================
 +
+Note!!!!!!!!!!!!!!!!!!!!
+Before calling any autonomous method the encoders need to be zeroed
+					setRightSensorPositionToZero();
+					setLeftSensorPositionToZero();
+					setDriveTrainRamp(2);
+					Timer.delay(0.2);
+
 	public boolean velMoveToPosition(double _MoveToPositionIn, 
 										double _MoveToPositionPwrLevel, 
 										boolean _isCascadeMove) {
@@ -399,7 +410,7 @@ public class SRXDriveBaseAPI {
 												double _pwrLevel){
 		-
 	} 
-	
+	==this needs work - sort of works
 	public boolean autoTuneCorrectionFactor(double _autoTunepowerLevel){
 		- This will automatically sequence the correction factor decimal digits to determine right wheel correction factor 
 	}
@@ -449,3 +460,5 @@ public class SRXDriveBaseAPI {
 	 
 	
 */
+
+import edu.wpi.first.wpilibj.Timer;
