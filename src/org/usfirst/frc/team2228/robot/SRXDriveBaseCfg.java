@@ -27,20 +27,21 @@ public class SRXDriveBaseCfg {
 		
 		public static double kTeleStopBrakeValue = 0.05;
 		
-		public static double kAutoRightMoveStopBrakeValue = 0.04;
-		public static double kAutoLeftMoveStopBrakeValue = 0.05;
 		
-		public static double kAutoRightRotateStopBrakeValue = 0.09;
-		public static double kAutoLeftRotateStopBrakeValue = 0.08;
+		public static double kAutoRightMoveStopBrakeValue = 0.0;
+		public static double kAutoLeftMoveStopBrakeValue = 0.0;
 		
-		public static double kAutoRightTurnStopBrakeValue = 0.05;
-		public static double kAutoLeftTurnStopBrakeValue = 0.1;
+		public static double kAutoRightRotateStopBrakeValue = 0.0;
+		public static double kAutoLeftRotateStopBrakeValue = 0.0;
+		
+		public static double kAutoRightTurnStopBrakeValue = 0.0;
+		public static double kAutoLeftTurnStopBrakeValue = 0.0;
 		
 		public static double SecToMaxPower = 2;
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
 		
-		public static boolean isSRXClosedLoopEnabled = true;
+		public static boolean isSRXClosedLoopEnabled = false;
 		
 		public static double kdriveRightMstrFeedForwardGain = 1.58;
 		public static double kdriveRightMstrProportionalGain = 0.05;
@@ -132,7 +133,7 @@ public class SRXDriveBaseCfg {
 		
 		// This value is determined by testDriveStraightCalibration method
 		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
-				
+		public static double kRotateDriveStraightCorrection = 0.93;		
 		//===============================================
 		//MOTION METHOD PARAMETERS
 		

@@ -46,9 +46,8 @@ public class TeleopController {
 	}
 	public void teleopInit() {
 		// clear drivebase and teleop flags
-		driveBase.setSRXDriveBaseInitialization();
-		driveBase.DisplayChangeParmeters();
-		driveBase.setDriveTrainRamp(0);
+		driveBase.setSRXDriveBaseInit();
+		//driveBase.DisplayChangeParmeters();
 		// Clear button flags
 		isButtonCmdActiveA = false;
 		lastButtonReadA = false; 
@@ -59,13 +58,12 @@ public class TeleopController {
 	
 	}
 	public void teleopPeriodic() {
-		//double origThrottle = -DriverIF.Throttle();
-		//double origTurn = DriverIF.Turn();
+		double origThrottle = -DriverIF.Throttle();
+		double origTurn = DriverIF.Turn();
 
-		//double turn = origTurn;
-		//double throttle = origThrottle;
-		Timer.delay(.05);
-		driveBase.testMethodSelection();
+		double turn = origTurn;
+		double throttle = origThrottle;
+		
 		// ========================================
 		// SRXDriveBase test
 		// ========================================		
@@ -73,6 +71,7 @@ public class TeleopController {
 		//	getButtonA();
 		//	getButtonB();
 		//	getButtonX();
+		 driveBase.testMethodSelection();
 
 		// ============================================
 		// Teleop control
@@ -296,12 +295,12 @@ public class TeleopController {
 	// button A used as a toggle button
 	private void getButtonA(){
 		if (!isButtonCmdActiveA){
-			if (DriverIF.driveBaseTestCalibration() && !lastButtonReadA) {
+			if (DriverIF.RB_Button() && !lastButtonReadA) {
 				isButtonCmdActiveA = true;
 				driveBase.setRightSensorPositionToZero();
 				driveBase.setLeftSensorPositionToZero();
 				driveBase.setDriveTrainRamp(2);
-				Timer.delay(1);
+				Timer.delay(0.2);
 				msg("++Button A hit");
 			}
 		}
@@ -311,7 +310,7 @@ public class TeleopController {
 			//if(!driveBase.testDriveStraightCalibration(50.0, .3)){
 				
 			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
-			//if (!driveBase.velMoveToPosition(30, .3, false)){
+			if (!driveBase.velMoveToPosition(30, .3, false)){
 				
 			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
 			//if (!driveBase.rotateToAngle(90, .2)){
@@ -320,7 +319,7 @@ public class TeleopController {
 			//(deleted)if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
 			 
 			 //public boolean autoTuneCorrectionFactor(double _autoTunepowerLevel){
-			 if (!driveBase.autoTuneCorrectionFactor(.2)){
+			 //if (!driveBase.autoTuneCorrectionFactor(.2)){
 			 
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
@@ -328,7 +327,7 @@ public class TeleopController {
 				isButtonCmdActiveA = false;
 				msg("++Button A done");
 			}
-		lastButtonReadA = DriverIF.driveBaseTestCalibration(); 
+		lastButtonReadA = DriverIF.RB_Button(); 
 		}
 	}
 
@@ -373,26 +372,26 @@ public class TeleopController {
 		lastButtonReadB = DriverIF.cascadeBotton();
 	}
 	
-	private void getButtonX(){
-		if (!isButtonCmdActiveX){
-			if (DriverIF.Xbutton() && !lastButtonReadX) {
-				isButtonCmdActiveX = true;
-				driveBase.setRightSensorPositionToZero();
-				driveBase.setLeftSensorPositionToZero();	
-				Timer.delay(1);
-				msg("++Button C hit");
-		
-		}else if(DriverIF.Xbutton() && !lastButtonReadX){
-				isButtonCmdActiveX = false;
-				// Stop square wave
-				driveBase.testMotorPulse_SquareWave(0, 0, 5, true);
-				msg("++Button C done");
-			} else {
-				//public boolean testMotorPulse_SquareWave(double _pulseLowPower, double _pulseHighPower, double _pulseTimeSec, boolean _isTestForRightDrive)
-				driveBase.testMotorPulse_SquareWave(.2, .3, 5, true);
-			}
-		lastButtonReadX = DriverIF.Xbutton();
-		}
-	
-	}
+//	private void getButtonX(){
+//		if (!isButtonCmdActiveX){
+//			if (DriverIF.Xbutton() && !lastButtonReadX) {
+//				isButtonCmdActiveX = true;
+//				driveBase.setRightSensorPositionToZero();
+//				driveBase.setLeftSensorPositionToZero();	
+//				Timer.delay(1);
+//				msg("++Button C hit");
+//		
+//		}else if(DriverIF.Xbutton() && !lastButtonReadX){
+//				isButtonCmdActiveX = false;
+//				// Stop square wave
+//				driveBase.testMotorPulse_SquareWave(0, 0, 5, true);
+//				msg("++Button C done");
+//			} else {
+//				//public boolean testMotorPulse_SquareWave(double _pulseLowPower, double _pulseHighPower, double _pulseTimeSec, boolean _isTestForRightDrive)
+//				driveBase.testMotorPulse_SquareWave(.2, .3, 5, true);
+//			}
+//		lastButtonReadX = DriverIF.Xbutton();
+//		}
+//	
+//	}
 }

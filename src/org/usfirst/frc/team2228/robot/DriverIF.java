@@ -32,7 +32,7 @@ public class DriverIF {
 	public double leftStickX() {
 		return xboxIF.LEFT_JOYSTICK_X();
 	}
-	public boolean driveBaseTestCalibration() {
+	public boolean RB_Button() {
 		return xboxIF.RB_BUTTON();
 	}
 	public boolean cascadeBotton(){
