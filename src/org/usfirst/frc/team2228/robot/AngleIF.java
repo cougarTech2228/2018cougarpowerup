@@ -37,10 +37,10 @@ public class AngleIF implements PIDOutput {
 //        _PIDController.setInputRange(-180.0f,  180.0f);
 //        _PIDController.setOutputRange(-1.0, 1.0);
 //        _PIDController.setAbsoluteTolerance(kToleranceDegrees);
-//        _PIDController.setContinuous(true);
-        SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
-        SmartDashboard.putNumber("kP", getBaroPressure());
-        SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
+////        _PIDController.setContinuous(true);
+//        SmartDashboard.putNumber("Barometric Pressure", getBaroPressure());
+//        SmartDashboard.putNumber("kP", getBaroPressure());
+//        SmartDashboard.putNumber("Barometric Pressure", getBaroPressure()); 
 	}
 
 	public void setZeroAngle(double gyro) {
