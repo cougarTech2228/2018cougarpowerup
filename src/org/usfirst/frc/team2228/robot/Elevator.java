@@ -40,85 +40,83 @@ public class Elevator {
 		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 		SmartDashboard.putNumber("Launch:", 0);
+		SmartDashboard.putNumber("Encoder Value", elevator.getSensorCollection().getQuadraturePosition());
 		elevator.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		elevator.setNeutralMode(NeutralMode.Brake);
+		elevator.getSensorCollection().setQuadraturePosition(0, 15);
 	}
 
 	public void teleopPeriodic() {
-		double b = 1; 
-				//SmartDashboard.getNumber("Elevator Speed:", 0);
-		//b is the speed of the 
-		
+		SmartDashboard.putNumber("Encoder Value", elevator.getSensorCollection().getQuadraturePosition());
+		double b = 1;
+		// SmartDashboard.getNumber("Elevator Speed:", 0);
+		// b is the speed of the
+
 		if (driverIF.hookForward()) {
 			hookDown.set(.4);
 		} else if (driverIF.hookBackward()) {
 			hookDown.set(-.4);
-		}
-		else{
+		} else {
 			hookDown.set(0);
 		}
-		
+
 		if (driverIF.RaiseElevator()) {
 			pneu.brakeSet(true);
 			elevator.set(b);
-//			if(elevator.getSelectedSensorPosition(0) == -1){
-//				elevator.set(0);
-//				
-//			}
-			
+			// if(elevator.getSelectedSensorPosition(0) == -1){
+			// elevator.set(0);
+			//
+			// }
+
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(true);
 			pneu.liftSet(off);
 			elevator.set(-b);
-			if(!limitSwitch.get()){
+			if (!limitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
+				elevator.getSensorCollection().setQuadraturePosition(0, 15);
 			}
-		}
-		else{
+		} else {
 			elevator.set(0);
 			pneu.brakeSet(false);
 		}
-		
+
 		double d = 1;
-				//SmartDashboard.getNumber("back conveyor:", 0);
-		//d is the speed of the elevator motors
-		
-		if(driverIF.BackConveyorForwards()) {
+		// SmartDashboard.getNumber("back conveyor:", 0);
+		// d is the speed of the elevator motors
+
+		if (driverIF.BackConveyorForwards()) {
 			conveyor1.set(d);
 			System.out.println("BACKFOR");
-		}
-		else if(driverIF.BackConveyorBackwards()) {
+		} else if (driverIF.BackConveyorBackwards()) {
 			conveyor1.set(-d);
 			System.out.println("BACKBACK");
-		}
-		else {
+		} else {
 			conveyor1.set(0);
 		}
-		
-		double e = 1; 
-				//SmartDashboard.getNumber("front conveyor:", 0);
-		//hya
-		
-		if(driverIF.FrontConveyorForwards()) {
+
+		double e = 1;
+		// SmartDashboard.getNumber("front conveyor:", 0);
+		// hya
+
+		if (driverIF.FrontConveyorForwards()) {
 			conveyor2.set(e);
 			System.out.println("FRONTFOR");
-		}
-		else if(driverIF.FrontConveyorBackwards()) {
+		} else if (driverIF.FrontConveyorBackwards()) {
 			conveyor2.set(-e);
 			System.out.println("FRONTBACK");
-		}
-		else {
+		} else {
 			conveyor2.set(0);
 		}
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
-		if (LaunchValue == 1){
+		if (LaunchValue == 1) {
 			hook.set(Relay.Value.kOff);
 		}
-		if(driverIF.winchWind()){
+		if (driverIF.winchWind()) {
 			winch.set(.5);
 		}
-			
+		
 	}
 
 }

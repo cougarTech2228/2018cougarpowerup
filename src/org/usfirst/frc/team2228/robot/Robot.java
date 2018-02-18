@@ -2,6 +2,8 @@ package org.usfirst.frc.team2228.robot;
 
 import org.usfirst.frc.team2228.commands.StringCommand;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,7 +28,8 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	private CANLED LED;
+	UsbCamera camera;
+	//private CANLED LED;
 	//private AngleIF angle;
 
 	/**
@@ -39,12 +42,13 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-//		cube = new CubeManipulator(driverIF);
-//		chessyDrive = new TeleopController(driverIF, base);
+		cube = new CubeManipulator(driverIF);
+		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
-//		pc = new PneumaticController(driverIF);
-//		elevator = new Elevator(driverIF, pc);
-//		au = new AnalogUltrasonic();
+		pc = new PneumaticController(driverIF);
+		elevator = new Elevator(driverIF, pc);
+		au = new AnalogUltrasonic();
+		camera = CameraServer.getInstance().startAutomaticCapture();
 //		LED = new CANLED();
 //		LED.colorInit();
 		//angle = new AngleIF();
@@ -92,13 +96,14 @@ public class Robot extends IterativeRobot {
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
 		
-		LED.allianceColorLED();
-		LED.autonomousColorInit();
-		LED.rainbowShift();
+		//LED.allianceColorLED();
+		//LED.autonomousColorInit();
+		//LED.rainbowShift();
 		au.roundTo(0.0001);
 //		System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+
 		//angle.getAngle();
 	}
 

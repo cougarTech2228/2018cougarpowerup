@@ -74,8 +74,8 @@ public class SRXDriveBaseCfg {
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = false;
-		public static boolean isLeftEncoderSensorReversed = true;
+		public static boolean isRightEncoderSensorReversed = true;
+		public static boolean isLeftEncoderSensorReversed = false;
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;
@@ -123,7 +123,8 @@ public class SRXDriveBaseCfg {
 		public static boolean isDriveStraightAssistEnabled = false;
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 0.93; 
+		public static double kDriveStraightCorrection = 1.0805;
+				//for robox 0.93; 
 				// Hard floor correction 0.87;
 		
 		//===============================================

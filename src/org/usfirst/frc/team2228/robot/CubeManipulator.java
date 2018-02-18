@@ -8,6 +8,8 @@ public class CubeManipulator {
 	private Spark right;
 	private double cubeCollectionValue;
 	private double cubeExpulsionValue;
+	private boolean triggered = false;
+	private boolean lastButton = false;
 
 	public CubeManipulator(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -25,21 +27,41 @@ public class CubeManipulator {
 	}
 
 	public void teleopPeriodic() {
-		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
-		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
-
-		if (driverIf.collection()) {
+		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.5);
+		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.5);
+//		if (driverIf.collection()) {
+//			left.set(cubeCollectionValue);
+//			right.set(cubeCollectionValue);
+//			triggered = true;
+//		}
+//		else if (driverIf.expulsion()) {
+//			left.set(cubeExpulsionValue);
+//			right.set(cubeExpulsionValue);
+//			triggered = false;
+//		}
+//		else{
+//			left.set(0);
+//			right.set(0);
+//		}
+		
+		if (!driverIf.collectionToggle() && lastButton && triggered == false) {
 			left.set(cubeCollectionValue);
 			right.set(cubeCollectionValue);
+			triggered = true;
+			System.out.println("Suck in");
 		}
-		else if (driverIf.expulsion()) {
-			left.set(cubeExpulsionValue);
-			right.set(cubeExpulsionValue);
-		}
-		else{
+		else if (!driverIf.collectionToggle() && lastButton && triggered == true) {
 			left.set(0);
 			right.set(0);
+			triggered = false;
+			System.out.println("Spit Out");
 		}
+		
+		else if(driverIf.expulsion()){
+		left.set(cubeExpulsionValue);
+		right.set(cubeExpulsionValue);
+		}
+		lastButton = driverIf.collectionToggle();
 		
 	}
 			

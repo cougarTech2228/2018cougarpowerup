@@ -401,9 +401,9 @@ public class SRXDriveBase {
 	public double getLeftSensorPosition(){
 		// This value is updated every 20ms
 		if (SRXDriveBaseCfg.isLeftEncoderSensorReversed){
-			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
-		} else{
 			return driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
+		} else{
+			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		}
 	}
 	

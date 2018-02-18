@@ -29,7 +29,7 @@ public class TeleopControllerCfg {
     
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	// factor =(1 - 1/#sampleTimes)) minSampleTimes-2
-	public static double kLowSmoothFactor = 0.5;
+	public static double kLowSmoothFactor = 0.8;
 	public static double kHighSmoothFactor = 0.95;
 	public static double kTransitionSmoothFactor = 0.7;
 	

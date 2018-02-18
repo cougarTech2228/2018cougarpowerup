@@ -19,7 +19,7 @@ public class MoveTo extends Command {
 	}
 	
 	protected void initialize() {
-		System.out.println("initialized");
+		System.out.println("initial move: " + moveIn);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

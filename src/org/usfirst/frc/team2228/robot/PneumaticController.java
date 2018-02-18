@@ -15,6 +15,8 @@ public class PneumaticController {
 	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
+	private boolean lastButton2 = false;
+	private boolean triggered = false;
 
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -28,18 +30,21 @@ public class PneumaticController {
 			squeezies.set(on);
 			System.out.println("squeeze");
 		}
-		else if (driverIF.release()) {
-			System.out.println("release");
+		else if (driverIF.release()){
 			squeezies.set(off);
 		}
-		if(driverIF.liftCube()){
-			System.out.println("HYA");
-			lift.set(on);
+		//Tests to see if button is pressed, and then actuates on the release
+		if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == false) {
+			lift.set(true);
+			triggered = true;
+			System.out.println("cubeRotateUp toggle active");
 		}
-		else if (driverIF.lowerCube()){
-			System.out.println("HYADOS");
-			lift.set(off);
+		else if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == true) {
+			lift.set(false);
+			triggered = false;
+			System.out.println("cubeRotatedown toggle active");
 		}
+		lastButton2 = driverIF.cubeRotateToggle();
 	}
 	public void liftSet(boolean state){
 		lift.set(state);

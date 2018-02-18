@@ -21,6 +21,7 @@ public class AutoMaster {
 	private CommandGroup Cg;
 	private SendableChooser<String> chooser = new SendableChooser<>();
 	private String robotSide = "Right";
+	private double THISISWRONGSHOULDCALIBRATE = 0.0;
 	
 	public AutoMaster(SRXDriveBase srxdb) {
 		base = srxdb;
@@ -58,13 +59,17 @@ public class AutoMaster {
 		switch (autoSelected) {
 			case "Baseline":
 				System.out.println("Baseline selected");
-				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
+						                            Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				break;
 				
 			case "Switch":
 				System.out.println("Switch selected");
-				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
-				//if (robotSide == "Left" && L) || (robotSide == "Right" && R)
+				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
+						                           Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R)){
+					
+				
 				// Scale cube command
 				break;
 		}

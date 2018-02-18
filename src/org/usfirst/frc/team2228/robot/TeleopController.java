@@ -46,6 +46,8 @@ public class TeleopController {
 	public void teleopInit() {
 		// clear drivebase and teleop flags
 		driveBase.setProgramStateFlagsToFalse();
+		driveBase.setRightSensorPositionToZero();
+		driveBase.setLeftSensorPositionToZero();
 		// Clear button flags
 		isButtonCmdActiveA = false;
 		lastButtonReadA = false; 
@@ -73,7 +75,7 @@ public class TeleopController {
 		// ============================================
 
 		// Check and limit range of throttle and turn
-	/*	throttle = limit(throttle);
+		throttle = limit(throttle);
 		turn = limit(turn);
 		
 		if(turn != 0){
@@ -96,7 +98,7 @@ public class TeleopController {
 				origTurn,
 				turn);
 		}
-	*/
+	
 	}	
 
 // ===========================================
@@ -284,10 +286,10 @@ public class TeleopController {
 // SRXDriveBase test
 // ===================================================================
 	// button A used as a toggle button
-	/*
+	
 	private void getButtonA(){
 		if (!isButtonCmdActiveA){
-			if (DriverIF.driveBaseTestCalibration() && !lastButtonReadA) {
+			if (DriverIF.release() && !lastButtonReadA) {
 				isButtonCmdActiveA = true;
 				driveBase.setRightSensorPositionToZero();
 				driveBase.setLeftSensorPositionToZero();
@@ -299,24 +301,24 @@ public class TeleopController {
 		 else if (isButtonCmdActiveA) {
 				
 			//public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
-			//if(!driveBase.testDriveStraightCalibration(50.0, .3)){
+			if(!driveBase.testDriveStraightCalibration(100.0, .3)){
 				
 			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
-			//if (!driveBase.velMoveToPosition(30, .3, false)){
+			//if (!driveBase.velMoveToPosition(100, .3, false)){
 				
 			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
 			//if (!driveBase.rotateToAngle(90, .2)){
 				
 			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
-			if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
+			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
 				isButtonCmdActiveA = false;
 				msg("++Button A done");
 			}
 		
 		}
-		lastButtonReadA = DriverIF.driveBaseTestCalibration(); 
+		lastButtonReadA = DriverIF.release(); 
 	}
-
+/*
 	private void getButtonB(){
 		if (DriverIF.cascadeBotton() && lastButtonReadB) {
 					isButtonCmdActiveB = true;	
