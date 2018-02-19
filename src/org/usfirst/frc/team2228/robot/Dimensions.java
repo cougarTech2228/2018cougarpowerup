@@ -15,6 +15,7 @@ public class Dimensions {
 	//Field dimensions
 	public static final double AUTOLINE_WIDTH = 2;
 	public static final double AUTOLINE_TO_ALLIANCE = 120;
+	public static final double ALLIANCE_WALL_TO_SWITCH = 132;
 	public static final double EXCHANGEZONE_WIDTH = 36;
 	public static final double EXCHANGEZONE_LENGTH = 48;
 	public static final double ALL_TAPE_WIDTH = 2;

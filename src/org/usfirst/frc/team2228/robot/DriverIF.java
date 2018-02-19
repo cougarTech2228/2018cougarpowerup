@@ -8,6 +8,7 @@ public class DriverIF {
 	public DriverIF() {
 		xboxIF = new XboxIF();
 	}
+
 	public boolean BackConveyorForwards() {
 		return xboxIF.POV_UP();
 	}
@@ -15,32 +16,42 @@ public class DriverIF {
 	public boolean BackConveyorBackwards() {
 		return xboxIF.POV_DOWN();
 	}
-	public boolean hookForward(){
-		//return xboxIF.LB_BUTTON();
-		return false;
-		//did this for toggling the collection. NEEDS TO BE REMAPPED.
-	}
-	
-	public boolean hookBackward(){
-		//return xboxIF.RB_BUTTON();
-		return false;
-}
 
-	public boolean FrontConveyorForwards() {
+	public boolean conveyorsForward() {
+		if (xboxIF.RIGHT_TRIGGER() > 0.6)
+			return true;
+		else
+			return false;
+	}
+
+	public boolean conveyorsBackward() {
+		return xboxIF.Y_BUTTON();
+	}
+
+	public boolean hookForward() {
 		return xboxIF.POV_RIGHT();
 	}
-	public boolean FrontConveyorBackwards() {
+
+	public boolean hookBackward() {
 		return xboxIF.POV_LEFT();
 	}
-	
-	public boolean liftCube() {
-		return xboxIF.RS_BUTTON();
-	}
-	
-	public boolean lowerCube() {
-		return xboxIF.LS_BUTTON();
-	}
-	public boolean cubeRotateToggle(){
+
+	// public boolean FrontConveyorForwards() {
+	// return xboxIF.POV_RIGHT();
+	// }
+	// public boolean FrontConveyorBackwards() {
+	// return xboxIF.POV_LEFT();
+	// }
+
+//	public boolean liftCube() {
+//		return xboxIF.RS_BUTTON();
+//	}
+
+//	public boolean lowerCube() {
+//		return xboxIF.LS_BUTTON();
+//	}
+
+	public boolean cubeRotateToggle() {
 		return xboxIF.A_BUTTON();
 	}
 
@@ -55,12 +66,13 @@ public class DriverIF {
 	public boolean squeeze() {
 		return xboxIF.RS_BUTTON();
 	}
-	public boolean collectionToggle(){
+
+	public boolean collectionToggle() {
 		return xboxIF.LB_BUTTON();
 	}
 
 	public boolean release() {
-		return xboxIF.Y_BUTTON();
+		return xboxIF.LS_BUTTON();
 	}
 
 	public double Turn() {
@@ -68,27 +80,39 @@ public class DriverIF {
 	}
 
 	public double Throttle() {
-		
 		return xboxIF.LEFT_JOYSTICK_Y();
 	}
+
 	public boolean LowerElevator() {
-		if(xboxIF.LEFT_TRIGGER() > 0.6)
+		if (xboxIF.POV_DOWN())
 			return true;
 		else
 			return false;
 	}
+
 	public boolean RaiseElevator() {
-		if(xboxIF.RIGHT_TRIGGER() > 0.6)
+		if (xboxIF.POV_UP())
+
 			return true;
 		else
 			return false;
 	}
-	public boolean winchWind(){
-		if(xboxIF.START_BUTTON()){
-			return true;
-		}
-		else{
-			return false;
-		}
+	public boolean squeezeToggle(){
+		return xboxIF.RB_BUTTON();
+	}
+
+	public boolean winchWindUp() {
+		return xboxIF.START_BUTTON();
+	}
+	public boolean winchWindDown(){
+		return xboxIF.BACK_BUTTON();
+	}
+
+	public boolean elevatorToggleUp() {
+		return xboxIF.POV_UP();
+	}
+
+	public boolean elevatorToggleDown() {
+		return xboxIF.POV_DOWN();
 	}
 }

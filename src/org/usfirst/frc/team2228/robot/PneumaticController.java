@@ -15,8 +15,10 @@ public class PneumaticController {
 	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
+	boolean lastButton = false;
 	private boolean lastButton2 = false;
 	private boolean triggered = false;
+	private boolean triggered2 = false;
 
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -26,13 +28,22 @@ public class PneumaticController {
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
 		//System.out.println(brake.get());
-		if (driverIF.squeeze()) {
-			squeezies.set(on);
-			System.out.println("squeeze");
+//		if (driverIF.squeeze()) {
+//			squeezies.set(on);
+//			System.out.println("squeeze");
+//		}
+//		else if (driverIF.release()){
+//			squeezies.set(off);
+//		}
+		if (!driverIF.squeezeToggle() && lastButton && triggered2 == false) {
+			squeezies.set(true);
+			triggered2  = true;
 		}
-		else if (driverIF.release()){
-			squeezies.set(off);
+		else if (!driverIF.squeezeToggle() && lastButton && triggered2 == true) {
+			squeezies.set(false);
+			triggered2 = false;
 		}
+		lastButton = driverIF.squeezeToggle();
 		//Tests to see if button is pressed, and then actuates on the release
 		if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == false) {
 			lift.set(true);

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Relay;
 
 public class Elevator {
-	boolean on = true, off = false;
+	boolean on = false, off = true;
 	DriverIF driverIF;
 	WPI_TalonSRX elevator;
 	DMC60 conveyor1, conveyor2;
@@ -22,6 +22,26 @@ public class Elevator {
 	PneumaticController pneu;
 	DigitalInput limitSwitch;
 	FeedbackDevice encoder;
+	private boolean lastButtonDown;
+	private boolean triggered;
+	double currentHeight;
+	int heightCount = 0;
+	private boolean lastButtonUp;
+	double previousHeight;
+	boolean raising;
+	boolean lowering;
+	boolean lastButton1;
+	boolean lastButton2;
+	boolean triggered2;
+
+	public enum ElevatorHeights {
+		BOTTOM(0), PORTAL(100), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
+		public final double height;
+
+		ElevatorHeights(double encoderVal) {
+			height = encoderVal;
+		}
+	}
 
 	public Elevator(DriverIF _driverIF, PneumaticController _pneu) {
 		pneu = _pneu;
@@ -40,14 +60,17 @@ public class Elevator {
 		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 		SmartDashboard.putNumber("Launch:", 0);
-		SmartDashboard.putNumber("Encoder Value", elevator.getSensorCollection().getQuadraturePosition());
 		elevator.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		elevator.setNeutralMode(NeutralMode.Brake);
+		System.out.println(ElevatorHeights.BOTTOM.height);
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
+		raising = false;
+		lowering = true;
+		triggered = false;
+		triggered2 = false;
 	}
 
 	public void teleopPeriodic() {
-		SmartDashboard.putNumber("Encoder Value", elevator.getSensorCollection().getQuadraturePosition());
 		double b = 1;
 		// SmartDashboard.getNumber("Elevator Speed:", 0);
 		// b is the speed of the
@@ -61,7 +84,7 @@ public class Elevator {
 		}
 
 		if (driverIF.RaiseElevator()) {
-			pneu.brakeSet(true);
+			pneu.brakeSet(off);
 			elevator.set(b);
 			// if(elevator.getSelectedSensorPosition(0) == -1){
 			// elevator.set(0);
@@ -69,54 +92,124 @@ public class Elevator {
 			// }
 
 		} else if (driverIF.LowerElevator()) {
-			pneu.brakeSet(true);
-			pneu.liftSet(off);
+			pneu.brakeSet(off);
 			elevator.set(-b);
+			pneu.liftSet(false);
 			if (!limitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
-				elevator.getSensorCollection().setQuadraturePosition(0, 15);
 			}
 		} else {
 			elevator.set(0);
-			pneu.brakeSet(false);
+			pneu.brakeSet(on);
 		}
-
+		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
+		// if (heightCount < 4) {
+		// heightCount++;
+		// }
+		//
+		//
+		// } else if (!driverIF.elevatorToggleDown() && lastButtonDown) {
+		// if (heightCount > 0) {
+		// heightCount--;
+		// }
+		//
+		//
+		// }
+		// lastButtonUp = driverIF.elevatorToggleUp();
+		// lastButtonDown = driverIF.elevatorToggleDown();
+		// previousHeight =
+		// elevator.getSensorCollection().getQuadraturePosition();
+		// if(heightCount == 0){
+		// elevatorSet(ElevatorHeights.BOTTOM.height, .7);
+		// }
+		// else if(heightCount == 1){
+		// elevatorSet(ElevatorHeights.PORTAL.height, .7);
+		// }
+		// else if(heightCount == 2){
+		// elevatorSet(ElevatorHeights.SCALE_LOW.height, .7);
+		// }
+		// else if(heightCount == 3){
+		// elevatorSet(ElevatorHeights.SCALE_NEUTRAL.height, .7);
+		// }
+		// else if(heightCount == 4){
+		// elevatorSet(ElevatorHeights.SCALE_HIGH.height, .7);
+		// }
 		double d = 1;
 		// SmartDashboard.getNumber("back conveyor:", 0);
 		// d is the speed of the elevator motors
 
-		if (driverIF.BackConveyorForwards()) {
-			conveyor1.set(d);
-			System.out.println("BACKFOR");
-		} else if (driverIF.BackConveyorBackwards()) {
-			conveyor1.set(-d);
-			System.out.println("BACKBACK");
-		} else {
-			conveyor1.set(0);
-		}
+		// if (driverIF.BackConveyorForwards()) {
+		// conveyor1.set(d);
+		// System.out.println("BACKFOR");
+		// } else if (driverIF.BackConveyorBackwards()) {
+		// conveyor1.set(-d);
+		// System.out.println("BACKBACK");
+		// } else {
+		// conveyor1.set(0);
+		// }
 
 		double e = 1;
 		// SmartDashboard.getNumber("front conveyor:", 0);
 		// hya
 
-		if (driverIF.FrontConveyorForwards()) {
-			conveyor2.set(e);
-			System.out.println("FRONTFOR");
-		} else if (driverIF.FrontConveyorBackwards()) {
-			conveyor2.set(-e);
-			System.out.println("FRONTBACK");
-		} else {
+		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
+			conveyor1.set(1);
+			conveyor2.set(1);
+			triggered = true;
+			// System.out.println("Suck in");
+		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
+			conveyor1.set(0);
 			conveyor2.set(0);
+			triggered = false;
+			// System.out.println("Co");
 		}
+
+		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
+			conveyor1.set(-1);
+			triggered2 = true;
+			// System.out.println("Suck in");
+		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
+			conveyor1.set(0);
+			triggered2 = false;
+			// System.out.println("Co");
+		}
+		lastButton1 = driverIF.conveyorsForward();
+		lastButton2 = driverIF.conveyorsBackward();
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
 		if (LaunchValue == 1) {
 			hook.set(Relay.Value.kOff);
 		}
-		if (driverIF.winchWind()) {
-			winch.set(.5);
+		if (driverIF.winchWindUp()) {
+			winch.set(.7);
+		} else if (driverIF.winchWindDown()) {
+			winch.set(-.7);
 		}
-		
+
 	}
 
+	public boolean elevatorSet(double height, double speed) {
+		pneu.brakeSet(off);
+		elevator.set(speed);
+		if (raising = true && elevator.getSensorCollection().getQuadraturePosition() >= height) {
+			elevator.set(0);
+			pneu.brakeSet(on);
+			return true;
+		} else if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
+			elevator.set(0);
+			pneu.brakeSet(on);
+			return true;
+		}
+		return false;
+	}
+	public void conveyors(boolean on){
+		if(on){
+			conveyor1.set(1);
+			conveyor2.set(1);
+		}
+		else{
+			conveyor1.set(0);
+			conveyor2.set(0);
+		}
+	}
 }

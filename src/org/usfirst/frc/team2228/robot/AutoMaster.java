@@ -4,6 +4,7 @@ import org.usfirst.frc.team2228.commands.EncoderTurn;
 import org.usfirst.frc.team2228.commands.MoveTo;
 import org.usfirst.frc.team2228.commands.RotateTo;
 import org.usfirst.frc.team2228.commands.StringCommand;
+import org.usfirst.frc.team2228.commands.Switch;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,12 +23,14 @@ public class AutoMaster {
 	private SendableChooser<String> chooser = new SendableChooser<>();
 	private String robotSide = "Right";
 	private double THISISWRONGSHOULDCALIBRATE = 0.0;
+	private Elevator elevator;
 	
-	public AutoMaster(SRXDriveBase srxdb) {
+	public AutoMaster(SRXDriveBase srxdb, Elevator _elevator) {
 		base = srxdb;
+		chooser.addDefault("Switch", customAuto);
+		elevator = _elevator;
+		chooser.addObject("Baseline", defaultAuto);
 		
-		chooser.addDefault("Baseline", defaultAuto);
-		chooser.addObject("Switch", customAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		//BOOP BEEP BOP BEEPEDIE BOOP BOP 
 		
@@ -66,7 +69,8 @@ public class AutoMaster {
 			case "Switch":
 				System.out.println("Switch selected");
 				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
-						                           Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				Cg.addSequential(new Switch(elevator));
 				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R)){
 					
 				

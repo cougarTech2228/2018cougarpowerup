@@ -9,7 +9,9 @@ public class CubeManipulator {
 	private double cubeCollectionValue;
 	private double cubeExpulsionValue;
 	private boolean triggered = false;
+	boolean triggered2 = false;
 	private boolean lastButton = false;
+	boolean lastButton2 = false;
 
 	public CubeManipulator(DriverIF _driverIf) {
 		driverIf = _driverIf;
@@ -54,14 +56,24 @@ public class CubeManipulator {
 			left.set(0);
 			right.set(0);
 			triggered = false;
-			System.out.println("Spit Out");
+		}
+		if (!driverIf.expulsion() && lastButton2 && triggered2 == false) {
+			left.set(cubeExpulsionValue);
+			right.set(cubeExpulsionValue);
+			triggered2 = true;
+		}
+		else if (!driverIf.expulsion() && lastButton2 && triggered2 == true) {
+			left.set(0);
+			right.set(0);
+			triggered2 = false;
 		}
 		
-		else if(driverIf.expulsion()){
-		left.set(cubeExpulsionValue);
-		right.set(cubeExpulsionValue);
-		}
+//		else if(driverIf.expulsion()){
+//		left.set(cubeExpulsionValue);
+//		right.set(cubeExpulsionValue);
+//		}
 		lastButton = driverIf.collectionToggle();
+		lastButton2 = driverIf.expulsion();
 		
 	}
 			

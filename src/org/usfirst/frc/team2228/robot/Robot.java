@@ -44,9 +44,10 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		auto = new AutoMaster(base);
+		
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
+		auto = new AutoMaster(base, elevator);
 		au = new AnalogUltrasonic();
 		camera = CameraServer.getInstance().startAutomaticCapture();
 //		LED = new CANLED();
