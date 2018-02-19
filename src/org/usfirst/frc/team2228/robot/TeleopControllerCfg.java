@@ -13,7 +13,7 @@ public class TeleopControllerCfg {
 		Linear,
 		Sine,
 		Squared,
-		ThrottleLimited
+		ThrottlePowerLimited
 	}
     public enum ThrottleSensitivity {
 		Linear,
@@ -21,7 +21,8 @@ public class TeleopControllerCfg {
 		Squared,
 		Cubed
 	}
-	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.Squared;
+
+	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.ThrottlePowerLimited;
 	public static ThrottleSensitivity throttleSensitivitySet = ThrottleSensitivity.Squared;
 	
     // used to vary the affect when using cubed sensitivity
@@ -29,7 +30,8 @@ public class TeleopControllerCfg {
     
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	// factor =(1 - 1/#sampleTimes)) minSampleTimes-2
-	public static double kLowSmoothFactor = 0.8;
+
+	public static double kLowSmoothFactor = 0.5;
 	public static double kHighSmoothFactor = 0.95;
 	public static double kTransitionSmoothFactor = 0.7;
 	

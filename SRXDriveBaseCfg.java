@@ -5,7 +5,7 @@ public class SRXDriveBaseCfg {
 		// ===============================================
 		// SRX ESC MODULE
 		//timeoutMS is recommended to be 10 milliseconds for bootup sequence according to the manual (3.1.2.1)
-		//heydud
+		
 		public static int kslotIDx = 0;
 		public static int kPIDLoopIDx = 0;
 		//hoi
@@ -21,22 +21,11 @@ public class SRXDriveBaseCfg {
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
 		public static boolean isBrakeEnabled = true;
 		
-		public static double kAutoMoveCoastToStopCounts = 0;
-		public static double kAutoRotateCoastToStopCounts = 0;
-		public static double kAutoTurnCoastToStopCounts = 0;
-		
-		public static double kTeleStopBrakeValue = 0.05;
-		
-		
-		public static double kAutoRightMoveStopBrakeValue = 0.0;
-		public static double kAutoLeftMoveStopBrakeValue = 0.0;
-		
-		public static double kAutoRightRotateStopBrakeValue = 0.0;
-		public static double kAutoLeftRotateStopBrakeValue = 0.0;
-		
-		public static double kAutoRightTurnStopBrakeValue = 0.0;
-		public static double kAutoLeftTurnStopBrakeValue = 0.0;
-		
+		public static double kRobotCoastToStopCounts = 0;
+		public static double kTeleStopBrakeValue = 0.05;		
+		public static double kAutoMoveStopBrakeValue = 0.05;
+		public static double kAutoRotateStopBrakeValue = 0.05;
+		public static double kAutoTurnStopBrakeValue = 0.05;
 		public static double SecToMaxPower = 2;
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
@@ -79,8 +68,8 @@ public class SRXDriveBaseCfg {
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = true;
-		public static boolean isLeftEncoderSensorReversed = false;
+		public static boolean isRightEncoderSensorReversed = false;
+		public static boolean isLeftEncoderSensorReversed = true;
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;
@@ -95,17 +84,15 @@ public class SRXDriveBaseCfg {
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
-		public static double kTrackWidthIn = 22.875;
+		public static double kTrackWidthIn = 23;
 		
-		public static double kMeasuredRgtWheelDiameter = 4.035;
-		public static double kMeasuredLftWheelDiameter = 4.035;
-
+		public static double kMeasuredRgtWheelDiameter = 4.0;
+		public static double kMeasuredLftWheelDiameter = 4.0;
 		//(kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2
-		public static double kWheelDiameterIn = 4.035;
-
+		public static double kWheelDiameterIn = 4.0;
 		// WheelDiameter * Math.PI
-		public static double kMeasuredRgtWheelCircum = 12.678;
-		public static double kMeasuredLftWheelCircum = 12.678;
+		public static double kMeasuredRgtWheelCircum = 9.425;
+		public static double kMeasuredLftWheelCircum = 9.425;
 
 		// ======================================
 		// ENCODER ENCODER CALCULATIONS
@@ -113,27 +100,26 @@ public class SRXDriveBaseCfg {
 		
 		// cnts per rev = quadrature(4) * encoder square wave cycles per rev
 		public static double kCountsPerRevolution = 523.63;
-		
 		// Wheel circumference / counts per revolution
-
-		public static double kRightInchesPerCount = 0.0242; //old 0.0179
-		public static double kRightEncoderCountsPerIn = 41.302; //old 55.586
-		public static double kLeftInchesPerCount = 0.0242; //old 0.01799
-		public static double kLeftEncoderCountsPerIn = 41.302; //old 55.586
-
+		public static double kRightInchesPerCount = 0.023;
+		//old 0.01799;
+		public static double kLeftInchesPerCount = 0.023;
+		//old 0.01799;
+		public static double kLeftEncoderCountsPerIn = 43.07;
+		//old 55.586;
+		public static double kRightEncoderCountsPerIn = 43.07;
+		//old 55.586;
+		
 		//=======================================================
 		// DRIVING STRAIGHT
 		
 		// Driving straight set up parameters
-		
 		public static boolean isDriveStraightAssistEnabled = false;
-		// Cap sensor correction to % of throttle power level
-		public static double kThrottlePowerRatio = 0.2;
 		
 		// This value is determined by testDriveStraightCalibration method
-
-		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
-		public static double kRotateDriveStraightCorrection = 0.93;		
+		public static double kDriveStraightCorrection = 0.96; 
+				// Hard floor correction 0.87;
+		
 		//===============================================
 		//MOTION METHOD PARAMETERS
 		
