@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	private SRXDriveBase base;
-	//private CubeManipulator cube;
+	private CubeManipulator cube;
 	private DriverIF driverIF;
 	private AngleIF angleIF;
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
-	//private Elevator elevator;
-	//private PneumaticController pc;
+	private Elevator elevator;
+	private PneumaticController pc;
 	private AnalogUltrasonic au;
 	UsbCamera camera;
 	//private CANLED LED;
