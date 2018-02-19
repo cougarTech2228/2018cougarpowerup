@@ -21,12 +21,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	private SRXDriveBase base;
-	private CubeManipulator cube;
+	//private CubeManipulator cube;
 	private DriverIF driverIF;
+	private AngleIF angleIF;
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
-	private Elevator elevator;
-	private PneumaticController pc;
+	//private Elevator elevator;
+	//private PneumaticController pc;
 	private AnalogUltrasonic au;
 	UsbCamera camera;
 	//private CANLED LED;
@@ -43,6 +44,8 @@ public class Robot extends IterativeRobot {
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
+
+		angleIF = new AngleIF();
 		chessyDrive = new TeleopController(driverIF, base);
 		
 		pc = new PneumaticController(driverIF);
@@ -50,6 +53,7 @@ public class Robot extends IterativeRobot {
 		auto = new AutoMaster(base, elevator);
 		au = new AnalogUltrasonic();
 		camera = CameraServer.getInstance().startAutomaticCapture();
+
 //		LED = new CANLED();
 //		LED.colorInit();
 		//angle = new AngleIF();
@@ -80,14 +84,14 @@ public class Robot extends IterativeRobot {
 		auto.run();
 	}
 
-//	public void teleopInit() {
-//		System.out.println("teleopInit() fi!");
-//		chessyDrive.teleopInit();
-//		System.out.println("Teleop Init done");
-//	}
 	/**
 	 * This function is called periodically during operator control
 	 */
+	@Override
+	public void teleopInit() {
+		chessyDrive.teleopInit();
+	}
+	
 	@Override
 	public void teleopPeriodic() {
 		
@@ -96,15 +100,20 @@ public class Robot extends IterativeRobot {
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
-		
+
 		//LED.allianceColorLED();
 		//LED.autonomousColorInit();
 		//LED.rainbowShift();
 		au.roundTo(0.0001);
+		
 //		System.out.println(au.getDistance1());
-		SmartDashboard.putNumber("Sensor1", au.getDistance1());
-		SmartDashboard.putNumber("Sensor2", au.getDistance2());
-
+		
+		SmartDashboard.putNumber("Angle", angleIF.getAngle());
+		SmartDashboard.putNumber("Yaw", angleIF.getYaw());
+		SmartDashboard.putNumber("Roll", angleIF.getRoll());
+		SmartDashboard.putNumber("Correction", angleIF.getAngleCorrection());
+		//SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		//SmartDashboard.putNumber("Sensor2", au.getDistance2());
 		//angle.getAngle();
 	}
 

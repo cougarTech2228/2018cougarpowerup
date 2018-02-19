@@ -31,9 +31,9 @@ public class TeleopControllerCfg {
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	// factor =(1 - 1/#sampleTimes)) minSampleTimes-2
 
-	public static double kLowSmoothFactor = 0.5;
-	public static double kHighSmoothFactor = 0.95;
-	public static double kTransitionSmoothFactor = 0.7;
+	public static double kLowSmoothFactor = 0.9;
+	public static double kHighSmoothFactor = 0.9999;
+	public static double kTransitionSmoothFactor = 0.6;
 	
 	// determination of max delta values are determined by testing
 	public static double kMaxDeltaVelocity = 0.2;
