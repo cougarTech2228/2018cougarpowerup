@@ -75,7 +75,11 @@ public class TeleopController {
 		// ============================================
 
 		// Check and limit range of throttle and turn
+<<<<<<< HEAD
 	throttle = limit(throttle);
+=======
+		throttle = limit(throttle);
+>>>>>>> refs/heads/robox.angle
 		turn = limit(turn);
 		
 		if(turn != 0){

@@ -1,14 +1,9 @@
 package org.usfirst.frc.team2228.robot;
 
-import org.usfirst.frc.team2228.commands.StringCommand;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -23,11 +18,13 @@ public class Robot extends IterativeRobot {
 	private SRXDriveBase base;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
+	private AngleIF angleIF;
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
+
 //	UsbCamera camera;
 	//private CANLED LED;
 	//private AngleIF angle;
@@ -40,15 +37,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 
-		driverIF = new DriverIF();
+		angleIF = new AngleIF();
+		driverIF = new DriverIF(angleIF);
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
 		auto = new AutoMaster(base);
+
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
 		au = new AnalogUltrasonic();
 //		camera = CameraServer.getInstance().startAutomaticCapture();
+
 //		LED = new CANLED();
 //		LED.colorInit();
 		//angle = new AngleIF();
@@ -88,22 +88,37 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	@Override
+	public void teleopInit() {
+		chessyDrive.teleopInit();
+	}
+	
+	@Override
 	public void teleopPeriodic() {
 		
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
 		chessyDrive.teleopPeriodic();
-		cube.teleopPeriodic();
-		pc.teleopPeriodic();
-		elevator.teleopPeriodic();
+//		cube.teleopPeriodic();
+//		pc.teleopPeriodic();
+//		elevator.teleopPeriodic();
+	
 		
-		//LED.allianceColorLED();
-		//LED.autonomousColorInit();
-		//LED.rainbowShift();
-		au.roundTo(0.0001);
-//		System.out.println(au.getDistance1());
-		SmartDashboard.putNumber("Sensor1", au.getDistance1());
-		SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
+//		LED.allianceColorLED();
+//		LED.autonomousColorInit();
+//		LED.rainbowShift();
+		au.roundTo(3);
+		au.updateSensors();
+		
+		System.out.println(au.getDistance1() + " " + au.getDistance2());
+
+		SmartDashboard.putNumber("Angle", angleIF.getAngle());
+		SmartDashboard.putNumber("Yaw", angleIF.round(angleIF.getYaw(), 3));
+		SmartDashboard.putNumber("Roll", angleIF.getRoll());
+		SmartDashboard.putNumber("Correction", angleIF.getAngleCorrection());
+				
+		
+		//SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		//SmartDashboard.putNumber("Sensor2", au.getDistance2());
 		//angle.getAngle();
 	}
 

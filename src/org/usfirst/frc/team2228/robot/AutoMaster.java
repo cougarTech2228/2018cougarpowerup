@@ -65,11 +65,16 @@ public class AutoMaster {
 				
 			case "Switch":
 				System.out.println("Switch selected");
+<<<<<<< HEAD
 				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
 						                           Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R)){
 					
 				
+=======
+				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R));
+>>>>>>> refs/heads/robox.angle
 				// Scale cube command
 				break;
 		}
