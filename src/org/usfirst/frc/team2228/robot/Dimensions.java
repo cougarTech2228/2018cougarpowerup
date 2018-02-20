@@ -52,7 +52,7 @@ public class Dimensions {
 	public static final double RAMP_ANGLE = 15.35; // NOT IN INCHES, IT IS AN ANGLE!
 	
 	//Switch Dimensions
-	public static final double SWITCHWALL_TO_ALLIANCESTATION= 168;
+	public static final double SWITCHWALL_TO_ALLIANCESTATION= 153;
 	public static final double SWITCHPLATE_LENGTH = 48;
 	public static final double SWITCHPLATE_WIDTH = 36;
 	public static final double SWITCHPLATE_EDGE_TO_SWITCHPLATE_EDGE = 144;
