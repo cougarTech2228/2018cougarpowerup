@@ -9,13 +9,13 @@ public class PneumaticController {
 	boolean off = false;
 	public DriverIF driverIF;
 	public Compressor c = new Compressor(RobotMap.CAN_ID_10);
-	
+
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
 	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
-	
+
 	public boolean pressureSwitch = c.getPressureSwitchValue();
-	boolean lastButton = false;
+	private boolean lastButton = false;
 	private boolean lastButton2 = false;
 	private boolean triggered = false;
 	private boolean triggered2 = false;
@@ -27,41 +27,38 @@ public class PneumaticController {
 
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
-		//System.out.println(brake.get());
-//		if (driverIF.squeeze()) {
-//			squeezies.set(on);
-//			System.out.println("squeeze");
-//		}
-//		else if (driverIF.release()){
-//			squeezies.set(off);
-//		}
-		if (!driverIF.squeezeToggle() && lastButton && triggered2 == false) {
-			squeezies.set(true);
-			triggered2  = true;
-		}
-		else if (!driverIF.squeezeToggle() && lastButton && triggered2 == true) {
-			squeezies.set(false);
-			triggered2 = false;
-		}
-		lastButton = driverIF.squeezeToggle();
-		//Tests to see if button is pressed, and then actuates on the release
-		if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == false) {
-			lift.set(true);
-			triggered = true;
-			System.out.println("cubeRotateUp toggle active");
-		}
-		else if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == true) {
-			lift.set(false);
-			triggered = false;
-			System.out.println("cubeRotatedown toggle active");
-		}
-		lastButton2 = driverIF.cubeRotateToggle();
+		pneumaticToggle(driverIF.squeezeToggle(), lastButton, triggered, true, squeezies);
+		pneumaticToggle(driverIF.cubeRotateToggle(), lastButton2, triggered2, true, lift);
 	}
-	public void liftSet(boolean state){
+
+	public void liftSet(boolean state) {
 		lift.set(state);
 	}
-	public void brakeSet(boolean state){
+
+	public void brakeSet(boolean state) {
 		brake.set(state);
+	}
+
+	/**
+	 * 
+	 * @param button
+	 *            - button you would like to toggle
+	 * @param lastButton
+	 *            - set to state of button after loop
+	 * @param triggered
+	 *            - if motor is on or off
+	 * @param onDirection
+	 *            - primary direction of solenoid
+	 * @param solenoid
+	 *            - solenoid user would like to activate
+	 */
+	public void pneumaticToggle(boolean button, boolean lastButton, boolean isTriggered, boolean onDirection,
+			Solenoid solenoid) {
+		driverIF.toggle1(button, lastButton, isTriggered);
+		solenoid.set(onDirection);
+		driverIF.toggle2(button, lastButton, isTriggered);
+		solenoid.set(!onDirection);
+		lastButton = button;
 	}
 	// beep bop boopedy beep beep
 

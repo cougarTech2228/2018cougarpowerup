@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.PWMSpeedController;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class DriverIF {
 	XboxIF xboxIF;
@@ -43,13 +44,13 @@ public class DriverIF {
 	// return xboxIF.POV_LEFT();
 	// }
 
-//	public boolean liftCube() {
-//		return xboxIF.RS_BUTTON();
-//	}
+	// public boolean liftCube() {
+	// return xboxIF.RS_BUTTON();
+	// }
 
-//	public boolean lowerCube() {
-//		return xboxIF.LS_BUTTON();
-//	}
+	// public boolean lowerCube() {
+	// return xboxIF.LS_BUTTON();
+	// }
 
 	public boolean cubeRotateToggle() {
 		return xboxIF.A_BUTTON();
@@ -97,14 +98,16 @@ public class DriverIF {
 		else
 			return false;
 	}
-	public boolean squeezeToggle(){
+
+	public boolean squeezeToggle() {
 		return xboxIF.RB_BUTTON();
 	}
 
 	public boolean winchWindUp() {
 		return xboxIF.START_BUTTON();
 	}
-	public boolean winchWindDown(){
+
+	public boolean winchWindDown() {
 		return xboxIF.BACK_BUTTON();
 	}
 
@@ -115,4 +118,25 @@ public class DriverIF {
 	public boolean elevatorToggleDown() {
 		return xboxIF.POV_DOWN();
 	}
+
+	public boolean toggle1(boolean button, boolean lastButton, boolean isTriggered) {
+		if (!button && lastButton && !isTriggered) {
+			isTriggered = true;
+			return true;
+		}
+		return isTriggered;
+	}
+	public boolean toggle2(boolean button, boolean lastButton, boolean isTriggered){
+		if (!button && lastButton && isTriggered == true) {
+			return false;
+		}
+		return 
+		lastButton = button;
+	}
+//	public boolean toggle(boolean button, boolean lastButton, boolean isTriggered){
+//		toggle1(button, lastButton, isTriggered);
+//		toggle2(button, lastButton, isTriggered);
+//		return true;
+//	}
+
 }

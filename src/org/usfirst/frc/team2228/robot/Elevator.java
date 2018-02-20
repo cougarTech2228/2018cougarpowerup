@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Relay;
@@ -21,18 +22,23 @@ public class Elevator {
 	Spark hookDown;
 	PneumaticController pneu;
 	DigitalInput limitSwitch;
+	Toggler t;
 	FeedbackDevice encoder;
 	private boolean lastButtonDown;
 	private boolean triggered;
 	double currentHeight;
-	int heightCount = 0;
+	int heightState;
 	private boolean lastButtonUp;
 	double previousHeight;
 	boolean raising;
 	boolean lowering;
-	boolean lastButton1;
-	boolean lastButton2;
+	boolean lastButton1Conveyor;
+	boolean lastButton2Conveyor;
+	boolean lastButton1Elevator;
+	boolean lastButton2Elevator;
 	boolean triggered2;
+	boolean triggered1Elevator;
+	private boolean lastButton;
 
 	public enum ElevatorHeights {
 		BOTTOM(0), PORTAL(100), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
@@ -68,13 +74,15 @@ public class Elevator {
 		lowering = true;
 		triggered = false;
 		triggered2 = false;
+		lastButton = false;
+		triggered1Elevator = false;
+		t = new Toggler(5);
+		currentHeight = ElevatorHeights.BOTTOM.height;
 	}
 
 	public void teleopPeriodic() {
+		elevator.getSensorCollection().getQuadraturePosition();
 		double b = 1;
-		// SmartDashboard.getNumber("Elevator Speed:", 0);
-		// b is the speed of the
-
 		if (driverIF.hookForward()) {
 			hookDown.set(.4);
 		} else if (driverIF.hookBackward()) {
@@ -83,99 +91,32 @@ public class Elevator {
 			hookDown.set(0);
 		}
 
-		if (driverIF.RaiseElevator()) {
-			pneu.brakeSet(off);
-			elevator.set(b);
-			// if(elevator.getSelectedSensorPosition(0) == -1){
-			// elevator.set(0);
-			//
-			// }
-
-		} else if (driverIF.LowerElevator()) {
-			pneu.brakeSet(off);
-			elevator.set(-b);
-			pneu.liftSet(false);
-			if (!limitSwitch.get()) {
-				System.out.println("Limit Switch Triggered");
-				elevator.set(0);
-			}
-		} else {
-			elevator.set(0);
-			pneu.brakeSet(on);
-		}
-		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
-		// if (heightCount < 4) {
-		// heightCount++;
-		// }
+		// if (driverIF.RaiseElevator()) {
+		// pneu.brakeSet(off);
+		// elevator.set(b);
+		// // if(elevator.getSelectedSensorPosition(0) == -1){
+		// // elevator.set(0);
+		// //
+		// // }
 		//
-		//
-		// } else if (!driverIF.elevatorToggleDown() && lastButtonDown) {
-		// if (heightCount > 0) {
-		// heightCount--;
+		// } else if (driverIF.LowerElevator()) {
+		// pneu.brakeSet(off);
+		// elevator.set(-b);
+		// pneu.liftSet(false);
+		// if (!limitSwitch.get()) {
+		// System.out.println("Limit Switch Triggered");
+		// elevator.set(0);
 		// }
-		//
-		//
-		// }
-		// lastButtonUp = driverIF.elevatorToggleUp();
-		// lastButtonDown = driverIF.elevatorToggleDown();
-		// previousHeight =
-		// elevator.getSensorCollection().getQuadraturePosition();
-		// if(heightCount == 0){
-		// elevatorSet(ElevatorHeights.BOTTOM.height, .7);
-		// }
-		// else if(heightCount == 1){
-		// elevatorSet(ElevatorHeights.PORTAL.height, .7);
-		// }
-		// else if(heightCount == 2){
-		// elevatorSet(ElevatorHeights.SCALE_LOW.height, .7);
-		// }
-		// else if(heightCount == 3){
-		// elevatorSet(ElevatorHeights.SCALE_NEUTRAL.height, .7);
-		// }
-		// else if(heightCount == 4){
-		// elevatorSet(ElevatorHeights.SCALE_HIGH.height, .7);
-		// }
-		double d = 1;
-		// SmartDashboard.getNumber("back conveyor:", 0);
-		// d is the speed of the elevator motors
-
-		// if (driverIF.BackConveyorForwards()) {
-		// conveyor1.set(d);
-		// System.out.println("BACKFOR");
-		// } else if (driverIF.BackConveyorBackwards()) {
-		// conveyor1.set(-d);
-		// System.out.println("BACKBACK");
 		// } else {
-		// conveyor1.set(0);
+		// elevator.set(0);
+		// pneu.brakeSet(on);
 		// }
 
-		double e = 1;
-		// SmartDashboard.getNumber("front conveyor:", 0);
-		// hya
-
-		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
-			conveyor1.set(1);
-			conveyor2.set(1);
-			triggered = true;
-			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
-			conveyor1.set(0);
-			conveyor2.set(0);
-			triggered = false;
-			// System.out.println("Co");
-		}
-
-		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
-			conveyor1.set(-1);
-			triggered2 = true;
-			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
-			conveyor1.set(0);
-			triggered2 = false;
-			// System.out.println("Co");
-		}
-		lastButton1 = driverIF.conveyorsForward();
-		lastButton2 = driverIF.conveyorsBackward();
+		double d = 1;
+		elevatorToggle(driverIF.elevatorToggleUp(), driverIF.elevatorToggleDown(), 1.0, elevator);
+		motorToggle(driverIF.conveyorsForward(), lastButton1Conveyor, triggered, true, 1, conveyor1);
+		motorToggle(driverIF.conveyorsForward(), lastButton1Conveyor, triggered, true, 1, conveyor2);
+		motorToggle(driverIF.conveyorsBackward(), lastButton2Conveyor, triggered2, true, -1, conveyor1);
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
 		if (LaunchValue == 1) {
 			hook.set(Relay.Value.kOff);
@@ -190,26 +131,142 @@ public class Elevator {
 
 	public boolean elevatorSet(double height, double speed) {
 		pneu.brakeSet(off);
-		elevator.set(speed);
-		if (raising = true && elevator.getSensorCollection().getQuadraturePosition() >= height) {
-			elevator.set(0);
-			pneu.brakeSet(on);
-			return true;
-		} else if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
-			elevator.set(0);
-			pneu.brakeSet(on);
-			return true;
+		if (raising) {
+			elevator.set(1);
+			if (elevator.getSensorCollection().getQuadraturePosition() >= height) {
+				elevator.set(0);
+				pneu.brakeSet(on);
+				return true;
+			} else {
+
+			}
+		} else {
+			elevator.set(-1);
+			if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
+				elevator.set(0);
+				pneu.brakeSet(on);
+			}
 		}
 		return false;
 	}
-	public void conveyors(boolean on){
-		if(on){
+
+	public void conveyors(boolean on) {
+		if (on) {
 			conveyor1.set(1);
 			conveyor2.set(1);
-		}
-		else{
+		} else {
 			conveyor1.set(0);
 			conveyor2.set(0);
 		}
+	}
+
+	/**
+	 * 
+	 * @param button
+	 *            - button you would like to toggle
+	 * @param lastButton
+	 *            - set to state of button after loop
+	 * @param triggered
+	 *            - if motor is on or off
+	 * @param on_off
+	 *            - true if user wants the button to toggle the motor on/off,
+	 *            false if they want it to toggle to speed/-speed
+	 * @param speed
+	 *            - speed at which user wants motors to run
+	 * @param motor
+	 *            - motor the user wants to toggle
+	 */
+	public void motorToggle(boolean button, boolean lastButton, boolean isTriggered, boolean on_off, double speed,
+			PWMSpeedController motor) {
+		if (on_off) {
+			// driverIF.toggle1(button, lastButton, isTriggered);
+			if (!button && lastButton && !isTriggered) {
+				isTriggered = true;
+				motor.set(speed);
+			}
+			if (!button && lastButton && isTriggered == true) {
+				motor.set(0);
+			}
+			lastButton = button;
+			// driverIF.toggle2(button, lastButton, isTriggered);
+
+		} else {
+			// driverIF.toggle1(button, lastButton, isTriggered);
+			if (!button && lastButton && !isTriggered) {
+				isTriggered = true;
+				motor.set(speed);
+			}
+			if (!button && lastButton && isTriggered == true) {
+				motor.set(-speed);
+			}
+			lastButton = button;
+
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param buttonUp
+	 *            - button user wants to toggle the elevator up
+	 * @param buttonDown
+	 *            - button user wants to toggle elevator down
+	 * @param lastButton
+	 *            - set to state of button at the end of loop cycle
+	 * @param triggered
+	 *            - if motor is on or off
+	 * @param on_off
+	 *            - true if user wants the button to toggle the motor on/off,
+	 *            false if they want it to toggle to speed/-speed
+	 * @param speed
+	 *            - speed at which user wants motors to run
+	 * @param elevator
+	 *            - motor the user wants to toggle
+	 */
+
+	public void elevatorToggle(boolean buttonUp, boolean buttonDown, double speed, WPI_TalonSRX elevator) {
+		/*
+		 * int heightCount = 0; if (heightCount < 4) {
+		 * driverIF.toggle1(buttonUp, lastButton, isTriggered); heightCount++;
+		 * System.out.println("Going up"); driverIF.toggle2(buttonUp,
+		 * lastButton, isTriggered); heightCount++;
+		 * System.out.println("Going up"); } else if (heightCount > 0) {
+		 * driverIF.toggle1(buttonDown, lastButton, isTriggered); heightCount--;
+		 * System.out.println("Going down"); driverIF.toggle2(buttonDown,
+		 * lastButton, isTriggered); heightCount--;
+		 * System.out.println("Going down"); }
+		 */
+
+		int heightCount = t.toggle(buttonUp, true);
+		heightCount = t.toggle(buttonDown, false);
+		if (heightState < heightCount) {
+			raising = true;
+		} else {
+			raising = false;
+		}
+
+		if (heightCount == 0) {
+			elevatorSet(ElevatorHeights.BOTTOM.height, .7);
+			currentHeight = ElevatorHeights.BOTTOM.height;
+			System.out.println("Bottom");
+		} else if (heightCount == 1) {
+			elevatorSet(ElevatorHeights.PORTAL.height, .7);
+			currentHeight = ElevatorHeights.PORTAL.height;
+			System.out.println("Portal");
+		} else if (heightCount == 2) {
+			elevatorSet(ElevatorHeights.SCALE_LOW.height, .7);
+			currentHeight = ElevatorHeights.SCALE_LOW.height;
+			System.out.println("Scale low");
+		} else if (heightCount == 3) {
+			elevatorSet(ElevatorHeights.SCALE_NEUTRAL.height, .7);
+			currentHeight = ElevatorHeights.SCALE_NEUTRAL.height;
+			System.out.println("Scale neutral");
+		} else if (heightCount == 4) {
+			elevatorSet(ElevatorHeights.SCALE_HIGH.height, .7);
+			currentHeight = ElevatorHeights.SCALE_HIGH.height;
+			System.out.println("Scale high");
+		}
+		heightState = heightCount;
+
 	}
 }
