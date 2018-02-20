@@ -60,7 +60,13 @@ public class TeleopController {
 	public void teleopPeriodic() {
 		double origThrottle = -DriverIF.Throttle();
 		double origTurn = DriverIF.Turn();
-
+		if(SRXDriveBaseCfg.isTurnReversed = true){
+		origTurn = -DriverIF.Turn();
+		}
+		else{
+			origTurn = DriverIF.Turn();
+		}
+		
 		double turn = origTurn;
 		double throttle = origThrottle;
 		// ========================================

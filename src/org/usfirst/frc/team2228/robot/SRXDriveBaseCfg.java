@@ -11,11 +11,22 @@ public class SRXDriveBaseCfg {
 		//hoi
 		// ==============================================================
 		// SET MOTOR DIRECTION
+		// THESE ARE FOR MU
+//		public static boolean isDriveRightMasterMtrReversed = true;
+//		public static boolean isDriveRightFollowerMtrReversed = true;
+//		public static boolean isDriveLeftMasterMtrReversed = false;
+//		public static boolean isDriveLeftFollowerMtrReversed = false;
+//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+//		public static boolean isTurnReversed = true;
+		//===============================================
+		// SET MOTOR DIRECTION
+		// THESE ARE FOR THE TEST BOT
 		public static boolean isDriveRightMasterMtrReversed = false;
 		public static boolean isDriveRightFollowerMtrReversed = false;
 		public static boolean isDriveLeftMasterMtrReversed = true;
 		public static boolean isDriveLeftFollowerMtrReversed = true;
-		
+		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+		public static boolean isTurnReversed = false;
 		//===============================================
 		// BRAKE AND COAST PARAMETERS
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
@@ -120,10 +131,11 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// Driving straight set up parameters
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 1.0805;
+		public static double kDriveStraightCorrection = .9150;
+				//for test bot 1.0805;
 				//for robox 0.93; 
 				// Hard floor correction 0.87;
 		
