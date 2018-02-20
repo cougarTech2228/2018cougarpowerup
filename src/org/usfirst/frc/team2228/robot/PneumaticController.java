@@ -46,12 +46,12 @@ public class PneumaticController {
 		lastButton = driverIF.squeezeToggle();
 		//Tests to see if button is pressed, and then actuates on the release
 		if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == false) {
-			lift.set(true);
+			lift.set(false);
 			triggered = true;
 			System.out.println("cubeRotateUp toggle active");
 		}
 		else if (!driverIF.cubeRotateToggle() && lastButton2 && triggered == true) {
-			lift.set(false);
+			lift.set(true);
 			triggered = false;
 			System.out.println("cubeRotatedown toggle active");
 		}

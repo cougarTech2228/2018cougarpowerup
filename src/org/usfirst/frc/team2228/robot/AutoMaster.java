@@ -13,8 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoMaster {
-	final String defaultAuto = "Baseline";
-	final String customAuto = "Switch";
+	final String baseLineAuto = "Baseline";
+	final String leftSwitchAuto = "Left Switch";
+	final String rightSwitchAuto = "Right Switch";
 	private char[] positions;
 	private SRXDriveBase base;
 	private String autoSelected;
@@ -22,22 +23,22 @@ public class AutoMaster {
 	private CommandGroup Cg;
 	private SendableChooser<String> chooser = new SendableChooser<>();
 	private String robotSide = "Right";
-	private double THISISWRONGSHOULDCALIBRATE = 0.0;
+	private double THISISWRONGSHOULDCALIBRATE = 5.0;
 	private Elevator elevator;
 	
 	public AutoMaster(SRXDriveBase srxdb, Elevator _elevator) {
 		base = srxdb;
-		chooser.addDefault("Switch", customAuto);
+		chooser.addDefault("Left Switch", leftSwitchAuto);
 		elevator = _elevator;
-		chooser.addObject("Baseline", defaultAuto);
-		
+		chooser.addObject("Baseline", baseLineAuto);
+		chooser.addObject("Right Switch", rightSwitchAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		//BOOP BEEP BOP BEEPEDIE BOOP BOP 
 		
 		
 		
 		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
+		// baseLineAuto);
 		StringCommand command = new StringCommand(input);
 		//command.start();
 
@@ -62,17 +63,28 @@ public class AutoMaster {
 		switch (autoSelected) {
 			case "Baseline":
 				System.out.println("Baseline selected");
-				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
+				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
 						                            Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				break;
 				
-			case "Switch":
-				System.out.println("Switch selected");
-				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE+
-						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+			case "Left Switch":
+				System.out.println("Left Switch selected");
+				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
+						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				if(gameData.charAt(0) == 'L'){
 				Cg.addSequential(new Switch(elevator));
-				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R)){
-					
+				}
+				
+				// Scale cube command
+				break;
+				
+			case "Right Switch":
+				System.out.println("Right Switch selected");
+				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
+						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				if(gameData.charAt(0) == 'R'){
+				Cg.addSequential(new Switch(elevator));
+				}
 				
 				// Scale cube command
 				break;
