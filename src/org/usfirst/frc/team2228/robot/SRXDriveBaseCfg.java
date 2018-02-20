@@ -11,10 +11,10 @@ public class SRXDriveBaseCfg {
 		//hoi
 		// ==============================================================
 		// SET MOTOR DIRECTION
-		public static boolean isDriveRightMasterMtrReversed = false;
-		public static boolean isDriveRightFollowerMtrReversed = false;
-		public static boolean isDriveLeftMasterMtrReversed = true;
-		public static boolean isDriveLeftFollowerMtrReversed = true;
+		public static boolean isDriveRightMasterMtrReversed = true;
+		public static boolean isDriveRightFollowerMtrReversed = true;
+		public static boolean isDriveLeftMasterMtrReversed = false;
+		public static boolean isDriveLeftFollowerMtrReversed = false;
 		
 		//===============================================
 		// BRAKE AND COAST PARAMETERS
@@ -125,6 +125,7 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// Driving straight set up parameters
+
 		
 		public static boolean isDriveStraightAssistEnabled = false;
 		// Cap sensor correction to % of throttle power level
@@ -134,6 +135,7 @@ public class SRXDriveBaseCfg {
 
 		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
 		public static double kRotateDriveStraightCorrection = 0.93;		
+
 		//===============================================
 		//MOTION METHOD PARAMETERS
 		

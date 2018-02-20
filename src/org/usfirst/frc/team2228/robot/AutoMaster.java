@@ -55,17 +55,13 @@ public class AutoMaster {
 		switch (autoSelected) {
 			case "Baseline":
 				System.out.println("Baseline selected");
-				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - 
-						                           Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				break;
 				
 			case "Switch":
 				System.out.println("Switch selected");
-				Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - 
-						                           Dimensions.LENGTH_OF_ROBOT), 0.2, false));
-				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R)){
-				Cg.addSequential(new Switch(elevator));
-					
+				Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+				//if ((robotSide == "Left" && L) || (robotSide == "Right" && R));
 				// Scale cube command
 				break;
 		}

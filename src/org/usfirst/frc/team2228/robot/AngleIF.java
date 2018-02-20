@@ -79,6 +79,10 @@ public class AngleIF implements PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		// TODO Auto-generated method stub
-
+	}
+	
+	public double round(double d, int places) {
+		double a = Math.pow(10, places);
+		return Math.round(d * a) / a;
 	}
 }
