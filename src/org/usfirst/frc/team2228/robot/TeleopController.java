@@ -75,7 +75,7 @@ public class TeleopController {
 		// ============================================
 
 		// Check and limit range of throttle and turn
-		throttle = limit(throttle);
+	throttle = limit(throttle);
 		turn = limit(turn);
 		
 		if(turn != 0){
@@ -232,7 +232,7 @@ public class TeleopController {
 
 			// If driverIF change is large enough to cause a wheelie or cause the
 			// robot to start to tip - the robot intervenes to see that this does
-			// not occur The following limits the change in driverIF movement
+			// not occur. The following limits the change in driverIF movement
 			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kTransitionMaxDelta) {
 				smoothFactor = TeleopControllerCfg.kTransitionSmoothFactor;
 			} else {
@@ -289,7 +289,7 @@ public class TeleopController {
 	
 	private void getButtonA(){
 		if (!isButtonCmdActiveA){
-			if (DriverIF.release() && !lastButtonReadA) {
+			if (DriverIF.collection() && !lastButtonReadA) {
 				isButtonCmdActiveA = true;
 				driveBase.setRightSensorPositionToZero();
 				driveBase.setLeftSensorPositionToZero();
@@ -315,8 +315,9 @@ public class TeleopController {
 				msg("++Button A done");
 			}
 		
+			
 		}
-		lastButtonReadA = DriverIF.release(); 
+		lastButtonReadA = DriverIF.collection(); 
 	}
 /*
 	private void getButtonB(){

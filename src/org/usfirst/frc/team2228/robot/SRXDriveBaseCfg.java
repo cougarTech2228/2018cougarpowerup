@@ -11,10 +11,10 @@ public class SRXDriveBaseCfg {
 		//hoi
 		// ==============================================================
 		// SET MOTOR DIRECTION
-		public static boolean isDriveRightMasterMtrReversed = false;
-		public static boolean isDriveRightFollowerMtrReversed = false;
-		public static boolean isDriveLeftMasterMtrReversed = true;
-		public static boolean isDriveLeftFollowerMtrReversed = true;
+		public static boolean isDriveRightMasterMtrReversed = true;
+		public static boolean isDriveRightFollowerMtrReversed = true;
+		public static boolean isDriveLeftMasterMtrReversed = false;
+		public static boolean isDriveLeftFollowerMtrReversed = false;
 		
 		//===============================================
 		// BRAKE AND COAST PARAMETERS
@@ -120,10 +120,11 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// Driving straight set up parameters
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 1.0805;
+		//Value for test bot 1.0805
+		public static double kDriveStraightCorrection = .9150;
 				//for robox 0.93; 
 				// Hard floor correction 0.87;
 		

@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	UsbCamera camera;
+//	UsbCamera camera;
 	//private CANLED LED;
 	//private AngleIF angle;
 
@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
 		au = new AnalogUltrasonic();
-		camera = CameraServer.getInstance().startAutomaticCapture();
+//		camera = CameraServer.getInstance().startAutomaticCapture();
 //		LED = new CANLED();
 //		LED.colorInit();
 		//angle = new AngleIF();
