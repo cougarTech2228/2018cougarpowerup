@@ -104,7 +104,6 @@ public class TeleopController {
 				origTurn,
 				turn);
 		}
-	
 	}	
 
 // ===========================================

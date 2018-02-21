@@ -18,8 +18,8 @@ public class CubeManipulator {
 		left = new Spark(RobotMap.PWM_PORT_0);
 		right = new Spark(RobotMap.PWM_PORT_1);
 		
-		SmartDashboard.putNumber("CollectionValue", 0.25);
-		SmartDashboard.putNumber("ExpulsionValue", -0.25);
+		SmartDashboard.putNumber("CollectionValue", 0.75);
+		SmartDashboard.putNumber("ExpulsionValue", -0.75);
 		
 		// positive is clockwise, negative is counter clockwise
 		left.set(0);

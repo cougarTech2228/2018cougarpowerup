@@ -28,9 +28,9 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	//UsbCamera camera;
-	//private CANLED LED;
-	//private AngleIF angle;
+	UsbCamera frontCamera, backCamera;
+	// private CANLED LED;
+	// private AngleIF angle;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,18 +44,20 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		
+
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
-		auto = new AutoMaster(base, elevator);
+		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
-		//camera = CameraServer.getInstance().startAutomaticCapture();
-//		LED = new CANLED();
-//		LED.colorInit();
-		//angle = new AngleIF();
+		//frontCamera = new UsbCamera("Front Camera", 0);
+		//backCamera = new UsbCamera("Back Camera", 1);
+		//frontCamera = CameraServer.getInstance().startAutomaticCapture();
+		//backCamera = CameraServer.getInstance().startAutomaticCapture();
+		// LED = new CANLED();
+		// LED.colorInit();
+		// angle = new AngleIF();
 	}
 
-	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -69,6 +71,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		// Gets everything from Autonomous Init from the AutoMaster class
 		auto.init();
 	}
 
@@ -77,35 +80,38 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		// Gets everything from the Autonomous Periodic from the AutoMaster
+		// class
 		auto.run();
 	}
 
-//	public void teleopInit() {
-//		System.out.println("teleopInit() fi!");
-//		chessyDrive.teleopInit();
-//		System.out.println("Teleop Init done");
-//	}
+	// public void teleopInit() {
+	// System.out.println("teleopInit() fi!");
+	// chessyDrive.teleopInit();
+	// System.out.println("Teleop Init done");
+	// }
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
-		// SmartDashboard.putNumber("Sonar", us.getDistance());
+		// Gets everything from the generic drivebase, the CubeManipulator
+		// class, the Pneumatic class and the Elevatorclass for the teleop
+		// period
 		chessyDrive.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
-		
-		//LED.allianceColorLED();
-		//LED.autonomousColorInit();
-		//LED.rainbowShift();
+
+		// LED.allianceColorLED();
+		// LED.autonomousColorInit();
+		// LED.rainbowShift();
 		au.roundTo(0.0001);
-//		System.out.println(au.getDistance1());
+		// System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
-		//angle.getAngle();
+		// angle.getAngle();
 	}
 
 	/**
