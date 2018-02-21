@@ -20,7 +20,7 @@ public class Elevator {
 	Relay hook;
 	Spark hookDown;
 	PneumaticController pneu;
-	DigitalInput limitSwitch;
+	DigitalInput limitSwitch, leftLimitSwitch, rightLimitSwitch, hookArmDownwards, hookArmUpwards;
 	FeedbackDevice encoder;
 	private boolean lastButtonDown;
 	private boolean triggered;
@@ -50,7 +50,11 @@ public class Elevator {
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
-		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
+//		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
+		leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
+		rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
+		hookArmDownwards = new DigitalInput(RobotMap.DIO_PORT_2);
+		hookArmUpwards = new DigitalInput(RobotMap.DIO_PORT_3);
 		elevator.set(0);
 		hook = new Relay(0, Relay.Direction.kForward);
 		hook.set(Relay.Value.kForward);
@@ -71,13 +75,13 @@ public class Elevator {
 	}
 
 	public void teleopPeriodic() {
-		double b = 1;
+		double b = .5;
 		// SmartDashboard.getNumber("Elevator Speed:", 0);
 		// b is the speed of the
 
-		if (driverIF.hookForward()) {
+		if (driverIF.hookForward() && hookArmUpwards.get()) {
 			hookDown.set(.4);
-		} else if (driverIF.hookBackward()) {
+		} else if (driverIF.hookBackward()  && hookArmDownwards.get()) {
 			hookDown.set(-.4);
 		} else {
 			hookDown.set(0);
@@ -86,19 +90,23 @@ public class Elevator {
 		if (driverIF.RaiseElevator()) {
 			pneu.brakeSet(off);
 			elevator.set(b);
-			// if(elevator.getSelectedSensorPosition(0) == -1){
-			// elevator.set(0);
-			//
-			// }
+			 if(elevator.getSelectedSensorPosition(0) == -1){
+			 elevator.set(0);
+			
+			 }
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
 			elevator.set(-b);
 			pneu.liftSet(false);
-			if (!limitSwitch.get()) {
+			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
 			}
+//			if(!limitSwitch.get()){
+//				elevator.set(0);
+//				
+//			}
 		} else {
 			elevator.set(0);
 			pneu.brakeSet(on);
@@ -149,13 +157,13 @@ public class Elevator {
 		// conveyor1.set(0);
 		// }
 
-		double e = 1;
+		double e = .5;
 		// SmartDashboard.getNumber("front conveyor:", 0);
 		// hya
 
 		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
-			conveyor1.set(1);
-			conveyor2.set(1);
+			conveyor1.set(e);
+			conveyor2.set(-e);
 			triggered = true;
 			// System.out.println("Suck in");
 		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
@@ -166,11 +174,13 @@ public class Elevator {
 		}
 
 		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
-			conveyor1.set(-1);
+			conveyor1.set(-e);
+			conveyor2.set(e);
 			triggered2 = true;
 			// System.out.println("Suck in");
 		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
 			conveyor1.set(0);
+			conveyor2.set(0);
 			triggered2 = false;
 			// System.out.println("Co");
 		}

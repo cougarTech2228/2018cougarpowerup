@@ -12,7 +12,7 @@ public class PneumaticController {
 	
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
-	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
+	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_2);
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
 	boolean lastButton = false;
@@ -62,6 +62,14 @@ public class PneumaticController {
 	}
 	public void brakeSet(boolean state){
 		brake.set(state);
+	}
+	public void squeeze(boolean _grab){
+		if(_grab == true){
+			squeezies.set(true);
+		}
+		else{
+			squeezies.set(false);
+		}
 	}
 	// beep bop boopedy beep beep
 
