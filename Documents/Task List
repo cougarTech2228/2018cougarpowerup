@@ -156,6 +156,12 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - every laptop bag should have a usb cable (and an ethernet cable)
   - drive laptops should have a xbox controller
   
+  - MOREAUTOSTUFF
+  - make sure the code doesn't crash when we don't get a valid string on the drive station (check for null and length)
+  - the 168 inches was the middle of the switch, make a new constant for the side
+  - use the 168 for the left switch auto, because we can drive straight perpendicular to the switch
+  - add commands to drive straight to the 168, and then rotate 90 degrees and drive until the ultrasonics are happy
+
   
   
   
