@@ -24,7 +24,12 @@ public class MoveTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
+		if(base.velMoveToPosition(moveIn, movePwr, isCascade)){
 		isDone = !base.velMoveToPosition(moveIn, movePwr, isCascade);
+		}
+		else if(1 == 1){
+			
+		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

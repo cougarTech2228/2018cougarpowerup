@@ -54,9 +54,13 @@ public class AutoMaster {
 		autoSelected = chooser.getSelected();
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		gameData = gameData.replace(" ", "");
+		if(gameData.length() >= 3){
+		gameData = gameData.substring(0, 3);
+		}
 		positions = gameData.toCharArray();
 		System.out.println("Auto selected: " + autoSelected);
-		if (gameData.charAt(0) == 'L') {
+		if (gameData.charAt(0) == 'L' || gameData.charAt(0) == 'l') {
 			System.out.println("L");
 		} else {
 			System.out.println("R");
@@ -65,40 +69,71 @@ public class AutoMaster {
 
 		case "Baseline":
 			System.out.println("Baseline selected");
-			//Adds movement to the auto sequence
+			// Adds movement to the auto sequence
 			Cg.addSequential(
 					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 			break;
 
+//		case "Left Switch":
+//			
+//			if(gameData.length() == 0){
+//				System.out.println("Could not find game data");
+//				Cg.addSequential(
+//						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+//			}
+//			else{
+//			System.out.println("Left Switch selected");
+//			// Adds movement to the auto sequence
+//			Cg.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT),
+//					0.4, false));
+//			// If the left side of the switch is ours, it places the cube, if
+//			// not, it does nothing
+//			if (gameData.charAt(0) == 'L' || gameData.charAt(0) == 'l') {
+//				Cg.addSequential(new Switch(elevator));
+//			}
+//			}
+//			// Scale cube command
+//			break;
+			
 		case "Left Switch":
-			System.out.println("Left Switch selected");
-			//Adds movement to the auto sequence
-			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					0.4, false));
-			//If the left side of the switch is ours, it places the cube, if not, it does nothing
-			if (gameData.charAt(0) == 'L') {
-				Cg.addSequential(new Switch(elevator));
+			if(gameData.length() == 0){
+				System.out.println("Could not find game data");
+				Cg.addSequential(
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 			}
-
-			// Scale cube command
+			else{
+				System.out.println("Left Switch Auto Selected");
+				Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
+				Cg.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				Cg.addSequential(new RotateTo(base, 90, 0.3));
+				
+			}
 			break;
 
 		case "Right Switch":
-			System.out.println("Right Switch selected");
-			//The bot starts closing the aquirer arms for half a second
-			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
-			//After half a second the bot starts moving
-			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					0.4, false));
-			//While the bot is moving, it continues closing the aquirer arms for another second and a half
-			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
 
-			if (gameData.charAt(0) == 'R') {
-				//If the right side of the switch is ours, it places the cube while opening the aquirer arms
-				Cg.addSequential(new Switch(elevator));
-				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
+			if (gameData.length() == 0) {
+				System.out.println("Could not find game data");
+				Cg.addSequential(
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+			} else {
+				System.out.println("Right Switch selected");
+				// The bot starts closing the aquirer arms for half a second
+				Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
+				// After half a second the bot starts moving
+				Cg.addSequential(new MoveTo(base,
+						(Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				// While the bot is moving, it continues closing the aquirer
+				// arms for another second and a half
+				Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
+
+				if (gameData.charAt(0) == 'R' || gameData.charAt(0) == 'r') {
+					// If the right side of the switch is ours, it places the
+					// cube while opening the aquirer arms
+					Cg.addSequential(new Switch(elevator));
+					Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
+				}
 			}
-
 			// Scale cube command
 			break;
 		}
@@ -106,7 +141,7 @@ public class AutoMaster {
 	}
 
 	public void run() {
-		//Runs the sequence made in auto init
+		// Runs the sequence made in auto init
 		Scheduler.getInstance().run();
 	}
 }
