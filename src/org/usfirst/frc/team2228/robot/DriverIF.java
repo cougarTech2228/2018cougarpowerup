@@ -18,7 +18,7 @@ public class DriverIF {
 		return xboxIF.POV_DOWN();
 	}
 
-	public boolean conveyorsForward() {
+	public boolean conveyorToggle() {
 		if (xboxIF.RIGHT_TRIGGER() > 0.6)
 			return true;
 		else
@@ -59,6 +59,7 @@ public class DriverIF {
 	public boolean collection() {
 		return xboxIF.X_BUTTON();
 	}
+
 
 	public boolean expulsion() {
 		return xboxIF.B_BUTTON();

@@ -70,6 +70,8 @@ public class Dimensions {
 	public static final double HIGHT_OF_RAMP = 1.75;
 	public static final double BOTTEM_OF_INPUT_TO_TOP_OF_INPUT = 16.25;
 	public static final double WIDTH_OF_INPUT = 21;
+	public static final double GROUND_TO_PORTAL = 20;
+	
 	
 	
 }

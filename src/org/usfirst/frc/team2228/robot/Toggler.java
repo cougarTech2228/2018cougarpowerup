@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
 public class Toggler {
-	private int state, states;
+	public int state, states;
 	boolean on;
 
 	public Toggler(int states) {
@@ -9,14 +9,17 @@ public class Toggler {
 		this.states = states;
 		on = true;
 	}
+	public int get() {
+		return state;
+	}
 
-	public int toggle(boolean button, boolean iterateUp) {
-		if (button) {
+	public int toggle(boolean buttonUp, boolean buttonDown) {
+		if (buttonUp || buttonDown) {
 //			System.out.println("Button " + iterateUp);
 			if (on) {
-				if (iterateUp)
+				if (buttonUp)
 					state += 1;
-				else
+				else if (buttonDown)
 					state -= 1;
 				on = false;
 			}
@@ -27,7 +30,16 @@ public class Toggler {
 		}
 		if (state > states - 1)
 			state = 0;
+		if (state < 0)
+			state = states - 1;
 
 		return state;
+	}
+	public int toggle(boolean button) {
+		return toggle(button, false);
+	}
+	@Override
+	public String toString() {
+		return "state: " + state + " max: " + states;
 	}
 }
