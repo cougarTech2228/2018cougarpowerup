@@ -150,7 +150,7 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
     - group test components, debug missing components
     - try adding command buttons
   
-  LABELING
+ DONE - LABELING
   - robox SRXCANTalons master/follower left and right need to be labeled as CAN id 1 through
   - label the laptop power adapters with 2228 and which laptop it goes to
   - every laptop bag should have a usb cable (and an ethernet cable)
