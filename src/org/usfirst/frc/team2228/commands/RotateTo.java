@@ -16,7 +16,7 @@ public class RotateTo extends Command {
 	}
 	
 	protected void initialize() {
-		
+
 		System.out.println("initialized");
 	}
 

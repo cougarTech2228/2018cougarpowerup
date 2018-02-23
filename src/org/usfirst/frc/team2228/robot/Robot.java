@@ -49,10 +49,10 @@ public class Robot extends IterativeRobot {
 		elevator = new Elevator(driverIF, pc);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
-		//frontCamera = new UsbCamera("Front Camera", 0);
-		//backCamera = new UsbCamera("Back Camera", 1);
-		//frontCamera = CameraServer.getInstance().startAutomaticCapture();
-		//backCamera = CameraServer.getInstance().startAutomaticCapture();
+		// frontCamera = new UsbCamera("Front Camera", 0);
+		// backCamera = new UsbCamera("Back Camera", 1);
+		// frontCamera = CameraServer.getInstance().startAutomaticCapture();
+		// backCamera = CameraServer.getInstance().startAutomaticCapture();
 		// LED = new CANLED();
 		// LED.colorInit();
 		// angle = new AngleIF();

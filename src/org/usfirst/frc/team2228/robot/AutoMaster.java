@@ -6,7 +6,6 @@ import org.usfirst.frc.team2228.commands.PneumaticGrabber;
 import org.usfirst.frc.team2228.commands.RotateTo;
 import org.usfirst.frc.team2228.commands.StringCommand;
 import org.usfirst.frc.team2228.commands.Switch;
-
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -55,8 +54,8 @@ public class AutoMaster {
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		gameData = gameData.replace(" ", "");
-		if(gameData.length() >= 3){
-		gameData = gameData.substring(0, 3);
+		if (gameData.length() >= 3) {
+			gameData = gameData.substring(0, 3);
 		}
 		positions = gameData.toCharArray();
 		System.out.println("Auto selected: " + autoSelected);
@@ -74,39 +73,42 @@ public class AutoMaster {
 					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 			break;
 
-//		case "Left Switch":
-//			
-//			if(gameData.length() == 0){
-//				System.out.println("Could not find game data");
-//				Cg.addSequential(
-//						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
-//			}
-//			else{
-//			System.out.println("Left Switch selected");
-//			// Adds movement to the auto sequence
-//			Cg.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT),
-//					0.4, false));
-//			// If the left side of the switch is ours, it places the cube, if
-//			// not, it does nothing
-//			if (gameData.charAt(0) == 'L' || gameData.charAt(0) == 'l') {
-//				Cg.addSequential(new Switch(elevator));
-//			}
-//			}
-//			// Scale cube command
-//			break;
-			
+		// case "Left Switch":
+		//
+		// if(gameData.length() == 0){
+		// System.out.println("Could not find game data");
+		// Cg.addSequential(
+		// new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE -
+		// Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+		// }
+		// else{
+		// System.out.println("Left Switch selected");
+		// // Adds movement to the auto sequence
+		// Cg.addSequential(new MoveTo(base,
+		// (Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER -
+		// Dimensions.LENGTH_OF_ROBOT),
+		// 0.4, false));
+		// // If the left side of the switch is ours, it places the cube, if
+		// // not, it does nothing
+		// if (gameData.charAt(0) == 'L' || gameData.charAt(0) == 'l') {
+		// Cg.addSequential(new Switch(elevator));
+		// }
+		// }
+		// // Scale cube command
+		// break;
+
 		case "Left Switch":
-			if(gameData.length() == 0){
+			if (gameData.length() == 0) {
 				System.out.println("Could not find game data");
 				Cg.addSequential(
 						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
-			}
-			else{
+			} else {
 				System.out.println("Left Switch Auto Selected");
 				Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
-				Cg.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				Cg.addSequential(new MoveTo(base,
+						(Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
 				Cg.addSequential(new RotateTo(base, 90, 0.3));
-				
+
 			}
 			break;
 

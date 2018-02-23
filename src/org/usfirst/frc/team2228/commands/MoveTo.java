@@ -10,25 +10,24 @@ public class MoveTo extends Command {
 	private double moveIn, movePwr;
 	private boolean isCascade;
 	private SRXDriveBase base;
-	
+
 	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) {
 		this.base = base;
 		moveIn = _MoveToPositionIn;
 		movePwr = _MoveToPositionPwrLevel;
 		isCascade = _isCascadeMove;
 	}
-	
+
 	protected void initialize() {
 		System.out.println("initial move: " + moveIn);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		if(base.velMoveToPosition(moveIn, movePwr, isCascade)){
-		isDone = !base.velMoveToPosition(moveIn, movePwr, isCascade);
-		}
-		else if(1 == 1){
-			
+		if (base.velMoveToPosition(moveIn, movePwr, isCascade)) {
+			isDone = !base.velMoveToPosition(moveIn, movePwr, isCascade);
+		} else if (1 == 1) {
+
 		}
 	}
 
