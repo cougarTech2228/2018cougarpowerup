@@ -143,7 +143,7 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - switch camera stream with an xbox button or SmartDashboard read
   - power a green light LED ring and capture an image
   
-  AUTONOMOUS
+  DONE - AUTONOMOUS
    - add choice for straight baseline, straight switch & score, cube to scale
    
   SMARTDASHBOARD
@@ -156,7 +156,7 @@ ADD A DistanceIF class (robot will use this to read distances and perpendicular 
   - every laptop bag should have a usb cable (and an ethernet cable)
   - drive laptops should have a xbox controller
   
-  - MOREAUTOSTUFF
+ DONE - MOREAUTOSTUFF
   - make sure the code doesn't crash when we don't get a valid string on the drive station (check for null and length)
   - the 168 inches was the middle of the switch, make a new constant for the side
   - use the 168 for the left switch auto, because we can drive straight perpendicular to the switch
