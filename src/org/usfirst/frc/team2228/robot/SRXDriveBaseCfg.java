@@ -79,6 +79,7 @@ public class SRXDriveBaseCfg {
         public static double kSpeedDeadBand = 0.1;
 		public static double kNeutralDeadBand = 0.08;
 		
+		
 		// This sets the velocity calculation time sample
 		public static int kSRXVelocitySample = 64;
 		
@@ -145,9 +146,11 @@ public class SRXDriveBaseCfg {
 		
 		// This value is determined by testDriveStraightCalibration method
 		public static double kRotateDriveStraightCorrection = 0.93;	
-		public static double kDriveStraightCorrection = .9150;
-				//for test bot 1.0805;
-				//for robox 0.93; 
+		public static double kDriveStraightCorrection = 1.0; // 0.98; 
+				//for Mew.9150;
+				//for Mew Two 1.0805;
+		        //for Lamda 0.98
+				//for robox 0.93;
 				// Hard floor correction 0.87;
 		
 		//===============================================

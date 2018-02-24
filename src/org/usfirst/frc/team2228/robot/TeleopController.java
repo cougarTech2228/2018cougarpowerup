@@ -37,6 +37,8 @@ public class TeleopController {
 	private double previousEMAThottleValue = 0;
 	private double PowerCorrectionRatio = .3;
 	
+	private int notTurning = 0;
+	
 	private String lastMsgString = " ";
 
 	public TeleopController(DriverIF _driverIF, SRXDriveBase _driveBase) {
@@ -63,7 +65,7 @@ public class TeleopController {
 		double origThrottle = -DriverIF.Throttle();
 		double origTurn = DriverIF.Turn();
 		if(SRXDriveBaseCfg.isTurnReversed = true){
-		origTurn = -DriverIF.Turn();
+		    origTurn = -DriverIF.Turn();
 		}
 		else{
 			origTurn = DriverIF.Turn();
@@ -94,6 +96,17 @@ public class TeleopController {
 		if(turn != 0){
 			turn = CheckTurnSensitivityFilter(limit(throttle), limit(turn));
 		}
+		if (Math.abs(turn) < TeleopControllerCfg.kJoyStickDeadBand){
+			System.out.println("turn" + turn);
+			++notTurning;
+			if (notTurning == 20) // trying not to zero the yaw too early
+			{
+			  driveBase.setAngleZero();
+			}
+		} else {
+			notTurning = 0;
+		}
+		
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(limit(throttle));
 			throttle = CheckAccelFilter(limit(throttle));

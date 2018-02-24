@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
+	private AngleIF angleIF;
 	//UsbCamera camera;
 	//private CANLED LED;
 	//private AngleIF angle;
@@ -42,17 +43,21 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		
-		pc = new PneumaticController(driverIF);
+
+//		cube = new CubeManipulator(driverIF);
+//		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
+//		au = new AnalogUltrasonic();
+		
 		auto = new AutoMaster(base, elevator);
-		au = new AnalogUltrasonic();
+		
+		angleIF = new AngleIF();
+		base.setAngleIF(angleIF);
+		base.setCorrectionSensor(3); // navx
 		//camera = CameraServer.getInstance().startAutomaticCapture();
 //		LED = new CANLED();
 //		LED.colorInit();
-		//angle = new AngleIF();
 	}
 
 	
@@ -69,6 +74,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		angleIF.zeroYaw();
 		auto.init();
 	}
 
@@ -80,11 +86,9 @@ public class Robot extends IterativeRobot {
 		auto.run();
 	}
 
-//	public void teleopInit() {
-//		System.out.println("teleopInit() fi!");
-//		chessyDrive.teleopInit();
-//		System.out.println("Teleop Init done");
-//	}
+	public void teleopInit() {
+		angleIF.zeroYaw();
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
@@ -93,19 +97,20 @@ public class Robot extends IterativeRobot {
 		
 		// SmartDashboard.putNumber("Sonar", us.getDistance());
 		chessyDrive.teleopPeriodic();
-		cube.teleopPeriodic();
-		pc.teleopPeriodic();
-		elevator.teleopPeriodic();
+//		cube.teleopPeriodic();
+//		pc.teleopPeriodic();
+//		elevator.teleopPeriodic();
 		
 		//LED.allianceColorLED();
 		//LED.autonomousColorInit();
 		//LED.rainbowShift();
-		au.roundTo(0.0001);
+		//au.round(0.0001);
 //		System.out.println(au.getDistance1());
-		SmartDashboard.putNumber("Sensor1", au.getDistance1());
-		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+		//SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		//SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
-		//angle.getAngle();
+		angleIF.getAngle();
+		SmartDashboard.putNumber("ANGLE:", angleIF.getAngle());
 	}
 
 	/**

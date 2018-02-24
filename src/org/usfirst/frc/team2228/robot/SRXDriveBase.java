@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SRXDriveBase {
 	// The following is for the addition of a Navx and ultrasonic sensors
 	// public class SRXDriveBase( AngleIF _angle, DistanceIF _distance)
-	// AngleIF robotAngle = _angle;
+	private AngleIF robotAngle;
 	// DistanceIF robotDistance = _distance;
 	
 	
@@ -43,9 +43,10 @@ public class SRXDriveBase {
 	private int cycleCount = 1;
 	private int SRXTimeoutValueMs = 10;
 	private int state = 0;
-	private int CorrectionSensorType = 0;
+	private int CorrectionSensorType = 3;
 	private int stepFunctionStopCount = 0;
 	private int autoCmdSequence = 1;
+	private int getCorrectionUpdate = 0;
 
 	//TODO
 	//private DrvStraightCorSensor correctionSensor = 0;
@@ -95,7 +96,7 @@ public class SRXDriveBase {
 	private double stepFunctionSpeed = 0;
 	
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = true;
+	private boolean isConsoleDataEnabled = false;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	
@@ -262,6 +263,17 @@ public class SRXDriveBase {
 		
 		// set timeout to zero to stop waiting for confirmations
 		SRXTimeoutValueMs = 0;
+	}
+	
+	public void setAngleIF(AngleIF _angleIF){
+		robotAngle = _angleIF;
+	}
+
+	
+	public void setAngleZero(){
+		if (CorrectionSensorType == 3){
+			robotAngle.zeroYaw();
+		}
 	}
 	/**
 	* =======================================================================================
@@ -462,7 +474,21 @@ public class SRXDriveBase {
 					// sensorCorrection = capCorrection(robotDistanceSensor.getAngleCorrection());
 					break;
 				case 3:
-					// sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
+					if (getCorrectionUpdate == 0) {
+						sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
+						getCorrectionUpdate ++;
+						System.out.println("loop count " + getCorrectionUpdate);
+						//sensorCorrection = 0.0;
+					}
+					
+					else {
+							getCorrectionUpdate ++;
+							System.out.println("Loop Count " + getCorrectionUpdate);
+						}
+					
+					if (getCorrectionUpdate == 20) {
+						getCorrectionUpdate = 0;
+					}
 					break;
 				default:
 					sensorCorrection = 0;
@@ -607,12 +633,16 @@ public class SRXDriveBase {
 	 * straight/drive perpendicular correction
 	 */
 	public void setThrottleTurn(double _throttleValue, double _turnValue, boolean _isDrivingPerpendicular) {
-		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled && _turnValue == 0) {
-			driveStraightDirCorrection = getDriveStraightCorrection();
-			
+		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled && Math.abs(_turnValue) < SRXDriveBaseCfg.kSpeedDeadBand) {		
 			// Calculate cmd level in terms of PercentVbus; range (-1 to 1)
-			leftCmdLevel = _throttleValue + _turnValue + driveStraightDirCorrection;
-			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue) - driveStraightDirCorrection;
+			leftCmdLevel = _throttleValue + _turnValue; // + driveStraightDirCorrection;
+			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue); // - driveStraightDirCorrection;
+			driveStraightDirCorrection = getDriveStraightCorrection();
+			rightCmdLevel += driveStraightDirCorrection;
+			if (driveStraightDirCorrection > 0){
+			System.out.println("DriveStrightDirCorrection " + driveStraightDirCorrection);
+			}
+		
 		} else {
 			leftCmdLevel = _throttleValue  +_turnValue;
 			rightCmdLevel = ((_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue);
@@ -674,7 +704,10 @@ public class SRXDriveBase {
 		} else {
 			// Check for drive straight correction
 			if (SRXDriveBaseCfg.isDriveStraightAssistEnabled){
-				rightCmdLevel += getDriveStraightCorrection();
+				double correction = getDriveStraightCorrection();
+				System.out.println("rightCmd: " + rightCmdLevel);
+				rightCmdLevel += correction;
+				System.out.println("right: " + rightCmdLevel + " left: " + leftCmdLevel);
 			}
 			
 			// Check for sensor stop
@@ -894,12 +927,15 @@ public class SRXDriveBase {
 		// Determine a max correction based on throttle power level 
 		// leftCmdLevel is a global variable and main throttle (TURN = 0 going straight
 		maxSensorCorrection = Math.abs(leftCmdLevel) * SRXDriveBaseCfg.kThrottlePowerRatio;
+		double capCorrection = _sensorCorrection;
 		
 		// Cap correction
 		if(Math.abs(_sensorCorrection) > maxSensorCorrection) {
-			_sensorCorrection = Math.signum(_sensorCorrection) * maxSensorCorrection;
+			capCorrection = Math.signum(_sensorCorrection) * maxSensorCorrection;
+			System.out.println("MAX");
 		}
-		return _sensorCorrection;
+		System.out.println("capCorrection " + capCorrection);
+		return capCorrection;
 	}
 	/**
 	* =======================================================================================

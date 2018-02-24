@@ -22,8 +22,7 @@ public class AutoMaster {
 	private String input = "";
 	private CommandGroup Cg;
 	private SendableChooser<String> chooser = new SendableChooser<>();
-	private String robotSide = "Right";
-	private double THISISWRONGSHOULDCALIBRATE = 5.0;
+	private double OVERSHOOT = 5.0;
 	private Elevator elevator;
 	
 	public AutoMaster(SRXDriveBase srxdb, Elevator _elevator) {
@@ -63,14 +62,13 @@ public class AutoMaster {
 		switch (autoSelected) {
 			case "Baseline":
 				System.out.println("Baseline selected");
-				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
+				Cg.addSequential(new MoveTo(base, (OVERSHOOT +
 						                            Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				break;
 				
 			case "Left Switch":
 				System.out.println("Left Switch selected");
-				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
-						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				if(gameData.charAt(0) == 'L'){
 				Cg.addSequential(new Switch(elevator));
 				}
@@ -80,8 +78,7 @@ public class AutoMaster {
 				
 			case "Right Switch":
 				System.out.println("Right Switch selected");
-				Cg.addSequential(new MoveTo(base, (THISISWRONGSHOULDCALIBRATE +
-						                           Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+				Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
 				if(gameData.charAt(0) == 'R'){
 				Cg.addSequential(new Switch(elevator));
 				}
