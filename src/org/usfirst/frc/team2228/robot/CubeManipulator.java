@@ -8,6 +8,7 @@ public class CubeManipulator {
 	private Spark right;
 	private double cubeCollectionValue;
 	private double cubeExpulsionValue;
+	private double cubinatorCurrent;
 	private boolean triggered = false;
 	boolean triggered2 = false;
 	private boolean lastButton = false;
@@ -18,6 +19,7 @@ public class CubeManipulator {
 		left = new Spark(RobotMap.PWM_PORT_0);
 		right = new Spark(RobotMap.PWM_PORT_1);
 		
+		SmartDashboard.putNumber("Left Aquirer Output Voltage", .5);
 		SmartDashboard.putNumber("CollectionValue", 0.75);
 		SmartDashboard.putNumber("ExpulsionValue", -0.75);
 		
