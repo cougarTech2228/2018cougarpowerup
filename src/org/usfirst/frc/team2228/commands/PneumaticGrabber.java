@@ -45,9 +45,6 @@ public class PneumaticGrabber extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		if(grabbing == true){
-			System.out.println("Grabbing Stopped At " + Timer.getFPGATimestamp());
-		}
 	}
 
 	// Called when another command which requires one or more of the same
