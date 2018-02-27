@@ -108,9 +108,7 @@ public class DriverIF {
 		return xboxIF.START_BUTTON();
 	}
 
-	public boolean winchWindDown() {
-		return xboxIF.BACK_BUTTON();
-	}
+
 
 	public boolean elevatorToggleUp() {
 		return xboxIF.POV_UP();
@@ -133,6 +131,9 @@ public class DriverIF {
 		}
 		return 
 		lastButton = button;
+	}
+	public boolean camSwitch() {
+		return xboxIF.BACK_BUTTON();
 	}
 //	public boolean toggle(boolean button, boolean lastButton, boolean isTriggered){
 //		toggle1(button, lastButton, isTriggered);
