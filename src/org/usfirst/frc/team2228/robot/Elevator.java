@@ -92,7 +92,7 @@ public class Elevator {
 			elevator.getSensorCollection().setQuadraturePosition(0, 0);
 			heightCount = 0;
 		} else {
-			elevator.set(-0.7);
+//			elevator.set(-0.7);
 		}
 		int i = Encoder.state;
 		int i2 = Encoder.toggle(driverIF.elevatorToggleUp(), driverIF.elevatorToggleDown());
@@ -190,8 +190,7 @@ public class Elevator {
 	 * @param motor2
 	 *            - second conveyor
 	 */
-	public void ConveyorToggle(boolean button, boolean button2, double speed, PWMSpeedController motor,
-			PWMSpeedController motor2) {
+	public void ConveyorToggle(boolean button, boolean button2, double speed, PWMSpeedController motor, PWMSpeedController motor2) {
 		if (button) {
 			motor.set(speed);
 			motor2.set(-speed);

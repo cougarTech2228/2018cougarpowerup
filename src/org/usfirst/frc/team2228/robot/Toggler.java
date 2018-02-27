@@ -2,7 +2,7 @@ package org.usfirst.frc.team2228.robot;
 
 public class Toggler {
 	public int state, states;
-	boolean on;
+	private boolean on;
 
 	public Toggler(int states) {
 		state = 0;

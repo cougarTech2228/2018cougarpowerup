@@ -19,6 +19,8 @@ public class PneumaticController {
 	private boolean lastButton2 = false;
 	private boolean triggered = false;
 	private boolean triggered2 = false;
+	
+	private Toggler toggle = new Toggler(2);
 
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
@@ -27,8 +29,8 @@ public class PneumaticController {
 
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
-		pneumaticToggle(driverIF.squeezeToggle(), lastButton, triggered, true, squeezies);
-		pneumaticToggle(driverIF.cubeRotateToggle(), lastButton2, triggered2, true, lift);
+		pneumaticToggle(driverIF.squeezeToggle(), true, squeezies);
+		pneumaticToggle(driverIF.cubeRotateToggle(), true, lift);
 	}
 
 	public void liftSet(boolean state) {
@@ -52,12 +54,11 @@ public class PneumaticController {
 	 * @param solenoid
 	 *            - solenoid user would like to activate
 	 */
-	public void pneumaticToggle(boolean button, boolean lastButton, boolean isTriggered, boolean onDirection,
-			Solenoid solenoid) {
-		driverIF.toggle1(button, lastButton, isTriggered);
-		solenoid.set(onDirection);
-		driverIF.toggle2(button, lastButton, isTriggered);
-		solenoid.set(!onDirection);
+	public void pneumaticToggle(boolean button, boolean onDirection, Solenoid solenoid) {
+		if(toggle.toggle(button) == 0)
+			solenoid.set(onDirection);
+		else
+			solenoid.set(!onDirection);
 		lastButton = button;
 	}
 	// beep bop boopedy beep beep
