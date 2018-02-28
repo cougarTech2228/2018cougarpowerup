@@ -74,7 +74,7 @@ public class AutoMaster {
 			System.out.println("Baseline selected");
 			// Adds movement to the auto sequence
 			Cg.addSequential(
-					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.3, false, 7));
 			break;
 
 		// case "Left Switch":
@@ -105,14 +105,14 @@ public class AutoMaster {
 			if (gameData.length() == 0) {
 				System.out.println("Could not find game data");
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.3, false, 10));
 			} else {
 				System.out.println("Left Switch Auto Selected");
 				Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 				Cg.addSequential(new MoveTo(base,
-						(Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						(Dimensions.ALLIANCE_WALL_TO_SWITCH_CENTER - Dimensions.LENGTH_OF_ROBOT), 0.3, false, 10));
 				Cg.addSequential(new RotateTo(base, 90, 0.3));
-				Cg.addSequential(new MoveTo(base, leftAutoMoveToSwitch, 0.2, false));
+				Cg.addSequential(new MoveTo(base, leftAutoMoveToSwitch, 0.2, false, 10));
 
 				if (gameData.charAt(0) == 'l' || gameData.charAt(0) == 'L') {
 					Cg.addSequential(new Switch(elevator));
@@ -126,23 +126,24 @@ public class AutoMaster {
 			if (gameData.length() == 0) {
 				System.out.println("Could not find game data");
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false, 10));
 			} else {
 				System.out.println("Right Switch selected");
 				// The bot starts closing the acquirer arms for half a second
 				Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 				// After half a second the bot starts moving
 				Cg.addSequential(new MoveTo(base,
-						(Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.4, false));
+						(Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT), 0.3, false, 10));
 				// While the bot is moving, it continues closing the acquirer
 				// arms for another second and a half
-				Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
+				Cg.addParallel(new PneumaticGrabber(pneu, true, 0.5));
+				//Changes 1.5 to .5 
 
 				if (gameData.charAt(0) == 'R' || gameData.charAt(0) == 'r') {
 					// If the right side of the switch is ours, it places the
 					// cube while opening the acquirer arms
+					Cg.addSequential(new PneumaticGrabber(pneu, false, 1.0));
 					Cg.addSequential(new Switch(elevator));
-					Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
 				}
 			}
 			// Scale cube command
@@ -152,12 +153,12 @@ public class AutoMaster {
 			if (gameData.length() == 0) {
 				System.out.println("Could not find game data");
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false, 10));
 			} else {
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false, 10));
 				Cg.addSequential(new RotateTo(base, -90, .3));
-				Cg.addSequential(new MoveTo(base, autoMoveToScale, 0.2, false));
+				Cg.addSequential(new MoveTo(base, autoMoveToScale, 0.2, false, 10));
 
 				if (gameData.charAt(0) == 'R' || gameData.charAt(0) == 'r') {
 					Cg.addSequential(new ElevatorRaise(elevator, Dimensions.SCALE_STARTING_POSITION, 0.3));
@@ -171,12 +172,12 @@ public class AutoMaster {
 			if (gameData.length() == 0) {
 				System.out.println("Could not find game data");
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false, 10));
 			} else {
 				Cg.addSequential(
-						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+						new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false, 10));
 				Cg.addSequential(new RotateTo(base, 90, .3));
-				Cg.addSequential(new MoveTo(base, autoMoveToScale, 0.2, false));
+				Cg.addSequential(new MoveTo(base, autoMoveToScale, 0.2, false, 10));
 
 				if (gameData.charAt(0) == 'l' || gameData.charAt(0) == 'L') {
 					Cg.addSequential(new ElevatorRaise(elevator, Dimensions.SCALE_STARTING_POSITION, 0.3));

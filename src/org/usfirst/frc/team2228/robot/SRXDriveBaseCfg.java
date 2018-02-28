@@ -12,21 +12,21 @@ public class SRXDriveBaseCfg {
 		// ==============================================================
 		// SET MOTOR DIRECTION
 		// THESE ARE FOR MU
-		public static boolean isDriveRightMasterMtrReversed = true;
-		public static boolean isDriveRightFollowerMtrReversed = true;
-		public static boolean isDriveLeftMasterMtrReversed = false;
-		public static boolean isDriveLeftFollowerMtrReversed = false;
-		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-		public static boolean isTurnReversed = true;
+//		public static boolean isDriveRightMasterMtrReversed = true;
+//		public static boolean isDriveRightFollowerMtrReversed = true;
+//		public static boolean isDriveLeftMasterMtrReversed = false;
+//		public static boolean isDriveLeftFollowerMtrReversed = false;
+//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+//		public static boolean isTurnReversed = true;
 		//===============================================
 		// SET MOTOR DIRECTION
 		// THESE ARE FOR MU 2
-//		public static boolean isDriveRightMasterMtrReversed = false;
-//		public static boolean isDriveRightFollowerMtrReversed = false;
-//		public static boolean isDriveLeftMasterMtrReversed = true;
-//		public static boolean isDriveLeftFollowerMtrReversed = true;
-//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-//		public static boolean isTurnReversed = false;
+		public static boolean isDriveRightMasterMtrReversed = false;
+		public static boolean isDriveRightFollowerMtrReversed = false;
+		public static boolean isDriveLeftMasterMtrReversed = true;
+		public static boolean isDriveLeftFollowerMtrReversed = true;
+		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+		public static boolean isTurnReversed = false;
 		//===============================================
 		// BRAKE AND COAST PARAMETERS
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
@@ -40,8 +40,8 @@ public class SRXDriveBaseCfg {
 		public static double kTeleStopBrakeValue = 0.05;
 		
 		
-		public static double kAutoRightMoveStopBrakeValue = 0.0;
-		public static double kAutoLeftMoveStopBrakeValue = 0.0;
+		public static double kAutoRightMoveStopBrakeValue = 0.05;
+		public static double kAutoLeftMoveStopBrakeValue = 0.05;
 		
 		public static double kAutoRightRotateStopBrakeValue = 0.0;
 		public static double kAutoLeftRotateStopBrakeValue = 0.0;
@@ -107,18 +107,18 @@ public class SRXDriveBaseCfg {
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
-		public static double kTrackWidthIn = 22.875;
+		public static double kTrackWidthIn = 24.125;
 		
-		public static double kMeasuredRgtWheelDiameter = 6.0; 
+		public static double kMeasuredRgtWheelDiameter = 6.0153; 
 				//4.035;
-		public static double kMeasuredLftWheelDiameter = 6.0; 
+		public static double kMeasuredLftWheelDiameter = 6.0654; 
 				//4.035;
 		//(kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2
-		public static double kWheelDiameterIn = 6.0;
+		public static double kWheelDiameterIn = 6.0404;
 				//4.035;
 		// WheelDiameter * Math.PI
-		public static double kMeasuredRgtWheelCircum = 18.849;
-		public static double kMeasuredLftWheelCircum = 18.849;
+		public static double kMeasuredRgtWheelCircum = 18.8976;
+		public static double kMeasuredLftWheelCircum = 19.0551;
 
 		// ======================================
 		// ENCODER ENCODER CALCULATIONS
@@ -129,16 +129,16 @@ public class SRXDriveBaseCfg {
 		
 		// Wheel circumference / counts per revolution
 
-		public static double kRightInchesPerCount = 0.359;
+		public static double kRightInchesPerCount = 0.0361;
 				// 4 inch wheels 0.0242;
 		//old 0.01799;
-		public static double kLeftInchesPerCount = 0.359;
+		public static double kLeftInchesPerCount = 0.0359;
 		//4 inch wheels 0.0242;
 		//old 0.01799;
-		public static double kLeftEncoderCountsPerIn = 27.780;
+		public static double kLeftEncoderCountsPerIn = 27.701;
 		//4 inch wheels 41.302;
 		//old 55.586;
-		public static double kRightEncoderCountsPerIn = 27.780;
+		public static double kRightEncoderCountsPerIn = 27.855;
 				//4 inch 41.302;
 		//old 55.586;
 		
@@ -149,15 +149,16 @@ public class SRXDriveBaseCfg {
 
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
-		public static boolean isDriveStraightAssistEnabled = true;
-		
+		public static boolean isDriveStraightAssistEnabled = false;
+		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 
-		public static double kDriveStraightCorrection = .9750;
-		public static double kRotateDriveStraightCorrection = 0.93;	
-				//for test bot 1.0805;
-				//for robox 0.93; 
-				// Hard floor correction 0.87;
+		public static double kDriveStraightCorrection = .825;
+				// ? .950;
+		//for test bot 1.0805;
+		//for robox 0.93; 
+		// Hard floor correction 0.87;
+		public static double kRotateDriveStraightCorrection = 0.3;	
 		
 		//===============================================
 		//MOTION METHOD PARAMETERS

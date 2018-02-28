@@ -11,10 +11,10 @@ public class RobotMap {
 	public final static int PDP_CAN_ID_0 = 0; // pdp always 0
 
 	// drive base always first four
-	public final static int CAN_ID_1 = 1;
-	public final static int CAN_ID_2 = 2;
-	public final static int CAN_ID_3 = 3;
-	public final static int CAN_ID_4 = 4;
+	public final static int CAN_ID_1 = 1; // Right master drive motor
+	public final static int CAN_ID_2 = 2; // Right follower drive motor
+	public final static int CAN_ID_3 = 3; // Left master drive motor
+	public final static int CAN_ID_4 = 4; // Left follower drive motor
 	// CAN 5 is used for the elevator
 	public final static int CAN_ID_5 = 5;
 	// CAN 6 used for the winch

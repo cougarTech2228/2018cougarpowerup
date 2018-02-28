@@ -12,7 +12,8 @@ public class MoveTo extends Command {
 	private boolean isCascade;
 	private SRXDriveBase base;
 
-	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) {
+	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove, double timeWait) {
+		super(timeWait);
 		this.base = base;
 		moveIn = _MoveToPositionIn;
 		movePwr = _MoveToPositionPwrLevel;
@@ -27,7 +28,7 @@ public class MoveTo extends Command {
 		System.out.println("Started moving at " + startTime + " seconds");
 		System.out.println("Started moving at " + startLeftCounts + " counts on the left side");
 		System.out.println("Started moving at " + startRightCounts + " counts on the right side");
-
+		base.setDriveTrainRamp(4);
 		
 	}
 
@@ -40,6 +41,7 @@ public class MoveTo extends Command {
 	@Override
 	protected boolean isFinished() {
 		return isDone;
+		
 	}
 
 	// Called once after isFinished returns true

@@ -215,7 +215,7 @@ public class Elevator {
 	public void conveyors(boolean on){
 		if(on){
 			conveyor1.set(1);
-			conveyor2.set(1);
+			conveyor2.set(-1);
 		}
 		else{
 			conveyor1.set(0);

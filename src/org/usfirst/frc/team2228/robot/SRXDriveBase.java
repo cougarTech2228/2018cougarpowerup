@@ -95,7 +95,7 @@ public class SRXDriveBase {
 	private double stepFunctionSpeed = 0;
 	
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = false;
+	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	
@@ -421,10 +421,10 @@ public class SRXDriveBase {
 	public double getLeftSensorPosition(){
 		// This value is updated every 20ms
 		if (SRXDriveBaseCfg.isLeftEncoderSensorReversed){
-
-			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
-		} else{
+//TODO Must check before compition!!
 			return driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
+		} else{
+			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		}
 	}
 	

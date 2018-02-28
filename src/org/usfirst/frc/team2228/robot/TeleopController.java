@@ -77,7 +77,7 @@ public class TeleopController {
 		// SRXDriveBase test
 		// ========================================		
 		
-		//	getButtonA();
+//			getButtonA();
 		//	getButtonB();
 		//	getButtonX();
 		// driveBase.testMethodSelection();
@@ -88,7 +88,7 @@ public class TeleopController {
 
 		// Check and limit range of throttle and turn
 
-	    throttle = limit(throttle);
+	 /*   throttle = limit(throttle);
 		turn = limit(turn);
 		
 		if(turn != 0){
@@ -110,7 +110,7 @@ public class TeleopController {
 				throttle,
 				origTurn,
 				turn);
-		}
+		}*/
 	}	
 
 // ===========================================
