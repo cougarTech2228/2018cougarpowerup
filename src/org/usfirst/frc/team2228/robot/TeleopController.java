@@ -269,7 +269,7 @@ public class TeleopController {
 		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
 		EMAThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
 		previousEMAThottleValue = EMAThrottleValue;
-		
+		System.out.println("AccelFltrCheckThrottleValue" + AccelFltrCheckThrottleValue);
 		return  AccelFltrCheckThrottleValue;
 	}
 
