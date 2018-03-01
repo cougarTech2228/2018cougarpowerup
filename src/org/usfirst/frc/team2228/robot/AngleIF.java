@@ -78,8 +78,6 @@ public class AngleIF implements PIDOutput {
 		double error;
 		double Yaw = Math.floor(getYaw()*10000)/10000;
 		error = AngleSP - Yaw;
-		//if (Yaw > 0){
-		//}
 		double correction = 1 *((kP * error) - (kD * rate));
 		System.out.println("Yaw " + Yaw + "; correction " + correction);
 		if (Math.abs(Yaw) < 0.07) {
