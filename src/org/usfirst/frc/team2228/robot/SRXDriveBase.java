@@ -68,6 +68,8 @@ public class SRXDriveBase {
 	private double pulSqStartTimeSec = 0;
 	private double sqWaveVel = 0;
 	private double delayStartTime = 0;
+	private double methodStartTime = 0;
+	private double methodTime = 0;
 	
 	//private double driveStraightEncoderError = 0;
 	private double rightSensorStartPositionRead = 0;
@@ -94,6 +96,10 @@ public class SRXDriveBase {
 	private double correction = 0.93;
 	private double stepFunctionSpeed = 0;
 	
+	private double CAL_kDriveStraightCorrection = SRXDriveBaseCfg.kDriveStraightCorrection;
+	private double CAL_RightDriveCmdLevel = 0;
+	private double CAL_LeftDriveCmdLevel = 0;
+		
 	//  Program flow switches
 	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
@@ -116,7 +122,7 @@ public class SRXDriveBase {
 	private boolean isTuneDirectionPos = false;
 	private boolean isLastTuneDirectionPos = false;
 	private boolean isTestStepFunctionActive = false;
-	private boolean isEcoderReset = false;
+	private boolean isTestBtnActive = false;
 	
 	private String logSRXDriveString = " ";
 	private String lastMsgString = " ";
@@ -322,6 +328,8 @@ public class SRXDriveBase {
 	}
 	
 	public void setSRXDriveBaseInit() {
+		setStopMotors();
+		
 		isVelMoveToPositionActive = false;
 		isRotateToAngleActive = false;
 		isTurnToAngleActive = false;
@@ -336,7 +344,7 @@ public class SRXDriveBase {
 		isSensorCorrectionActive = false;
 		isAutoTuneCorrectionFactorActive = false;
 		isTestStepFunctionActive = false;
-		isEcoderReset = false;
+		isTestBtnActive = false;
 		
 		loadShuffleBoardParmeters();
 		setDriveTrainRamp(0);
@@ -481,17 +489,22 @@ public class SRXDriveBase {
 	* =======================================================================================
 	*/	
 	public void loadShuffleBoardParmeters() {
-		SmartDashboard.putBoolean("TestStepFunction:", false);
-		SmartDashboard.putBoolean("DriveStraightCal:", false);
-		SmartDashboard.putBoolean("DriveStraightAutoCal:", false);
-		SmartDashboard.putBoolean("VelMoveToPosition:", false);
-		SmartDashboard.putBoolean("RotateToAngle:", false);
-		SmartDashboard.putBoolean("TurnToAngle:", false);
-		SmartDashboard.putBoolean("CascadeTest:", false);
+		SmartDashboard.putBoolean("TstBtn-StepFnc:", false);
+		SmartDashboard.putBoolean("TstBtn-DrvStraightCal:", false);
+		SmartDashboard.putBoolean("TstBtn-DrvStrghtAutoCal:", false);
+		SmartDashboard.putBoolean("TstBtn-VelMoveToPos:", false);
+		SmartDashboard.putBoolean("TstBtn-RotateToAngle:", false);
+		SmartDashboard.putBoolean("TstBtn-TurnToAngle:", false);
+		SmartDashboard.putBoolean("TstBtn-CascadeTest:", false);
+		SmartDashboard.putBoolean("TstBtn-DriveCmdLevel:", false);
 		
 		SmartDashboard.putNumber("Kp_encoderHeadingPID:", Kp_encoderHeadingPID);
 		SmartDashboard.putNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
 		SmartDashboard.putNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
+		
+		SmartDashboard.putNumber("CAL_kDriveStraightCorrection:", CAL_kDriveStraightCorrection);
+		SmartDashboard.putNumber("CAL_RightDriveCmdLevel:", CAL_RightDriveCmdLevel);
+		SmartDashboard.putNumber("CAL_LeftDriveCmdLevel:", CAL_LeftDriveCmdLevel);
 	}
 	
 	// Reads encoder, velocity, current, error, and displays on smartdashboard
@@ -897,10 +910,10 @@ public class SRXDriveBase {
 			Kd_encoderHeadingPID = SmartDashboard.getNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
 			
 		} else {
-			if(SmartDashboard.getBoolean("TestStepFunction:", false)){
-				if(!isEcoderReset){
+			if(SmartDashboard.getBoolean("TstBtn-StepFnc:", false)){
+				if(!isTestBtnActive){
 					msg("SHUFFLE START TEST STEP FUNCTION=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
 					setDriveTrainRamp(2);
@@ -909,19 +922,19 @@ public class SRXDriveBase {
 				// testStepFunction(double _stepFunctionPower, double _stepFunctionTimeSec, boolean _isTestForRightDrive)
 				if(!testStepFunction(.3, 5, false)){
 					isTestMethodSelectionActive = false;
-					isEcoderReset = false;
-					SmartDashboard.putBoolean("TestStepFunction:", false);
+					isTestBtnActive = false;
+					SmartDashboard.putBoolean("TstBtn-StepFnc:", false);
 					msg("SHUFFLE END TEST STEP FUNCTION=============");
 				}	
 			}
 			
-			if(SmartDashboard.getBoolean("DriveStraightCal:", false)){
+			if(SmartDashboard.getBoolean("TstBtn-DrvStraightCal:", false)){
 				
 				//SRXDriveBaseCfg.kDriveStraightCorrection = SmartDashboard.getNumber("DriveStraightCorrection:" , SRXDriveBaseCfg.kDriveStraightCorrection);
-				correction = SmartDashboard.getNumber("DriveStraightCorrection:" , correction);
-				if(!isEcoderReset){
+				CAL_kDriveStraightCorrection = SmartDashboard.getNumber("CAL_kDriveStraightCorrection:", CAL_kDriveStraightCorrection);
+				if(!isTestBtnActive){
 					msg("SHUFFLE START DRIVE STRAIGHT CAL=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
 					setDriveTrainRamp(2);
@@ -930,17 +943,17 @@ public class SRXDriveBase {
 				// testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
 				if(!testDriveStraightCalibration(50.0, .3)){
 					isTestMethodSelectionActive = false;
-					isEcoderReset = false;
-					SmartDashboard.putBoolean("DriveStraightCal:", false);
+					isTestBtnActive = false;
+					SmartDashboard.putBoolean("TstBtn-DrvStraightCal:", false);
 					msg("SHUFFLE END DRIVE STRAIGHT CAL============");
 				}	
 			}
 			
-			if(SmartDashboard.getBoolean("VelMoveToPosition:", false)){
+			if(SmartDashboard.getBoolean("TstBtn-VelMoveToPos:", false)){
 				
-				if(!isEcoderReset){
+				if(!isTestBtnActive){
 					msg("SHUFFLE START VEL MOVE TO POSITION=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
 					setDriveTrainRamp(2);
@@ -949,16 +962,16 @@ public class SRXDriveBase {
 				// velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isSensorStopUsed, boolean _isCascadeMove)
 				if(!velMoveToPosition(50, .3, false)) {
 					isTestMethodSelectionActive = false;
-					isEcoderReset = false;
-					SmartDashboard.putBoolean("VelMoveToPosition:", false);
+					isTestBtnActive = false;
+					SmartDashboard.putBoolean("TstBtn-VelMoveToPos:", false);
 					msg("SHUFFLE END VEL MOVE TO POSITION=============");
 				}	
 			}
-			if(SmartDashboard.getBoolean("RotateToAngle:", false)){
+			if(SmartDashboard.getBoolean("TstBtn-RotateToAngle:", false)){
 				
-				if(!isEcoderReset){
+				if(!isTestBtnActive){
 					msg("SHUFFLE START ROTATE TO ANGLE=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
 					setDriveTrainRamp(2);
@@ -967,34 +980,39 @@ public class SRXDriveBase {
 				// rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
 				if(!rotateToAngle(90, .3)) {
 					isTestMethodSelectionActive = false;
-					isEcoderReset = false;
-					SmartDashboard.putBoolean("RotateToAngle:", false);
+					isTestBtnActive = false;
+					SmartDashboard.putBoolean("TstBtn-RotateToAngle:", false);
 					msg("SHUFFLE END ROTATE TO ANGLE=============");
 				}	
 			}
-			if(SmartDashboard.getBoolean("TurnToAngle:", false)){
+			if(SmartDashboard.getBoolean("TstBtn-TurnToAngle:", false)){
 				
-				if(!isEcoderReset){
+				if(!isTestBtnActive){
 					msg("SHUFFLE START TURN TO ANGLE=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
 					setDriveTrainRamp(2);
 					Timer.delay(0.2);
 				}
-				//turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
-				if(!turnByEncoderToAngle(90, 25, .1, false, false)) {
+				// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
+				if(!turnByEncoderToAngle(90, 25, .3, false, false)) {
 					isTestMethodSelectionActive = false;
-					isEcoderReset = false;
-					SmartDashboard.putBoolean("TurnToAngle:", false);
+					isTestBtnActive = false;
+					SmartDashboard.putBoolean("TstBtn-TurnToAngle:", false);
 					msg("SHUFFLE END TURN TO ANGLE=============");
 				}	
 			}
-			if(SmartDashboard.getBoolean("CascadeTest:", false)){
+			if (SmartDashboard.getBoolean("TstBtn-DriveCmdLevel:", false)){
+				// SetDriveTrainCmdLevel(double _rightCMDLevel, double _leftCMDLevel)
+				SetDriveTrainCmdLevel
+				(SmartDashboard.getNumber("CAL_RightDriveCmdLevel:", CAL_RightDriveCmdLevel), SmartDashboard.getNumber("CAL_LeftDriveCmdLevel:", CAL_LeftDriveCmdLevel)); 
+			}
+			if(SmartDashboard.getBoolean("TstBtn-CascadeTest:", false)){
 				
-				if(!isEcoderReset){
+				if(!isTestBtnActive){
 					msg("SHUFFLE START CASCADE TEST=============");
-					isEcoderReset = true;
+					isTestBtnActive = true;
 					autoCmdSequence = 1;
 					setRightSensorPositionToZero();
 					setLeftSensorPositionToZero();
@@ -1007,9 +1025,8 @@ public class SRXDriveBase {
 						// move 10 inches
 						msg("case 1");
 						if (!velMoveToPosition(10, 0.2, true)) {
-							System.out.println("Velmovedone");
 							autoCmdSequence = 2;
-							msg("next case 2");
+							msg("VelMoveDone - next case 2");
 						};
 						break;
 					case 2:
@@ -1017,7 +1034,7 @@ public class SRXDriveBase {
 						
 						if(!turnByEncoderToAngle(90, 25, .1, false, true )){
 							autoCmdSequence = 3;
-							msg("next case 3");
+							msg("TurnByEncoderDone - next case 3");
 						};
 						break;
 					case 3:
@@ -1025,7 +1042,7 @@ public class SRXDriveBase {
 						
 						if (!velMoveToPosition(10, 0.2, true)) {
 							autoCmdSequence = 4;
-							msg("next case 4");
+							msg("VelMoveToPositionDOne - next case 4");
 						};
 						break;
 					case 4:
@@ -1033,16 +1050,16 @@ public class SRXDriveBase {
 						
 						if(!turnByEncoderToAngle(-70, 25, .1, false, false )){
 							isTestMethodSelectionActive = false;
-							SmartDashboard.putBoolean("CascadeTest:", false);
+							SmartDashboard.putBoolean("TstBtn-CascadeTest:", false);
 							msg("SHUFFLE END CASCADE TEST=============");
-							isEcoderReset = false;
+							isTestBtnActive = false;
 						};
 						break;	
 					default:
 						isTestMethodSelectionActive = false;
-						SmartDashboard.putBoolean("CascadeTest:", false);
+						SmartDashboard.putBoolean("TstBtn-CascadeTest:", false);
 						msg("SHUFFLE END CASCADE TEST=============");
-						isEcoderReset = false;
+						isTestBtnActive = false;
 				}
 				
 			}
@@ -1109,12 +1126,13 @@ public class SRXDriveBase {
 		
 		if (!isTestMoveForStraightCalActive){
 			msg("START CALIBARTION======================================");
+			methodStartTime = Timer.getFPGATimestamp();
 			isTestMoveForStraightCalActive = true;
 			
 			leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount);
 			
 			leftCmdLevel = _pwrLevel;
-			rightCmdLevel = (_pwrLevel * SRXDriveBaseCfg.kDriveStraightCorrection); 
+			rightCmdLevel = (_pwrLevel * CAL_kDriveStraightCorrection); 
 			
 			
 			if (isConsoleDataEnabled){
@@ -1139,6 +1157,8 @@ public class SRXDriveBase {
 				isTestMoveForStraightCalActive = false;
 				rightCmdLevel = 0;
 				leftCmdLevel = 0;
+				methodTime = Timer.getFPGATimestamp() - methodStartTime;
+				msg("Drive Straight Calibration Time(Sec) = " + methodTime);
 			}	
 		}
 		

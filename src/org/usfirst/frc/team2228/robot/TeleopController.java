@@ -6,28 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TeleopController {
 	
 	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isStopCheckToggleActive = false;
 	
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
-
-	private short loggerIterations = 0;
-	private short loggerThreshold = 20;
-	
-	private int autoCmdSequence = 1;
-	//private int timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
 	
 	private double previousEMAValue = 0.0; // -1 to 1
-	private static double test = 0;
 	private double smoothFactor = 0;
-	
-	private boolean isButtonCmdActiveA = false;
-	private boolean lastButtonReadA = false;
-	private boolean isButtonCmdActiveB = false;
-	private boolean lastButtonReadB = false;
-	private boolean isButtonCmdActiveX = false;
-	private boolean lastButtonReadX = false;
-	private boolean isStopCheckToggleActive = false;
-
 	private double deltaThrottleForStopCheck =0;
 	private double previousThrottleForStopCheck =0;
 	private double stopAccum = 0;
@@ -36,49 +21,23 @@ public class TeleopController {
 	private double previousEMAThottleValue = 0;
 	private double PowerCorrectionRatio = .3;
 	
+	
 	private String lastMsgString = " ";
 
 	public TeleopController(DriverIF _driverIF, SRXDriveBase _driveBase) {
 		DriverIF = _driverIF;
 		driveBase = _driveBase;
-		System.out.println("Started TeleopController");
-		
 	}
-	public void teleopInit() {
-		// clear drivebase and teleop flags
-		driveBase.setSRXDriveBaseInit();
-		//driveBase.DisplayChangeParmeters();
-		// Clear button flags
-		isButtonCmdActiveA = false;
-		lastButtonReadA = false; 
-		isButtonCmdActiveB = false;
-		lastButtonReadB = false;
-		isButtonCmdActiveX = false;
-		lastButtonReadX = false;
 	
-	}
 	public void teleopPeriodic() {
 		double origThrottle = -DriverIF.Throttle();
 		double origTurn = DriverIF.Turn();
 
 		double turn = origTurn;
 		double throttle = origThrottle;
-		
-		// ========================================
-		// SRXDriveBase test
-		// ========================================		
-		
-		//	getButtonA();
-		//	getButtonB();
-		//	getButtonX();
-		 driveBase.testMethodSelection();
-
-		// ============================================
-		// Teleop control
-		// ============================================
 
 		// Check and limit range of throttle and turn
-	/*	throttle = limit(throttle);
+		throttle = limit(throttle);
 		turn = limit(turn);
 		
 		if(turn != 0){
@@ -91,7 +50,6 @@ public class TeleopController {
 		}
 		
 		//CheckForAdjustSpeedRequest();
-		//driveBase.UpdateSRXDriveDataDisplay();
 		
 		driveBase.setThrottleTurn(throttle, turn, false);
 		if (isTeleopConsoleDataEnabled){
@@ -101,7 +59,7 @@ public class TeleopController {
 				origTurn,
 				turn);
 		}
-	*/
+	
 	}	
 
 // ===========================================
@@ -179,6 +137,7 @@ public class TeleopController {
 	}
 	
 	public double SCurve(double _value) {
+		
 		double adjustedValue = _value;
 		if (_value < 0) {
 			adjustedValue = (2 * (-(Math.pow(_value, 3)))) - (3 * (Math.pow(_value, 2)));
@@ -237,7 +196,7 @@ public class TeleopController {
 		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
 		if (Math.signum(AccelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
 
-			// If driverIF change is large enough to cause a wheelie or cause the
+			// If change is large enough to cause a wheelie or cause the
 			// robot to start to tip - the robot intervenes to see that this does
 			// not occur The following limits the change in driverIF movement
 			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kTransitionMaxDelta) {
@@ -269,7 +228,7 @@ public class TeleopController {
 		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
 		EMAThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
 		previousEMAThottleValue = EMAThrottleValue;
-		System.out.println("AccelFltrCheckThrottleValue" + AccelFltrCheckThrottleValue);
+		msg("AccelFltrCheckThrottleValue" + AccelFltrCheckThrottleValue);
 		return  AccelFltrCheckThrottleValue;
 	}
 
@@ -284,114 +243,11 @@ public class TeleopController {
 		return num;
 	}
 	private void msg(String _msgString){
-		if (_msgString != lastMsgString){
-			System.out.println(_msgString);
-			lastMsgString = _msgString;
-		}
-	}
-//====================================================================
-// SRXDriveBase test
-// ===================================================================
-	// button A used as a toggle button
-	private void getButtonA(){
-		if (!isButtonCmdActiveA){
-			if (DriverIF.RB_Button() && !lastButtonReadA) {
-				isButtonCmdActiveA = true;
-				driveBase.setRightSensorPositionToZero();
-				driveBase.setLeftSensorPositionToZero();
-				driveBase.setDriveTrainRamp(2);
-				Timer.delay(0.2);
-				msg("++Button A hit");
+		if (isTeleopConsoleDataEnabled){
+			if (_msgString != lastMsgString){
+				System.out.println(_msgString);
+				lastMsgString = _msgString;
 			}
 		}
-		 else if (isButtonCmdActiveA) {
-				
-			//public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
-			//if(!driveBase.testDriveStraightCalibration(50.0, .3)){
-				
-			//velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) 
-			if (!driveBase.velMoveToPosition(30, .3, false)){
-				
-			//public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
-			//if (!driveBase.rotateToAngle(90, .2)){
-			
-			// public boolean testDriveStraightWithEncoderHeadingCal(double _testDistanceIn, double _pwrLevel){
-			//(deleted)if(!driveBase.testDriveStraightWithEncoderHeadingCal(50.0, .4)){
-			 
-			 //public boolean autoTuneCorrectionFactor(double _autoTunepowerLevel){
-			 //if (!driveBase.autoTuneCorrectionFactor(.2)){
-			 
-				
-			// turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
-			//if (!driveBase.turnByEncoderToAngle(90.0, 25, 0.1, false, false)) {
-				isButtonCmdActiveA = false;
-				msg("++Button A done");
-			}
-		lastButtonReadA = DriverIF.RB_Button(); 
-		}
 	}
-
-	private void getButtonB(){
-		if (DriverIF.cascadeBotton() && lastButtonReadB) {
-					isButtonCmdActiveB = true;	
-					autoCmdSequence = 1;
-		} else if (isButtonCmdActiveB) {
-			switch(autoCmdSequence){
-				case 1:
-					// move 10 inches
-					msg("case 1");
-					if (!driveBase.velMoveToPosition(10, 0.2, true)) {
-						autoCmdSequence = 2;
-					};
-					break;
-				case 2:
-					// turn right 90 deg
-					msg("case 2");
-					if(!driveBase.turnByEncoderToAngle(90, 25, .1, false, true )){
-						autoCmdSequence = 3;
-					};
-					break;
-				case 3:
-					// move 10 in
-					msg("case 3");
-					if (!driveBase.velMoveToPosition(10, 0.2, true)) {
-						autoCmdSequence = 4;
-					};
-					break;
-				case 4:
-					// turn left 90 deg
-					msg("case 4");
-					if(!driveBase.turnByEncoderToAngle(-70, 25, .1, false, false )){
-						isButtonCmdActiveB = false;	
-					};
-					break;	
-				default:
-					isButtonCmdActiveB = false;	
-			}	
-		}
-		lastButtonReadB = DriverIF.cascadeBotton();
-	}
-	
-//	private void getButtonX(){
-//		if (!isButtonCmdActiveX){
-//			if (DriverIF.Xbutton() && !lastButtonReadX) {
-//				isButtonCmdActiveX = true;
-//				driveBase.setRightSensorPositionToZero();
-//				driveBase.setLeftSensorPositionToZero();	
-//				Timer.delay(1);
-//				msg("++Button C hit");
-//		
-//		}else if(DriverIF.Xbutton() && !lastButtonReadX){
-//				isButtonCmdActiveX = false;
-//				// Stop square wave
-//				driveBase.testMotorPulse_SquareWave(0, 0, 5, true);
-//				msg("++Button C done");
-//			} else {
-//				//public boolean testMotorPulse_SquareWave(double _pulseLowPower, double _pulseHighPower, double _pulseTimeSec, boolean _isTestForRightDrive)
-//				driveBase.testMotorPulse_SquareWave(.2, .3, 5, true);
-//			}
-//		lastButtonReadX = DriverIF.Xbutton();
-//		}
-//	
-//	}
 }

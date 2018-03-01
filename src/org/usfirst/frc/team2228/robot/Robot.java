@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	private SRXDriveBase base;
+	private TestSRXDriveBase testSRXDriveBase;
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
@@ -42,7 +43,7 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-	
+		testSRXDriveBase = new TestSRXDriveBase(base);
 	}
 
 	
@@ -104,7 +105,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		System.out.println("teleopInit() fi!");
-		chessyDrive.teleopInit();
+		//chessyDrive.teleopInit();
 		System.out.println("Teleop Init done");
 	}
 	/**
@@ -116,12 +117,21 @@ public class Robot extends IterativeRobot {
 		//base.teleopPeriodic();
 		//cube.teleopPeriodic();
 	}
-
+	
+	/**
+	 * This function is called once during test mode
+	 */
+	@Override
+	public void testInit() {
+		testSRXDriveBase.SRXDriveBaseTestInit();
+	}
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
 	@Override
 	public void testPeriodic() {
+		testSRXDriveBase.SRXDriveBaseTestPeriodic();
 	}
 				
 }
