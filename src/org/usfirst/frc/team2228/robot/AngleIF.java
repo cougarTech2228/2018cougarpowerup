@@ -13,7 +13,7 @@ public class AngleIF implements PIDOutput {
 //	private PIDController _PIDController;
 	static final double AngleSP = 0.0;
 	static double rate = 0;
-	static double kP = 0.003;
+	static double kP = 0.0003;
 	static final double kI = 0.00;
 	static final double kD = 0.00;
 	
@@ -76,7 +76,7 @@ public class AngleIF implements PIDOutput {
 	}
 	public double getAngleCorrection() {
 		double error;
-		double Yaw = getYaw();
+		double Yaw = Math.floor(getYaw()*10000)/10000;
 		error = AngleSP - Yaw;
 		//if (Yaw > 0){
 		//}
