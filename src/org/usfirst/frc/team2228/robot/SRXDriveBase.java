@@ -457,7 +457,7 @@ public class SRXDriveBase {
 		}	
 		return	sensorCorrection;
 	}
-	
+	//hi
 	public boolean isDriveMoving() {
 		if ((Math.abs(driveLeftMasterMtr.getSelectedSensorVelocity(SRXDriveBaseCfg.kPIDLoopIDx)) > 0.1) ||
 			(Math.abs(driveRightMasterMtr.getSelectedSensorVelocity(SRXDriveBaseCfg.kPIDLoopIDx)) > 0.1))
