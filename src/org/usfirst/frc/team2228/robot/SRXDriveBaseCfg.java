@@ -4,7 +4,7 @@ public class SRXDriveBaseCfg {
 		// program control flags
 		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		
 		
 		// ===============================================
