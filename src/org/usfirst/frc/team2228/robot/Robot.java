@@ -28,9 +28,9 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	UsbCamera frontCamera, backCamera;
-	// private CANLED LED;
-	// private AngleIF angle;
+	//UsbCamera camera;
+	//private CANLED LED;
+	private AngleIF angleIF;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -49,6 +49,10 @@ public class Robot extends IterativeRobot {
 		elevator = new Elevator(driverIF, pc);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
+		angleIF = new AngleIF();
+		base.setAngleIF(angleIF);
+		//base.setCorrectionSensor(3); // navx
+		
 		//frontCamera = new UsbCamera("Front Camera", 0);
 		//backCamera = new UsbCamera("Back Camera", 1);
 		//frontCamera = CameraServer.getInstance().startAutomaticCapture();
@@ -72,6 +76,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// Gets everything from Autonomous Init from the AutoMaster class
+		angleIF.zeroYaw();
 		auto.init();
 	}
 
@@ -84,12 +89,10 @@ public class Robot extends IterativeRobot {
 		// class
 		auto.run();
 	}
-
-	// public void teleopInit() {
-	// System.out.println("teleopInit() fi!");
-	// chessyDrive.teleopInit();
-	// System.out.println("Teleop Init done");
-	// }
+	
+	public void teleopInit() {
+		angleIF.zeroYaw();
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
@@ -106,12 +109,11 @@ public class Robot extends IterativeRobot {
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
 		// LED.rainbowShift();
-		au.roundTo(0.0001);
+		//au.roundTo(0.0001);
 		// System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
-		// angle.getAngle();
 	}
 
 	/**

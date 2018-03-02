@@ -20,6 +20,7 @@ public class MoveTo extends Command {
 	
 	protected void initialize() {
 		System.out.println("initial move: " + moveIn);
+		base.setAngleZero();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
