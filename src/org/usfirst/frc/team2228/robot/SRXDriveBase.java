@@ -477,21 +477,7 @@ public class SRXDriveBase {
 					// sensorCorrection = capCorrection(robotDistanceSensor.getAngleCorrection());
 					break;
 				case 3:
-//					if (getCorrectionUpdate == 0) {
-						sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
-//						getCorrectionUpdate ++;
-//						System.out.println("loop count " + getCorrectionUpdate);
-//						//sensorCorrection = 0.0;
-//					}
-//					
-//					else {
-//							getCorrectionUpdate ++;
-//							System.out.println("Loop Count " + getCorrectionUpdate);
-//						}
-//					
-//					if (getCorrectionUpdate == 20) {
-//						getCorrectionUpdate = 0;
-//					}
+					sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
 					break;
 				default:
 					sensorCorrection = 0;
