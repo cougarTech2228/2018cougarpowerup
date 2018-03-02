@@ -27,8 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SRXDriveBase {
 	// The following is for the addition of a Navx and ultrasonic sensors
 	// public class SRXDriveBase( AngleIF _angle, DistanceIF _distance)
-	// AngleIF robotAngle = _angle;
-	// DistanceIF robotDistance = _distance;
+	private AngleIF robotAngle;
+	private AnalogUltrasonic robotDistance;
 	
 	
 	// DifferentialDrive or tank motors
@@ -46,6 +46,7 @@ public class SRXDriveBase {
 	private int CorrectionSensorType = 0;
 	private int stepFunctionStopCount = 0;
 	private int autoCmdSequence = 1;
+	private int getCorrectionUpdate = 0;
 
 	//TODO
 	//private DrvStraightCorSensor correctionSensor = 0;
@@ -263,6 +264,20 @@ public class SRXDriveBase {
 		// set timeout to zero to stop waiting for confirmations
 		SRXTimeoutValueMs = 0;
 	}
+	
+	public void setAngleIF(AngleIF _angleIF){
+		robotAngle = _angleIF;
+	}
+
+	public void setAngleZero(){
+		if (CorrectionSensorType == 3){
+			robotAngle.zeroYaw();
+		}
+		
+//	public void setAnalogUltrasonic(AnalogUltrasonic _AnalogUltrasonic){
+//			robotDistance = _AnalogUltrasonic;
+//		}
+	}
 	/**
 	* =======================================================================================
 	* SRXBaseDrive SET/CONFIG METHODS
@@ -462,7 +477,7 @@ public class SRXDriveBase {
 					// sensorCorrection = capCorrection(robotDistanceSensor.getAngleCorrection());
 					break;
 				case 3:
-					// sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
+					sensorCorrection = capCorrection(robotAngle.getAngleCorrection());
 					break;
 				default:
 					sensorCorrection = 0;
@@ -607,12 +622,16 @@ public class SRXDriveBase {
 	 * straight/drive perpendicular correction
 	 */
 	public void setThrottleTurn(double _throttleValue, double _turnValue, boolean _isDrivingPerpendicular) {
-		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled && _turnValue == 0) {
-			driveStraightDirCorrection = getDriveStraightCorrection();
-			
+		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled && Math.abs(_turnValue) < SRXDriveBaseCfg.kSpeedDeadBand) {		
 			// Calculate cmd level in terms of PercentVbus; range (-1 to 1)
-			leftCmdLevel = _throttleValue + _turnValue + driveStraightDirCorrection;
-			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue) - driveStraightDirCorrection;
+			leftCmdLevel = _throttleValue + _turnValue; // + driveStraightDirCorrection;
+			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue); // - driveStraightDirCorrection;
+			driveStraightDirCorrection = getDriveStraightCorrection();
+			rightCmdLevel += driveStraightDirCorrection;
+			if (driveStraightDirCorrection > 0){
+			System.out.println("DriveStrightDirCorrection " + driveStraightDirCorrection);
+			}
+		
 		} else {
 			leftCmdLevel = _throttleValue  +_turnValue;
 			rightCmdLevel = ((_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue);

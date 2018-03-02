@@ -94,6 +94,17 @@ public class TeleopController {
 		if(turn != 0){
 			turn = CheckTurnSensitivityFilter(limit(throttle), limit(turn));
 		}
+//		if (Math.abs(turn) < TeleopControllerCfg.kJoyStickDeadBand){
+//			System.out.println("turn" + turn);
+//			++notTurning;
+//			if (notTurning == 20) // trying not to zero the yaw too early
+//			{
+//			  driveBase.setAngleZero();
+//			}
+//		} else {
+//			notTurning = 0;
+//		}
+//		
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(limit(throttle));
 			throttle = CheckAccelFilter(limit(throttle));

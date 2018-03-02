@@ -155,7 +155,9 @@ public class SRXDriveBaseCfg {
 
 		public static double kDriveStraightCorrection = .9750;
 		public static double kRotateDriveStraightCorrection = 0.93;	
+		        // Mew 0.9150
 				//for test bot 1.0805;
+		        // for Lamda 0.98
 				//for robox 0.93; 
 				// Hard floor correction 0.87;
 		
