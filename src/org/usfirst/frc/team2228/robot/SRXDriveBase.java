@@ -28,7 +28,7 @@ public class SRXDriveBase {
 	// The following is for the addition of a Navx and ultrasonic sensors
 	// public class SRXDriveBase( AngleIF _angle, DistanceIF _distance)
 	private AngleIF robotAngle;
-	// DistanceIF robotDistance = _distance;
+	private AnalogUltrasonic robotDistance;
 	
 	
 	// DifferentialDrive or tank motors
@@ -269,11 +269,14 @@ public class SRXDriveBase {
 		robotAngle = _angleIF;
 	}
 
-	
 	public void setAngleZero(){
 		if (CorrectionSensorType == 3){
 			robotAngle.zeroYaw();
 		}
+		
+//	public void setAnalogUltrasonic(AnalogUltrasonic _AnalogUltrasonic){
+//			robotDistance = _AnalogUltrasonic;
+//		}
 	}
 	/**
 	* =======================================================================================
