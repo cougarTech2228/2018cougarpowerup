@@ -12,15 +12,13 @@ public class CubeManipulator {
 	boolean triggered2 = false;
 	private boolean lastButton = false;
 	boolean lastButton2 = false;
-	private Toggler collect, expult;
+	private PneumaticController pneu;
 
-	public CubeManipulator(DriverIF _driverIf) {
+	public CubeManipulator(DriverIF _driverIf, PneumaticController _pneu) {
+		pneu = _pneu;
 		driverIf = _driverIf;
 		left = new Spark(RobotMap.PWM_PORT_0);
 		right = new Spark(RobotMap.PWM_PORT_1);
-		
-		collect = new Toggler(2);
-		expult = new Toggler(2);
 		
 		SmartDashboard.putNumber("CollectionValue", 0.75);
 		SmartDashboard.putNumber("ExpulsionValue", -0.75);
@@ -50,23 +48,25 @@ public class CubeManipulator {
 //			right.set(0);
 //		}
 		
-		if (collect.toggle(driverIf.collectionToggle()) == 0) {
+		if (!driverIf.collectionToggle() && lastButton && triggered == false) {
 			left.set(cubeCollectionValue);
 			right.set(cubeCollectionValue);
+			pneu.liftSet(false);
+			pneu.squeezeSet(false);
 			triggered = true;
 			System.out.println("Suck in");
 		}
-		else {
+		else if (!driverIf.collectionToggle() && lastButton && triggered == true) {
 			left.set(0);
 			right.set(0);
 			triggered = false;
 		}
-		if (expult.toggle(driverIf.expulsion()) == 0) {
+		if (!driverIf.expulsion() && lastButton2 && triggered2 == false) {
 			left.set(cubeExpulsionValue);
 			right.set(cubeExpulsionValue);
 			triggered2 = true;
 		}
-		else {
+		else if (!driverIf.expulsion() && lastButton2 && triggered2 == true) {
 			left.set(0);
 			right.set(0);
 			triggered2 = false;

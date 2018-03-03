@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWM;
@@ -24,6 +25,7 @@ public class Elevator {
 	DigitalInput limitSwitch;
 	Toggler t;
 	Toggler Encoder;
+//	AnalogInput prox;
 	FeedbackDevice encoder;
 	double currentHeight;
 	int heightState;
@@ -69,6 +71,7 @@ public class Elevator {
 		elevator.set(0);
 		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		t = new Toggler(6);
+//		prox = new AnalogInput(2);
 
 		// winch + hook
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
@@ -89,6 +92,7 @@ public class Elevator {
 		SmartDashboard.putNumber("Launch:", 0);
 		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
+//		SmartDashboard.putNumber("prox", prox.getVoltage());
 		elevator.setNeutralMode(NeutralMode.Brake);
 
 		// for encoderset method
@@ -104,7 +108,7 @@ public class Elevator {
 			elevator.set(0);
 			hitlimit = true;
 		} else if (!hitlimit) {
-			elevator.set(0.7);
+			elevator.set(-0.7);
 
 		}
 		int i = Encoder.state;
@@ -121,7 +125,8 @@ public class Elevator {
 		MoveElevator(state, speed, error);
 		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
 		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
-		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
+//		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
+//		SmartDashboard.putNumber("prox", prox.getVoltage());
 	}
 
 	/**

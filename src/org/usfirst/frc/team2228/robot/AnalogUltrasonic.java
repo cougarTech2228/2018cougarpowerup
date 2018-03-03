@@ -10,8 +10,8 @@ public class AnalogUltrasonic {
 	private final double MM_TO_INCHES = 25.4;
 	private final double MAX_READ_DISTANCE = 5000;// maximum distance the us
 													// sensor can read in mm
-	AnalogInput sensor = new AnalogInput(1);
-	AnalogInput sensor2 = new AnalogInput(2);
+	AnalogInput sensor = new AnalogInput(0);
+	AnalogInput sensor2 = new AnalogInput(1);
 	PIDSource pid;
 	double[] distanceArray1 = new double[10];
 	double[] distanceArray2 = new double[10];

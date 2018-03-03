@@ -48,28 +48,28 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		cube = new CubeManipulator(driverIF);
-		chessyDrive = new TeleopController(driverIF, base);
-
 		pc = new PneumaticController(driverIF);
+		cube = new CubeManipulator(driverIF, pc);
+		chessyDrive = new TeleopController(driverIF, base);
 		elevator = new Elevator(driverIF, pc);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
-		curCam = CameraServer.getInstance().startAutomaticCapture();
+//		curCam = CameraServer.getInstance().startAutomaticCapture();
 		// LED = new CANLED();
 		// LED.colorInit();
 		// angle = new AngleIF();
-		
 		toggler = new Toggler(2);
 		int intcam0 = 0;
 		int intcam1 = 1;
-		camera0 = new UsbCamera("USB Camera " + intcam0, intcam0);
-		CameraServer.getInstance().addCamera(camera0);
-		server = CameraServer.getInstance().addServer("serve_" + camera0.getName());
-		camera1 = new UsbCamera("USB Camera " + intcam1, intcam1);
-		CameraServer.getInstance().addCamera(camera1);
-		curCam = camera0;
-		SmartDashboard.putString("Current Cam", curCam.getName());
+//		camera0 = new UsbCamera("USB Camera " + intcam0, intcam0);
+		camera0 = CameraServer.getInstance().startAutomaticCapture();
+//		CameraServer.getInstance().addCamera(camera0);
+//		server = CameraServer.getInstance().addServer("serve_" + camera0.getName());
+//		camera1 = new UsbCamera("USB Camera " + intcam1, intcam1);
+		camera1 = CameraServer.getInstance().startAutomaticCapture();
+//		CameraServer.getInstance().addCamera(camera1);
+//		curCam = camera0;
+//		SmartDashboard.putString("Current Cam", curCam.getName());
 	}
 
 	/**
