@@ -51,7 +51,7 @@ public class Elevator {
 	}
 
 	public enum ElevatorTimes {
-		BOTTOM(0), PORTAL(-141401), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
+		BOTTOM(0), PORTAL(141401), SCALE_LOW(1349826), SCALE_NEUTRAL(1489334), SCALE_HIGH(2637075);
 		public final double time;
 
 		ElevatorTimes(double _time) {
@@ -125,7 +125,7 @@ public class Elevator {
 		MoveElevator(state, speed, error);
 		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
 		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
-//		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
+		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
 //		SmartDashboard.putNumber("prox", prox.getVoltage());
 	}
 

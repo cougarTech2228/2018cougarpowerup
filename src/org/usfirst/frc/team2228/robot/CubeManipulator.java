@@ -51,8 +51,8 @@ public class CubeManipulator {
 		if (!driverIf.collectionToggle() && lastButton && triggered == false) {
 			left.set(cubeCollectionValue);
 			right.set(cubeCollectionValue);
-			pneu.liftSet(false);
-			pneu.squeezeSet(false);
+//			pneu.liftSet(false);
+//			pneu.squeezeSet(false);
 			triggered = true;
 			System.out.println("Suck in");
 		}
