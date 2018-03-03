@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Relay;
 
 public class Elevator {
-	boolean on = false, off = true;
+	boolean on = false, off = true, hitlimit = false;
 	DriverIF driverIF;
 	WPI_TalonSRX elevator;
 	DMC60 conveyor1, conveyor2;
@@ -47,6 +47,14 @@ public class Elevator {
 			height = encoderVal;
 		}
 	}
+	public enum ElevatorTimes {
+		BOTTOM(0), PORTAL(-141401), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
+		public final double time;
+
+		ElevatorTimes(double _time) {
+			time = _time;
+		}
+	}
 
 	public Elevator(DriverIF _driverIF, PneumaticController _pneu) {
 		pneu = _pneu;
@@ -78,7 +86,9 @@ public class Elevator {
 		SmartDashboard.putNumber("front conveyor:", 0);
 		SmartDashboard.putNumber("Elevator Speed:", 0);
 		SmartDashboard.putNumber("Launch:", 0);
-		SmartDashboard.putNumber("Elevator", 0);
+		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
+		elevator.setNeutralMode(NeutralMode.Brake);
 
 		// for encoderset method
 		Encoder = new Toggler(2);
@@ -88,11 +98,13 @@ public class Elevator {
 
 		ConveyorToggle(driverIF.conveyorToggle(), driverIF.conveyorsBackward(), 0.25, conveyor1, conveyor2);
 
-		if (!limitSwitch.get()) {
+		if (limitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 0);
-			heightCount = 0;
-		} else {
-			elevator.set(-0.7);
+			elevator.set(0);
+			hitlimit = true;
+		} else if (!hitlimit) {
+			elevator.set(0.7);
+			
 		}
 		int i = Encoder.state;
 		int i2 = Encoder.toggle(driverIF.elevatorToggleUp(), driverIF.elevatorToggleDown());
@@ -106,6 +118,9 @@ public class Elevator {
 		System.out.println(Encoder + " " + t);
 
 		MoveElevator(state, speed, error);
+		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
+		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
+		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
 	}
 
 	/**
@@ -139,8 +154,22 @@ public class Elevator {
 			done = EncoderSet(ElevatorHeights.SCALE_HIGH.height, speed, error);
 			break;
 		}
-		System.out.println("Encoder accounts: " + elevator.getSensorCollection().getQuadraturePosition());
+//		System.out.println("Encoder counts: " + elevator.getSensorCollection().getQuadraturePosition());
 		return done;
+	}
+	public boolean moveElevatorOnTime(){
+		return false;
+	}
+	
+	public void conveyors(boolean on){
+		if(on){
+			conveyor1.set(1);
+			conveyor2.set(-1);
+		}
+		else{
+			conveyor1.set(0);
+			conveyor2.set(0);
+		}
 	}
 
 	/**
@@ -155,7 +184,7 @@ public class Elevator {
 	 */
 	public boolean EncoderSet(double encoderCount, double speed, int Error) {
 		if (Encoder.state == 0) {
-			pneu.brakeSet(false);
+			//pneu.brakeSet(false);
 			if (elevator.getSensorCollection().getQuadraturePosition() > encoderCount + Error) {
 				elevator.set(speed);
 				return false;
@@ -163,14 +192,16 @@ public class Elevator {
 				elevator.set(-speed);
 				return false;
 			} else {
-				elevator.set(0);
+				elevator.set(0.05);
 				Encoder.toggle(true);
 				return true;
 			}
+			
 		} else {
-			pneu.brakeSet(true);
+			//pneu.brakeSet(true);
 			return true;
 		}
+	
 	}
 
 	public void EncoderReset() {
