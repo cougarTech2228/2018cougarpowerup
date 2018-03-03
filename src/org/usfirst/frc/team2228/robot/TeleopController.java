@@ -25,7 +25,7 @@ public class TeleopController {
 	//CONSTANTS
 	
 	//  defines minimum joystick moves to be acted on 
-    public static double kJoyStickDeadBand = 0.1;
+    public static double kJoyStickDeadBand = 0.13;
 	 // used to vary the affect when using cubed sensitivity
     public static double kThrottleCubedGain = 1.0; // 0 to 1; 0 is linear (output==input) 1 is cubed (output=input**3)
     
@@ -52,6 +52,11 @@ public class TeleopController {
 	private double EMAThrottleValue = 0;
 	private double previousEMAThottleValue = 0;
 	
+	private boolean isTestBtnActive = false;
+	private double CAL_thottle = 0;
+	private double CAL_turn = 0;
+	private double TST_Turn = 0;
+	private double TST_Throttle = 0;
 	
 	
 	private String lastMsgString = " ";
@@ -81,7 +86,17 @@ public class TeleopController {
 		DriverIF = _driverIF;
 		driveBase = _driveBase;
 	}
-	
+	//==========================================
+	// TELEOP INIT
+	public void teleopInit(){
+
+		SmartDashboard.putBoolean("TstBtn-TurnSensitivity:", false);
+		SmartDashboard.putBoolean("TstBtn-ThrottleSensitivity:", false);
+		SmartDashboard.putBoolean("TstBtn-AccelFilter:", false);
+		
+		SmartDashboard.putNumber("CAL_thottle", CAL_thottle);
+		SmartDashboard.putNumber("CAL_turn", CAL_turn);
+		}
 	//==========================================
 	// TELEOP PERIODIC
 	public void teleopPeriodic() {
@@ -143,15 +158,10 @@ public class TeleopController {
 			break;
 		case ThrottlePowerLimited:
 			// square the turn
-			//fTurn = (Math.signum(fTurn) * Math.pow(fTurn, 2));
+			//fTurn = fTurn * Math.abs(fTurn));
 			// Cap turn with respect to throttle power
 			fTurn = fTurn * ((1-Math.abs(fThrottle)) * PowerCorrectionRatio);
-//			if(Math.abs(fTurn) > (Math.abs(fThrottle) * PowerCorrectionRatio)){
-//				fTurn = Math.signum(fTurn)*((1-Math.abs(fThrottle)) * PowerCorrectionRatio);
-//				System.out.println("Turn" + fTurn);
-//				System.out.println("PowerCorrectionRatio" + PowerCorrectionRatio);
-//				SmartDashboard.putNumber("fTurn", fTurn);
-//			}
+
 			break;
 		default:
 			break;
@@ -186,12 +196,11 @@ public class TeleopController {
 			fThrottle = SCurve(_throttle);
 			break;
 		case Squared:
-			fThrottle = Math.signum(_throttle) * Math.pow(_throttle, 2);
+			fThrottle = _throttle * Math.abs(_throttle);
 			break;
 		case Cubed:
 			// kThrottleCubedGain => from 0 to 1; 0 = linear, 1 = cubed
-			fThrottle = (kThrottleCubedGain * (Math.pow(_throttle, 3)))
-					+ ((1 - kThrottleCubedGain) * _throttle);
+			fThrottle = (kThrottleCubedGain * (Math.pow(_throttle, 3)))	+ ((1 - kThrottleCubedGain) * _throttle);
 			break;
 		default:
 			break;
@@ -313,5 +322,27 @@ public class TeleopController {
 				lastMsgString = _msgString;
 			}
 		}
+	}
+	
+	/**
+	* =======================================================================================
+	* TEST METHODS
+	* =======================================================================================
+	*/	
+	public void testMethodselection() {
+		if(SmartDashboard.getBoolean("TstBtn-TurnSensitivity:", false)){
+			
+			// public double CheckTurnSensitivityFilter(double _throttle, double _turn) 
+			System.out.println(CheckTurnSensitivityFilter(SmartDashboard.getNumber("CAL_thottle", CAL_thottle), SmartDashboard.getNumber("CAL_turn", CAL_turn)));			
+		}
+		if(SmartDashboard.getBoolean("TstBtn-ThrottleSensitivity:", false)){
+			// public double CheckThrottleSensitivity(double _throttle)
+			System.out.println(CheckThrottleSensitivity(SmartDashboard.getNumber("CAL_thottle", CAL_thottle))); 
+		}
+		if(SmartDashboard.getBoolean("TstBtn-AccelFilter:", false)){
+			// public double CheckAccelFilter(double _ThrottleValue)
+			System.out.println(CheckAccelFilter(SmartDashboard.getNumber("CAL_thottle", CAL_thottle))); 
+		}	
+		
 	}
 }

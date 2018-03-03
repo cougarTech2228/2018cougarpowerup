@@ -363,7 +363,7 @@ public class SRXDriveBaseAPI {
 
 +
 + =======================================================================================
-+ AUTONOMOUG METHODS
++ SRXDriveBase AUTONOMOUG METHODS
 + =======================================================================================
 +
 Note!!!!!!!!!!!!!!!!!!!!
@@ -393,6 +393,77 @@ Before calling any autonomous method the encoders need to be zeroed
 										boolean _isDirectionReverse, 
 										boolean _isCascadeTurn ) {
 	}
+	
++
++ =======================================================================================
++ SRXDriveBase TIMED AUTONOMOUG METHODS
++ =======================================================================================
++	
+	
+	public boolean timeVelMoveToPosition(double _MoveToPositionSec, double _MoveToPositionPwrLevel, boolean _isCascadeMove){
+		
+	}
+	public boolean timeRotateToAngle(double _rotateTimeToAngleSecSec, double _rotatePowerLevel) {
+		
+	}
+	public boolean timeTurnToAngle(double _turnAngleSec, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn ) {
+		
+	}
++
++ =======================================================================================
++ SRXDriveBase TEST SELECTION / SHUFFLE BOARD METHODS
++ =======================================================================================
++	
+	-  the following needs to be added to class Robot extends IterativeRobot
+	
+	- This function is called once during test mode
+	@Override
+	public void testInit() {
+		SRXDriveBase.SRXDriveBaseInit();
+		loadShuffleBoardParmeters();
+	}
+	
+	- This function is called periodically during test mode
+	@Override
+	public void testPeriodic() {
+		SRXDriveBase.testMethodSelection();
+	}
+	
+	- =====================================
+	if(SmartDashboard.getBoolean("TstBtn-StepFnc:", false)){
+		- testStepFunction(double _stepFunctionPower, double _stepFunctionTimeSec, boolean _isTestForRightDrive)
+	}
+	if(SmartDashboard.getBoolean("TstBtn-DrvStraightCal:", false)){
+		- testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
+		- Shuffleboard also uses CAL_kDriveStraightCorrection that is changed for the driveStraightCorrection variable
+	}
+	if(SmartDashboard.getBoolean("TstBtn-VelMoveToPos:", false)){
+		- velMoveToPosition(double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isSensorStopUsed, boolean _isCascadeMove)
+	}
+	if(SmartDashboard.getBoolean("TstBtn-TimeVelMove:", false)){
+		- timeVelMoveToPosition(double _MoveToPositionSec, double _MoveToPositionPwrLevel, boolean _isCascadeMove)
+	}
+	if(SmartDashboard.getBoolean("TstBtn-RotateToAngle:", false)){
+		- rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
+	}
+	if(SmartDashboard.getBoolean("TstBtn-TimeRotate:", false)){
+		- timeRotateToAngle(double _rotateTimeToAngleSec, double _rotatePowerLevel) 
+	}
+	if(SmartDashboard.getBoolean("TstBtn-TurnToAngle:", false)){
+		- turnByEncoderToAngle(double _turnAngleDeg, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
+	}
+	if(SmartDashboard.getBoolean("TstBtn-TimeTurn:", false)){
+		- timeTurnToAngle(double _turnAngleSec, double _turnRadiusIn, double _turnPowerLevel, boolean _isDirectionReverse, boolean _isCascadeTurn )
+	}
+	if (SmartDashboard.getBoolean("TstBtn-DriveCmdLevel:", false)){
+		- SetDriveTrainCmdLevel(double _rightCMDLevel, double _leftCMDLevel)
+		- Shuffleboard also uses CAL_RightDriveCmdLevel, CAL_LeftDriveCmdLevel to change the power level value of the drives
+		
+	}
+	if(SmartDashboard.getBoolean("TstBtn-CascadeTest:", false)){
+		
+	}
+	
 	
 +
 + =======================================================================================
