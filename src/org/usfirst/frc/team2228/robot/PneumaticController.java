@@ -9,57 +9,86 @@ public class PneumaticController {
 	boolean off = false;
 	public DriverIF driverIF;
 	public Compressor c = new Compressor(RobotMap.CAN_ID_10);
+	private Toggler toggle = new Toggler(2);
+	private Toggler toggle2 = new Toggler(2);
 
 	public Solenoid squeezies = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_0);
 	public Solenoid lift = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_1);
 	public Solenoid brake = new Solenoid(RobotMap.CAN_ID_10, RobotMap.PCM_PORT_3);
 
 	public boolean pressureSwitch = c.getPressureSwitchValue();
-	private boolean lastButton = false;
-	private boolean lastButton2 = false;
-	private boolean triggered = false;
-	private boolean triggered2 = false;
-	
-	private Toggler toggle = new Toggler(2);
-
+	private boolean liftState = true;
+	private boolean squeezeState = true;
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
 		brakeSet(false);
+		SmartDashboard.putBoolean("liftState", liftState);
+		SmartDashboard.putBoolean("squeezeState", squeezeState);
 	}
 
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
-		pneumaticToggle(driverIF.squeezeToggle(), true, squeezies);
-		pneumaticToggle(driverIF.cubeRotateToggle(), true, lift);
+		squeezeToggle(driverIF.squeezeToggle(), true, squeezies);
+		liftToggle(driverIF.cubeRotateToggle(), true, lift);
+		SmartDashboard.putBoolean("liftState", liftState);
+		SmartDashboard.putBoolean("squeezeState", squeezeState);
 	}
 
 	public void liftSet(boolean state) {
 		lift.set(state);
+		liftState = state;
+	}
+	public void smartDashboardLiftSet() {
+		lift.set(SmartDashboard.getBoolean("liftState", liftState));
+		liftState = SmartDashboard.getBoolean("liftState", liftState);
 	}
 
 	public void brakeSet(boolean state) {
 		brake.set(state);
+	}
+	public void squeezeSet(boolean state) {
+		squeezies.set(state);
+		squeezeState = state;
 	}
 
 	/**
 	 * 
 	 * @param button
 	 *            - button you would like to toggle
-	 * @param lastButton
-	 *            - set to state of button after loop
-	 * @param triggered
-	 *            - if motor is on or off
 	 * @param onDirection
 	 *            - primary direction of solenoid
 	 * @param solenoid
 	 *            - solenoid user would like to activate
 	 */
-	public void pneumaticToggle(boolean button, boolean onDirection, Solenoid solenoid) {
-		if(toggle.toggle(button) == 0)
+	public void	liftToggle(boolean button, boolean onDirection,
+			Solenoid solenoid) {
+			
+			if(toggle.toggle(button) == 0) {
+				solenoid.set(onDirection);
+			}
+			else {
+				solenoid.set(!onDirection);
+			}
+	}
+	public void squeezeToggle(boolean button, boolean onDirection, Solenoid solenoid) {
+		if(toggle2.toggle(button) == 0) {
 			solenoid.set(onDirection);
-		else
+		}
+		else {
 			solenoid.set(!onDirection);
-		lastButton = button;
+		}
+	}
+	public boolean getLiftState() {
+		if(toggle.state == 0) {
+			return false;
+		}
+		return true;
+	}
+	public boolean getSqueezeState() {
+		if(toggle2.state == 0) {
+			return false;
+		}
+		return true;
 	}
 	// beep bop boopedy beep beep
 
