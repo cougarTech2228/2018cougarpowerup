@@ -52,7 +52,7 @@ public class Elevator {
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
 //		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
-		rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
+//		rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
 		hookArmDownwards = new DigitalInput(RobotMap.DIO_PORT_2);
 		hookArmUpwards = new DigitalInput(RobotMap.DIO_PORT_3);
 		elevator.set(0);
@@ -89,7 +89,8 @@ public class Elevator {
 
 		if (driverIF.RaiseElevator()) {
 			pneu.brakeSet(off);
-			elevator.set(b);
+			pneu.squeezeSet(false);
+			elevator.set(-b);
 			 if(elevator.getSelectedSensorPosition(0) == -1){
 			 elevator.set(0);
 			
@@ -97,9 +98,9 @@ public class Elevator {
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
-			elevator.set(-b);
-			pneu.liftSet(false);
-			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
+			elevator.set(b);
+			pneu.squeezeSet(false);
+			if (!leftLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
 			}
@@ -163,7 +164,7 @@ public class Elevator {
 
 		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
 			conveyor1.set(e);
-			conveyor2.set(-e);
+			conveyor2.set(e);
 			triggered = true;
 			// System.out.println("Suck in");
 		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
@@ -175,7 +176,7 @@ public class Elevator {
 
 		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
 			conveyor1.set(-e);
-			conveyor2.set(e);
+			conveyor2.set(-e);
 			triggered2 = true;
 			// System.out.println("Suck in");
 		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {

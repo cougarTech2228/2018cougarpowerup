@@ -63,6 +63,9 @@ public class PneumaticController {
 	public void brakeSet(boolean state){
 		brake.set(state);
 	}
+	public void squeezeSet(boolean state) {
+		squeezies.set(state);
+	}
 	public void squeeze(boolean _grab){
 		if(_grab == true){
 			squeezies.set(true);

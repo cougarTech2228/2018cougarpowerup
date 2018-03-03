@@ -28,9 +28,11 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	//UsbCamera camera;
+	UsbCamera frontCamera;
 	//private CANLED LED;
 	private AngleIF angleIF;
+//	private UsbCamera backCamera;
+//	private UsbCamera cam;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -53,10 +55,10 @@ public class Robot extends IterativeRobot {
 		base.setAngleIF(angleIF);
 		//base.setCorrectionSensor(3); // navx
 		
-		//frontCamera = new UsbCamera("Front Camera", 0);
-		//backCamera = new UsbCamera("Back Camera", 1);
-		//frontCamera = CameraServer.getInstance().startAutomaticCapture();
-		//backCamera = CameraServer.getInstance().startAutomaticCapture();
+//		frontCamera = new UsbCamera("Front Camera", 0);
+//		backCamera = new UsbCamera("Back Camera", 1);
+//		frontCamera = CameraServer.getInstance().startAutomaticCapture();
+//		backCamera = CameraServer.getInstance().startAutomaticCapture();
 		// LED = new CANLED();
 		// LED.colorInit();
 		// angle = new AngleIF();
