@@ -39,7 +39,7 @@ public class TeleopController {
 	public static double kTransitionMaxDelta = 0.1;
 	
     public static double kTurnSensitivityGain = 0.3; // 0.1 to 1.0 used for chezy turn control
-	private static double PowerCorrectionRatio = .45;
+	private static double powerCorrectionRatio = .35;
 	
 	//======================================
 	// VARIABLES
@@ -51,7 +51,7 @@ public class TeleopController {
 	private double previousStopAccum = 0;
 	private double EMAThrottleValue = 0;
 	private double previousEMAThottleValue = 0;
-	
+	private double maxThrottle = 1;
 	private boolean isTestBtnActive = false;
 	private double CAL_thottle = 0;
 	private double CAL_turn = 0;
@@ -121,6 +121,7 @@ public class TeleopController {
 		
 		//CheckForAdjustSpeedRequest();
 		
+		throttle *= maxThrottle;
 		// drive robot
 		driveBase.setThrottleTurn(throttle, turn);
 		
@@ -132,9 +133,11 @@ public class TeleopController {
 								turn,
 								EMAThrottleValue);
 		}
+	}
 	
-	}	
-
+	public void SetMaxThrottlePower(double _MaxSpeed) {
+	maxThrottle = _MaxSpeed;
+	}
 // ===========================================
 // DRIVERIF FILTERING FUNCTIONS
 
@@ -160,8 +163,9 @@ public class TeleopController {
 			// square the turn
 			//fTurn = fTurn * Math.abs(fTurn));
 			// Cap turn with respect to throttle power
-			fTurn = fTurn * ((1-Math.abs(fThrottle)) * PowerCorrectionRatio);
-
+			//fTurn = fTurn * ((1-Math.abs(fThrottle)+.2) * powerCorrectionRatio);
+			//fTurn = fTurn * (Math.abs(fThrottle - .3/ fThrottle + (.3) * powerCorrectionRatio));
+			fTurn = fTurn * powerCorrectionRatio;
 			break;
 		default:
 			break;
@@ -247,6 +251,7 @@ public class TeleopController {
 		return _throttleForStopCheck;
 	}
 	
+
 	// AccelFilter
 	// The accel filter follows the actions of
 	// the driver with respect to the motion of the throttle driverIF. If the
@@ -258,6 +263,7 @@ public class TeleopController {
 	// 2) The positive/negative side of zero 
 	// 3) Within the driverIF deadband - reset filter
 	// Determination of kMaxDeltaVel is determined by testing.
+	
 	
 	public double CheckAccelFilter(double _ThrottleValue) {
 		double AccelFltrCheckThrottleValue = _ThrottleValue;

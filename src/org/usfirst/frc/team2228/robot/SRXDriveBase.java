@@ -624,8 +624,8 @@ public class SRXDriveBase {
 			}
 			
 			// Calculate cmd level in terms of PercentVbus; range (-1 to 1)
-			leftCmdLevel = _throttleValue + _turnValue;
-			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue) + driveStraightDirCorrection;
+			leftCmdLevel = _throttleValue + (_turnValue/2);
+			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - (_turnValue/2)) + driveStraightDirCorrection;
 		} else {
 			leftCmdLevel = _throttleValue  +_turnValue;
 			rightCmdLevel = ((_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue);
