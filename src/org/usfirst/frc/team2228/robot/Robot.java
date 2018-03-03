@@ -53,7 +53,7 @@ public class Robot extends IterativeRobot {
 
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc);
-		auto = new AutoMaster(base, elevator);
+		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
 		curCam = CameraServer.getInstance().startAutomaticCapture();
 		// LED = new CANLED();
@@ -133,9 +133,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void cameraCommand() {
-		
-		
-		
 		if (toggler.toggle(driverIF.camSwitch()) == 1) {
 			curCam = camera1;
 		} else {
