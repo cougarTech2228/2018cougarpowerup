@@ -102,19 +102,21 @@ public class Elevator {
 	public void teleopPeriodic() {
 
 		ConveyorToggle(driverIF.conveyorToggle(), driverIF.conveyorsBackward(), 0.25, conveyor1, conveyor2);
-
+//limit is activ low
 		if (limitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 0);
 			elevator.set(0);
-			hitlimit = true;
-		} else if (!hitlimit) {
-			elevator.set(-0.7);
-
-		}
+			System.out.println("Encoder set to zero");
+//			hitlimit = true;
+		} 
+//		else {
+//			elevator.set(-0.7);
+//
+//		}
 		int i = Encoder.state;
 		int i2 = Encoder.toggle(driverIF.elevatorToggleUp(), driverIF.elevatorToggleDown());
 		int state = t.toggle(driverIF.RaiseElevator(), driverIF.LowerElevator());
-		double speed = 0.7;
+		double speed = -0.7;
 		int error = 50000;
 
 		if (i != i2) {

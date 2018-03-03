@@ -28,10 +28,10 @@ public class Toggler {
 			if (!on)
 				on = true;
 		}
-		if (state > states - 1)
-			state = 0;
-		if (state < 0)
-			state = states - 1;
+//		if (state > states - 1)
+//			state = 0;
+//		if (state < 0)
+//			state = states - 1;
 
 		return state;
 	}
