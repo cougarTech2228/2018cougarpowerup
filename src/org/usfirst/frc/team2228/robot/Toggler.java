@@ -2,12 +2,20 @@ package org.usfirst.frc.team2228.robot;
 
 public class Toggler {
 	public int state, states;
-	private boolean on;
-
+	private boolean on, cycle;
 	public Toggler(int states) {
 		state = 0;
 		this.states = states;
 		on = true;
+		cycle = true;
+	}
+
+	public Toggler(int states, boolean cycle) {
+		state = 0;
+		this.states = states;
+		this.cycle = cycle;
+		on = true;
+		
 	}
 	public int get() {
 		return state;
@@ -28,10 +36,21 @@ public class Toggler {
 			if (!on)
 				on = true;
 		}
-//		if (state > states - 1)
-//			state = 0;
-//		if (state < 0)
-//			state = states - 1;
+		if(cycle) {
+			if (state > states - 1)
+			state = 0;
+		if (state < 0)
+			state = states - 1;
+		}
+		else {
+			if(state > states - 1) {
+				state = states;
+			}
+			if(state < 0) {
+				state = 0;
+			}
+		}
+
 
 		return state;
 	}

@@ -25,7 +25,7 @@ public class Elevator {
 	DigitalInput limitSwitch;
 	Toggler t;
 	Toggler Encoder;
-//	AnalogInput prox;
+	// AnalogInput prox;
 	FeedbackDevice encoder;
 	double currentHeight;
 	int heightState;
@@ -70,8 +70,8 @@ public class Elevator {
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
 		elevator.set(0);
 		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
-		t = new Toggler(6);
-//		prox = new AnalogInput(2);
+		t = new Toggler(5, false);
+		// prox = new AnalogInput(2);
 
 		// winch + hook
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
@@ -92,7 +92,7 @@ public class Elevator {
 		SmartDashboard.putNumber("Launch:", 0);
 		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
-//		SmartDashboard.putNumber("prox", prox.getVoltage());
+		// SmartDashboard.putNumber("prox", prox.getVoltage());
 		elevator.setNeutralMode(NeutralMode.Brake);
 
 		// for encoderset method
@@ -102,17 +102,17 @@ public class Elevator {
 	public void teleopPeriodic() {
 
 		ConveyorToggle(driverIF.conveyorToggle(), driverIF.conveyorsBackward(), 0.25, conveyor1, conveyor2);
-//limit is activ low
-		if (limitSwitch.get()) {
+		// limit is activ low
+		if (!limitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 0);
 			elevator.set(0);
 			System.out.println("Encoder set to zero");
-//			hitlimit = true;
-		} 
-//		else {
-//			elevator.set(-0.7);
-//
-//		}
+			// hitlimit = true;
+		}
+//		 else {
+//		 elevator.set(0.7);
+//		
+//		 }
 		int i = Encoder.state;
 		int i2 = Encoder.toggle(driverIF.elevatorToggleUp(), driverIF.elevatorToggleDown());
 		int state = t.toggle(driverIF.RaiseElevator(), driverIF.LowerElevator());
@@ -128,7 +128,7 @@ public class Elevator {
 		SmartDashboard.putBoolean("LimitSwitch", limitSwitch.get());
 		SmartDashboard.putNumber("Elevator", elevator.getSensorCollection().getQuadraturePosition());
 		System.out.println("Encoder Cts." + elevator.getSensorCollection().getQuadraturePosition());
-//		SmartDashboard.putNumber("prox", prox.getVoltage());
+		// SmartDashboard.putNumber("prox", prox.getVoltage());
 	}
 
 	/**
@@ -145,20 +145,18 @@ public class Elevator {
 		boolean done = false;
 		switch (t.toggle(driverIF.RaiseElevator(), driverIF.LowerElevator())) {
 		case 0:
-			break;
-		case 1:
 			done = EncoderSet(ElevatorHeights.BOTTOM.height, speed, error);
 			break;
-		case 2:
+		case 1:
 			done = EncoderSet(ElevatorHeights.PORTAL.height, speed, error);
 			break;
-		case 3:
+		case 2:
 			done = EncoderSet(ElevatorHeights.SCALE_LOW.height, speed, error);
 			break;
-		case 4:
+		case 3:
 			done = EncoderSet(ElevatorHeights.SCALE_NEUTRAL.height, speed, error);
 			break;
-		case 5:
+		case 4:
 			done = EncoderSet(ElevatorHeights.SCALE_HIGH.height, speed, error);
 			break;
 		}
@@ -179,6 +177,9 @@ public class Elevator {
 			conveyor1.set(0);
 			conveyor2.set(0);
 		}
+	}
+	public boolean elevatorPortalSet(double speed, int error) {
+		return EncoderSet(ElevatorHeights.PORTAL.height, speed, error);
 	}
 
 	/**
