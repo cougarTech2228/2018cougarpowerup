@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DMC60;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Relay;
 
@@ -33,6 +34,7 @@ public class Elevator {
 	boolean lastButton1;
 	boolean lastButton2;
 	boolean triggered2;
+	Timer timer;
 
 	public enum ElevatorHeights {
 		BOTTOM(0), PORTAL(100), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
@@ -72,6 +74,8 @@ public class Elevator {
 		lowering = true;
 		triggered = false;
 		triggered2 = false;
+		timer = new Timer();
+		
 	}
 
 	public void teleopPeriodic() {
@@ -109,7 +113,7 @@ public class Elevator {
 //				
 //			}
 		} else {
-			elevator.set(0);
+			elevator.set(0.05);
 			pneu.brakeSet(on);
 		}
 		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
@@ -158,7 +162,7 @@ public class Elevator {
 		// conveyor1.set(0);
 		// }
 
-		double e = .5;
+		double e = .85;
 		// SmartDashboard.getNumber("front conveyor:", 0);
 		// hya
 
@@ -193,8 +197,8 @@ public class Elevator {
 		}
 		if (driverIF.winchWindUp()) {
 			winch.set(.7);
-		} else if (driverIF.winchWindDown()) {
-			winch.set(-.7);
+		} else  {
+			winch.set(0);
 		}
 
 	}
@@ -209,6 +213,16 @@ public class Elevator {
 		} else if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
 			elevator.set(0);
 			pneu.brakeSet(on);
+			return true;
+		}
+		return false;
+	}
+	public boolean elevatorPortalSet() {
+		timer.start();
+		elevator.set(.3);
+		if(timer.get() > 2.5) {
+			elevator.set(0);
+			timer.stop();
 			return true;
 		}
 		return false;

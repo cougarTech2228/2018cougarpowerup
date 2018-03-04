@@ -4,79 +4,71 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class DriverIF {
 	XboxIF xboxIF;
+	XboxIF xboxIF2;
 
 	public DriverIF() {
-		xboxIF = new XboxIF();
-	}
-
-	public boolean BackConveyorForwards() {
-		return xboxIF.POV_UP();
-	}
-
-	public boolean BackConveyorBackwards() {
-		return xboxIF.POV_DOWN();
+		xboxIF = new XboxIF(1);
+		xboxIF2 = new XboxIF(2);
 	}
 
 	public boolean conveyorsForward() {
-		if (xboxIF.RIGHT_TRIGGER() > 0.6)
+		if (xboxIF.Y_BUTTON() || xboxIF2.Y_BUTTON())
 			return true;
 		else
 			return false;
 	}
 
 	public boolean conveyorsBackward() {
-		return xboxIF.Y_BUTTON();
+		if (xboxIF.X_BUTTON() || xboxIF2.X_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean hookForward() {
-		return xboxIF.POV_RIGHT();
+		if (xboxIF.POV_UP() || xboxIF2.POV_UP()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean hookBackward() {
-		return xboxIF.POV_LEFT();
+		if (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
-	// public boolean FrontConveyorForwards() {
-	// return xboxIF.POV_RIGHT();
-	// }
-	// public boolean FrontConveyorBackwards() {
-	// return xboxIF.POV_LEFT();
-	// }
-
-//	public boolean liftCube() {
-//		return xboxIF.RS_BUTTON();
-//	}
-
-//	public boolean lowerCube() {
-//		return xboxIF.LS_BUTTON();
-//	}
 
 	public boolean cubeRotateToggle() {
-		return xboxIF.A_BUTTON();
-	}
-
-	public boolean collection() {
-		return xboxIF.X_BUTTON();
+		if (xboxIF.A_BUTTON() || xboxIF2.A_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean expulsion() {
-		return xboxIF.B_BUTTON();
-	}
-
-	public boolean squeeze() {
-		return xboxIF.RS_BUTTON();
+		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean collectionToggle() {
-		return xboxIF.LB_BUTTON();
-	}
-
-	public boolean release() {
-		return xboxIF.LS_BUTTON();
+		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public double Turn() {
 		return xboxIF.RIGHT_JOYSTICK_X();
+
 	}
 
 	public double Throttle() {
@@ -84,38 +76,49 @@ public class DriverIF {
 	}
 
 	public boolean LowerElevator() {
-		if (xboxIF.POV_DOWN())
+		if (xboxIF.LEFT_TRIGGER() > 0.6 || xboxIF2.LEFT_TRIGGER() > 0.6)
 			return true;
 		else
 			return false;
 	}
 
 	public boolean RaiseElevator() {
-		if (xboxIF.POV_UP())
-
+		if (xboxIF.RIGHT_TRIGGER() > 0.6 || xboxIF2.RIGHT_TRIGGER() > 0.6)
 			return true;
 		else
 			return false;
 	}
-	public boolean squeezeToggle(){
-		return xboxIF.RB_BUTTON();
+
+	public boolean squeezeToggle() {
+		if (xboxIF.RB_BUTTON() || xboxIF2.RB_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean winchWindUp() {
-		return xboxIF.START_BUTTON();
-	}
-	public boolean winchWindDown(){
-		return xboxIF.BACK_BUTTON();
+		if (xboxIF.START_BUTTON() || xboxIF2.START_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean elevatorToggleUp() {
-		return xboxIF.POV_UP();
+		if (xboxIF.POV_UP() || xboxIF2.POV_UP()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean elevatorToggleDown() {
-		return xboxIF.POV_DOWN();
+		if (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	public boolean Xbutton() {
-		return xboxIF.START_BUTTON();
-	}
+
 }

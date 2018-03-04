@@ -29,8 +29,8 @@ public class CubeManipulator {
 	}
 
 	public void teleopPeriodic() {
-		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.5);
-		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.5);
+		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.8);
+		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.8);
 //		if (driverIf.collection()) {
 //			left.set(cubeCollectionValue);
 //			right.set(cubeCollectionValue);

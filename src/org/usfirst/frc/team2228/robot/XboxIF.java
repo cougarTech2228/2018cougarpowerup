@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class XboxIF {
 	private XboxController xbox;
 
-	public XboxIF() {
-		xbox = new XboxController(1);
+	public XboxIF(int _port) {
+		xbox = new XboxController(_port);
 	}
 
 	public boolean A_BUTTON() {
