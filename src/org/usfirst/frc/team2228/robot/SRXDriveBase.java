@@ -672,13 +672,34 @@ public class SRXDriveBase {
 		// Determine which drive(left/right) will be modified for the robot turn 
 		if(_throttleValue >= 0){
 			// Forward
-			leftCmdLevel = (_turnValue >= 0)? 1: (1+_turnValue);
-			rightCmdLevel = (_turnValue >= 0)? (1-_turnValue): 1;
-		
+			if (_turnValue >= 0){ 
+				leftCmdLevel = 1;
+			}
+			else{
+				leftCmdLevel = -(_turnValue);
+			}
+			if(_turnValue >= 0){
+			rightCmdLevel =  -(_turnValue); 
+			}
+			else{
+			rightCmdLevel = 1;
+			}
 		} else{
 			// Reverse
-			leftCmdLevel = (_turnValue >= 0)? (1+_turnValue): 1 ;
-			rightCmdLevel = (_turnValue >= 0)?  1: (1-_turnValue);
+			if (_turnValue >= 0){ 
+				leftCmdLevel = (_turnValue);
+			}
+			else{
+				leftCmdLevel = 1;
+			}
+			if(_turnValue >= 0){
+			rightCmdLevel = 1; 
+			}
+			else{
+			rightCmdLevel = _turnValue;
+			}
+			//leftCmdLevel = (_turnValue >= 0)? (1+_turnValue): 1 ;
+			//rightCmdLevel = (_turnValue >= 0)?  1: (1-_turnValue);
 		}
 		// Determine drive straight correction if enabled
 		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled) {
@@ -692,17 +713,23 @@ public class SRXDriveBase {
 			}
 			// Scale throttle by turn
 			// If turn is zero drive straight correction is added to right drive
-			leftCmdLevel = leftCmdLevel * _throttleValue;
-			rightCmdLevel = rightCmdLevel * _throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection + driveStraightDirCorrection;
+			leftCmdLevel = leftCmdLevel +_throttleValue;
+			rightCmdLevel = rightCmdLevel + _throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection + driveStraightDirCorrection;
 		} else {
-			leftCmdLevel *= _throttleValue;
-			rightCmdLevel *= (_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection);
+			leftCmdLevel += _throttleValue;
+			rightCmdLevel += (_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection);
 		}
 			
 		// Provide pivot turn at low speed values
 		pivotScale = (Math.abs(_throttleValue) > SRXDriveBaseCfg.kpivotLimit)? 0: ( 1 - ((Math.abs(_throttleValue) / SRXDriveBaseCfg.kpivotLimit)));
+		if((Math.abs(_throttleValue) > SRXDriveBaseCfg.kpivotLimit)){
+			pivotScale = 0;
+		}
+		else{
+			pivotScale = ( 1 - ((Math.abs(_throttleValue) / SRXDriveBaseCfg.kpivotLimit)));
+		}
 		leftCmdLevel = ((1 - pivotScale) * leftCmdLevel) + (pivotScale * _turnValue);
-		rightCmdLevel = ((1 - pivotScale) * rightCmdLevel) + (pivotScale * _turnValue);
+		rightCmdLevel = ((1 - pivotScale) * rightCmdLevel) - (pivotScale * _turnValue);
 		
 		// In feedback mode output commands to SRX modules set as [% from (-1 to 1)] x MaxVel_VelNativeUnits for feedback control
 		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
