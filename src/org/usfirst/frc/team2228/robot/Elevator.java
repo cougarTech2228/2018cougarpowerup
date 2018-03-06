@@ -113,7 +113,7 @@ public class Elevator {
 //				
 //			}
 		} else {
-			elevator.set(0.05);
+			elevator.set(-0.05);
 			pneu.brakeSet(on);
 		}
 		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
