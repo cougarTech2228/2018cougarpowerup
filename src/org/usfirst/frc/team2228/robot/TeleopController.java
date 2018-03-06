@@ -17,29 +17,29 @@ public class TeleopController {
 	private boolean isTeleopConsoleDataEnabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
-	 // used the in the sine function for turning
-    public static boolean isTurnSensitivityEnabled = true;
-    public static boolean isLowSpeedFactorEnabled = true;
 	
 	//=================================
 	//CONSTANTS
 	
 	//  defines minimum joystick moves to be acted on 
     public static double kJoyStickDeadBand = 0.13;
-	 // used to vary the affect when using cubed sensitivity
-    public static double kThrottleCubedGain = 1.0; // 0 to 1; 0 is linear (output==input) 1 is cubed (output=input**3)
-    
+	
+	// used to vary the affect when using cubed sensitivity
+	// 0 to 1; 0 is linear (output==input) 1 is cubed (output=input**3)
+    public static double kThrottleCubedGain = 1.0; 
+	
+    // 0.1 to 1.0 used for turn sine control
+    public static double kTurnSensitivityGain = 0.3;
+	
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	public static double kLowSmoothFactor = 0.5;
 	public static double kHighSmoothFactor = 0.95;
 	public static double kTransitionSmoothFactor = 0.7;
 	
-	// determination of max delta values are determined by testing
+	// determination of max throttle delta values are determined by testing
 	public static double kMaxDeltaVelocity = 0.1;
-	public static double kTransitionMaxDelta = 0.1;
 	
-    public static double kTurnSensitivityGain = 0.3; // 0.1 to 1.0 used for chezy turn control
-	private static double powerCorrectionRatio = .35;
+	
 	
 	//======================================
 	// VARIABLES
@@ -51,7 +51,10 @@ public class TeleopController {
 	private double previousStopAccum = 0;
 	private double EMAThrottleValue = 0;
 	private double previousEMAThottleValue = 0;
+	
 	private double maxThrottle = 1;
+	private double maxTurn = .35;
+	
 	private boolean isTestBtnActive = false;
 	private double CAL_thottle = 0;
 	private double CAL_turn = 0;
@@ -60,6 +63,7 @@ public class TeleopController {
 	
 	
 	private String lastMsgString = " ";
+	private double maxThottlePowerLevel;
 	
     //=========================
 	// ENUMs
@@ -68,7 +72,6 @@ public class TeleopController {
 		Linear,
 		Sine,
 		Squared,
-		ThrottlePowerLimited
 	}
     public enum ThrottleSensitivity {
 		Linear,
@@ -76,7 +79,7 @@ public class TeleopController {
 		Squared,
 		Cubed
 	}
-	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.ThrottlePowerLimited;
+	public static TurnSensitivity turnSensitivitySet = TurnSensitivity.Squared;
 	public static ThrottleSensitivity throttleSensitivitySet = ThrottleSensitivity.Squared;
 	
    
@@ -86,6 +89,7 @@ public class TeleopController {
 		DriverIF = _driverIF;
 		driveBase = _driveBase;
 	}
+	
 	//==========================================
 	// TELEOP INIT
 	public void teleopInit(){
@@ -97,6 +101,7 @@ public class TeleopController {
 		SmartDashboard.putNumber("CAL_thottle", CAL_thottle);
 		SmartDashboard.putNumber("CAL_turn", CAL_turn);
 		}
+		
 	//==========================================
 	// TELEOP PERIODIC
 	public void teleopPeriodic() {
@@ -119,12 +124,17 @@ public class TeleopController {
 		//	throttle = CheckDriverStopping(throttle);
 		}
 		
-		//CheckForAdjustSpeedRequest();
 		
+		// Limit max throttle / turn
 		throttle *= maxThrottle;
+		turn *= maxTurn;
+		
+		// ============================================
 		// drive robot
 		driveBase.setThrottleTurn(throttle, turn);
 		
+		// ++++++++++++++++++++++++++++++++++++
+		// Display
 		if (isTeleopConsoleDataEnabled){
 			System.out.printf("OrThottle: %-4.2f==Throttle: %-4.2f ==OrigTurn: %-4.2f ==Turn: %-4.2f ==EMA-TV: %-4.2f%n", 
 								origThrottle,
@@ -135,8 +145,14 @@ public class TeleopController {
 		}
 	}
 	
-	public void SetMaxThrottlePower(double _MaxSpeed) {
-	maxThrottle = _MaxSpeed;
+	//=======================================
+	// SET METHODS
+	public void SetMaxThrottlePower(double _maxThrottlePowerLevel) {
+	maxThrottle = _maxThrottlePowerLevel;
+	}
+	
+	public void SetMaxTurnPower(double _maxTurnPowerLevel) {
+	maxTurn = _maxTurnPowerLevel;
 	}
 // ===========================================
 // DRIVERIF FILTERING FUNCTIONS
@@ -150,23 +166,18 @@ public class TeleopController {
 		case Linear:
 			// no change
 			break;
+			
 		case Sine:
-			//Used for chessy turn, developed by team 254 for the turn stick to provide a more realistic feel for turning
+			//developed by team 254 for the turn stick to provide a more realistic feel for turning???
 			fTurn = ApplySineFunction(fTurn);
 			fTurn = ApplySineFunction(fTurn);
 			fTurn = ApplySineFunction(fTurn);
 			break;
+			
 		case Squared:
-			fTurn = (Math.signum(fTurn) * Math.pow(fTurn, 2));
+			fTurn = fTurn * Math.abs(fTurn);
 			break;
-		case ThrottlePowerLimited:
-			// square the turn
-			//fTurn = fTurn * Math.abs(fTurn));
-			// Cap turn with respect to throttle power
-			//fTurn = fTurn * ((1-Math.abs(fThrottle)+.2) * powerCorrectionRatio);
-			//fTurn = fTurn * (Math.abs(fThrottle - .3/ fThrottle + (.3) * powerCorrectionRatio));
-			fTurn = fTurn * powerCorrectionRatio;
-			break;
+		
 		default:
 			break;
 		}
@@ -278,13 +289,6 @@ public class TeleopController {
 			// robot to start to tip - the robot intervenes to see that this does
 			// not occur The following caps the change in driverIF movement
 			smoothFactor = kHighSmoothFactor;
-//			if (Math.abs(deltaAccelFltrThrottleValue) > kTransitionMaxDelta) {
-//				smoothFactor = kTransitionSmoothFactor;
-//			} else {
-//
-//				// If driver behaves
-//				smoothFactor = kLowSmoothFactor;
-//			}
 		}
 
 		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
@@ -295,14 +299,13 @@ public class TeleopController {
 				smoothFactor = kLowSmoothFactor;
 			}
 		
-
 		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
 		if (Math.abs( AccelFltrCheckThrottleValue) < kJoyStickDeadBand) {
 			 AccelFltrCheckThrottleValue = 0; 
 			smoothFactor = kLowSmoothFactor;
 		}
-		// Run through smoothing filter
 		
+		// RUN THROUGH SMOOTHING FILTER
 		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
 		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
 		EMAThrottleValue = previousEMAThottleValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
@@ -310,7 +313,10 @@ public class TeleopController {
 		msg("AFCTV" + AccelFltrCheckThrottleValue);
 		return  EMAThrottleValue;
 	}
-
+	
+	// ============================================
+	// UTIL METHODS
+	
 	//helper function to keep inside of acceptable %power range
 	protected static double cap(double num) {
 		if(Math.abs(num) > 1){

@@ -101,15 +101,19 @@ public class SRXDriveBaseCfg {
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
+		// kCountsPerRevolution = quadrature(4) * kDriveEncoderCyclesPerRev
+		public static double kCountsPerRevolution = 523.63;
+		
+		//(kMeasuredRgtWheelCircum + kMeasuredLftWheelCircum)/2
+		public static double kWheelCircumIn = 12.678;
+		
+		// kWheelCircumIn / kCountsPerRevolution; 1/kInchesPerCount
+		public static double kInchesPerCount = 0.0242;
+		public static double kEncoderCountsPerIn = 41.302;
+		
 		// Diameter = WheelCircum / Pi
 		public static double kRgtWheelDiameter = 4.035;
 		public static double kLftWheelDiameter = 4.035;
-		
-		//(kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2
-		public static double kWheelDiameterIn = 4.035;
-		
-		// kCountsPerRevolution = quadrature(4) * kDriveEncoderCyclesPerRev
-		public static double kCountsPerRevolution = 523.63;
 		
 		// kMeasuredRgtWheelCircum / kCountsPerRevolution; 1/kRightInchesPerCount
 		public static double kRightInchesPerCount = 0.0242; //old 0.0179
@@ -140,6 +144,8 @@ public class SRXDriveBaseCfg {
 		
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
+		
+		public static double kpivotLimit = .35;
 	
 		//================================================
 		// DRIVE TRAIN STALL PARAMETERS

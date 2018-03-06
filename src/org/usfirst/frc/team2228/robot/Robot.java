@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	SendableChooser<String> chooser = new SendableChooser<>();
 	private SRXDriveBase base;
-	private TestSRXDriveBase testSRXDriveBase;
+	//private TestSRXDriveBase testSRXDriveBase;
 	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		testSRXDriveBase = new TestSRXDriveBase(base);
+		//testSRXDriveBase = new TestSRXDriveBase(base);
 	}
 
 	
@@ -123,7 +123,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testInit() {
-		testSRXDriveBase.SRXDriveBaseTestInit();
+		base.setSRXDriveBaseInit();
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		testSRXDriveBase.SRXDriveBaseTestPeriodic();
+		base.testMethodSelection();
 	}
 				
 }
