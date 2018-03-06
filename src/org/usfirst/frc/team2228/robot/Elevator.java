@@ -70,6 +70,7 @@ public class Elevator {
 		elevator.setNeutralMode(NeutralMode.Brake);
 		System.out.println(ElevatorHeights.BOTTOM.height);
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
+		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		raising = false;
 		lowering = true;
 		triggered = false;
@@ -95,10 +96,10 @@ public class Elevator {
 			pneu.brakeSet(off);
 			pneu.squeezeSet(false);
 			elevator.set(-b);
-			 if(elevator.getSelectedSensorPosition(0) == -1){
-			 elevator.set(0);
-			
-			 }
+//			 if(elevator.getSelectedSensorPosition(0) == -1){
+//			 elevator.set(0);
+//			
+//			 }
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
@@ -110,10 +111,9 @@ public class Elevator {
 			}
 //			if(!limitSwitch.get()){
 //				elevator.set(0);
-//				
 //			}
 		} else {
-			elevator.set(0.05);
+			elevator.set(-0.05);
 			pneu.brakeSet(on);
 		}
 		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
@@ -200,6 +200,7 @@ public class Elevator {
 		} else  {
 			winch.set(0);
 		}
+		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 
 	}
 

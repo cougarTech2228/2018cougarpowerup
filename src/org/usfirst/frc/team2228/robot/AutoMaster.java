@@ -27,6 +27,7 @@ public class AutoMaster {
 	private double THISISWRONGSHOULDCALIBRATE = 5.0;
 	private Elevator elevator;
 	private PneumaticController pneu;
+	private double speed = .2;
 
 	public AutoMaster(SRXDriveBase srxdb, Elevator _elevator, PneumaticController _pneu) {
 		pneu = _pneu;
@@ -67,14 +68,14 @@ public class AutoMaster {
 			System.out.println("Baseline selected");
 			//Adds movement to the auto sequence
 			Cg.addSequential(
-					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), 0.2, false));
+					new MoveTo(base, -(Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false));
 			break;
 
 		case "Left Switch":
 			System.out.println("Left Switch selected");
 			//Adds movement to the auto sequence
 			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					0.4, false));
+					speed, false));
 			//If the left side of the switch is ours, it places the cube, if not, it does nothing
 			if (gameData.charAt(0) == 'L') {
 				Cg.addSequential(new Switch(elevator));
@@ -88,15 +89,16 @@ public class AutoMaster {
 			//The bot starts closing the aquirer arms for half a second
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			//After half a second the bot starts moving
-			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					0.4, false));
+			Cg.addSequential(new MoveTo(base, -(Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
+					speed, false));
 			//While the bot is moving, it continues closing the aquirer arms for another second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
 
 			if (gameData.charAt(0) == 'R') {
 				//If the right side of the switch is ours, it places the cube while opening the aquirer arms
-				Cg.addSequential(new Switch(elevator));
-				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addParallel(new Switch(elevator));
+				
 			}
 
 			// Scale cube command

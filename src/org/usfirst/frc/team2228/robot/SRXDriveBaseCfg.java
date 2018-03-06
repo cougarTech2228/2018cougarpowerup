@@ -111,7 +111,7 @@ public class SRXDriveBaseCfg {
 		
 		public static double kMeasuredRgtWheelDiameter = 6.0153; 
 				//4.035;
-		public static double kMeasuredLftWheelDiameter = 6.0; 
+		public static double kMeasuredLftWheelDiameter = 6.0654; 
 				//4.035;
 		//(kMeasuredRgtWheelDiameter + kMeasuredLftWheelDiameter)/2
 		public static double kWheelDiameterIn = 6.0404;
@@ -153,7 +153,7 @@ public class SRXDriveBaseCfg {
 		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 
-		public static double kDriveStraightCorrection = .825;
+		public static double kDriveStraightCorrection = .9750;
 		public static double kRotateDriveStraightCorrection = 0.93;	
 		        // Mew 0.9150
 				//for test bot 1.0805;
