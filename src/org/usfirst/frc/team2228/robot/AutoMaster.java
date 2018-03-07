@@ -66,19 +66,30 @@ public class AutoMaster {
 
 		case "Baseline":
 			System.out.println("Baseline selected");
-			//Adds movement to the auto sequence
+			// Adds movement to the auto sequence
 			Cg.addSequential(
-					new MoveTo(base, -(Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false));
+					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false));
 			break;
 
 		case "Left Switch":
 			System.out.println("Left Switch selected");
-			//Adds movement to the auto sequence
-			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
+			// Adds movement to the auto sequence
+
+			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
+			// After half a second the bot starts moving
+			Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT + 4.0),
 					speed, false));
-			//If the left side of the switch is ours, it places the cube, if not, it does nothing
+			// While the bot is moving, it continues closing the aquirer arms for another
+			// second and a half
+			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
+			Cg.addSequential(new RotateTo(base, 90, SRXDriveBaseCfg.kTrackWidthIn, .5, false, false));
+			
+
+			// If the left side of the switch is ours, it places the cube, if not, it does
+			// nothing
 			if (gameData.charAt(0) == 'L') {
-				Cg.addSequential(new Switch(elevator));
+				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addParallel(new Switch(elevator));
 			}
 
 			// Scale cube command
@@ -86,19 +97,21 @@ public class AutoMaster {
 
 		case "Right Switch":
 			System.out.println("Right Switch selected");
-			//The bot starts closing the aquirer arms for half a second
+			// The bot starts closing the aquirer arms for half a second
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
-			//After half a second the bot starts moving
-			Cg.addSequential(new MoveTo(base, -(Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
+			// After half a second the bot starts moving
+			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
 					speed, false));
-			//While the bot is moving, it continues closing the aquirer arms for another second and a half
+			// While the bot is moving, it continues closing the aquirer arms for another
+			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
 
 			if (gameData.charAt(0) == 'R') {
-				//If the right side of the switch is ours, it places the cube while opening the aquirer arms
+				// If the right side of the switch is ours, it places the cube while opening the
+				// aquirer arms
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
-				
+
 			}
 
 			// Scale cube command
@@ -108,7 +121,7 @@ public class AutoMaster {
 	}
 
 	public void run() {
-		//Runs the sequence made in auto init
+		// Runs the sequence made in auto init
 		Scheduler.getInstance().run();
 	}
 }

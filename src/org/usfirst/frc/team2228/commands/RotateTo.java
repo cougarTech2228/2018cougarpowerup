@@ -8,11 +8,18 @@ public class RotateTo extends Command {
 	private boolean isDone;
 	private SRXDriveBase base;
 	private double ToAngle, PowerLvl;
+	private boolean isDirectionReversed;
+	private boolean isCascadeTurn;
+	private double turnAngleDeg;
+	private double turnRadiusIn;
 	
-	public RotateTo(SRXDriveBase base, double _ToAngle, double _PowerLvl) {
-		ToAngle = _ToAngle;
+	public RotateTo(SRXDriveBase base, double _turnAngleDeg, double _turnRadiusIn, double _PowerLvl, boolean _isDirectionReversed, boolean _isCascadeTurn) {
 		PowerLvl = _PowerLvl;
 		this.base = base;
+		isDirectionReversed = _isDirectionReversed;
+		isCascadeTurn = _isCascadeTurn;
+		turnAngleDeg = _turnAngleDeg;
+		turnRadiusIn = _turnRadiusIn;
 	}
 	
 	protected void initialize() {
@@ -22,7 +29,7 @@ public class RotateTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.rotateToAngle(ToAngle, PowerLvl);
+		isDone = !base.turnByEncoderToAngle(ToAngle, turnAngleDeg, PowerLvl, isDirectionReversed, isCascadeTurn);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -34,6 +41,7 @@ public class RotateTo extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+		System.out.println("Turn Finsihed: " + turnAngleDeg + " degrees");
 	}
 
 	// Called when another command which requires one or more of the same

@@ -385,9 +385,9 @@ public class SRXDriveBase {
 	public double getRightEncoderPosition() {
 		// This value is updated every 160ms
 		if (SRXDriveBaseCfg.isRightEncoderSensorReversed){
-			return -driveRightMasterMtr.getSensorCollection().getQuadraturePosition();
-		} else{
 			return driveRightMasterMtr.getSensorCollection().getQuadraturePosition();
+		} else{
+			return -driveRightMasterMtr.getSensorCollection().getQuadraturePosition();
 		}
 	}
 	
@@ -422,9 +422,9 @@ public class SRXDriveBase {
 	public double getLeftEncoderPosition() {
 		// This value is updated every 160ms
 		if (SRXDriveBaseCfg.isLeftEncoderSensorReversed){
-			return -driveLeftMasterMtr.getSensorCollection().getQuadraturePosition();
-		} else{
 			return driveLeftMasterMtr.getSensorCollection().getQuadraturePosition();
+		} else{
+			return -driveLeftMasterMtr.getSensorCollection().getQuadraturePosition();
 		}
 	}
 	
@@ -437,9 +437,9 @@ public class SRXDriveBase {
 		// This value is updated every 20ms
 		if (SRXDriveBaseCfg.isLeftEncoderSensorReversed){
 
-			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
-		} else{
 			return driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
+		} else{
+			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		}
 	}
 	

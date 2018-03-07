@@ -76,6 +76,7 @@ public class Elevator {
 		triggered = false;
 		triggered2 = false;
 		timer = new Timer();
+		elevator.configOpenloopRamp(2, 0);
 		
 	}
 
