@@ -53,7 +53,7 @@ public class TeleopController {
 	private double previousEMAThottleValue = 0;
 	
 	private double maxThrottle = 1;
-	private double maxTurn = .35;
+	private double maxTurn = .25;
 	
 	private boolean isTestBtnActive = false;
 	private double CAL_thottle = 0;
@@ -111,9 +111,9 @@ public class TeleopController {
 		double turn = origTurn;
 		double throttle = origThrottle;
 
-		// Check and cap range of throttle and turn
-		throttle = cap(throttle);
-		turn = cap(turn);
+		// Check and normalize range of throttle and turn
+		throttle = normalize(throttle);
+		turn = normalize(turn);
 		
 		if(turn != 0){
 			turn = CheckTurnSensitivityFilter(throttle, turn);
@@ -124,14 +124,13 @@ public class TeleopController {
 		//	throttle = CheckDriverStopping(throttle);
 		}
 		
-		
 		// Limit max throttle / turn
 		throttle *= maxThrottle;
 		turn *= maxTurn;
 		
 		// ============================================
 		// drive robot
-		driveBase.setThrottleTurn(throttle, turn);
+		driveBase.setThrottleRotateTurn(throttle, turn);
 		
 		// ++++++++++++++++++++++++++++++++++++
 		// Display
@@ -321,10 +320,19 @@ public class TeleopController {
 	protected static double cap(double num) {
 		if(Math.abs(num) > 1){
 			num = Math.signum(num)* 1.0;
+		} 
+		return num;
+	}
+	protected static double normalize(double num) {
+		if(Math.abs(num) > 1){
+			num = Math.signum(num)* 1.0;
 		}
 		if (Math.abs(num) < kJoyStickDeadBand) {
 			num = 0;
-		} 
+		} else if((Math.abs(num) >= kJoyStickDeadBand) ){
+			// This normalizes data from (kJoyStickDeadBand - 1) to (0 - 1)
+			num = (num - kJoyStickDeadBand) / (1 - kJoyStickDeadBand);
+		}
 		return num;
 	}
 	private void msg(String _msgString){
