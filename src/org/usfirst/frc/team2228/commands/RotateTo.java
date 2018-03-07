@@ -29,7 +29,7 @@ public class RotateTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.turnByEncoderToAngle(ToAngle, turnAngleDeg, PowerLvl, isDirectionReversed, isCascadeTurn);
+		isDone = !base.turnByEncoderToAngle(turnAngleDeg, turnRadiusIn, PowerLvl, isDirectionReversed, isCascadeTurn);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

@@ -82,7 +82,7 @@ public class AutoMaster {
 			// While the bot is moving, it continues closing the aquirer arms for another
 			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
-			Cg.addSequential(new RotateTo(base, 90, SRXDriveBaseCfg.kTrackWidthIn, .5, false, false));
+			Cg.addSequential(new RotateTo(base, 50, SRXDriveBaseCfg.kTrackWidthIn + 4, .1, false, true));
 			
 
 			// If the left side of the switch is ours, it places the cube, if not, it does
