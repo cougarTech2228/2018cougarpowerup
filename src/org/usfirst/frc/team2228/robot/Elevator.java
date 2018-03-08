@@ -104,7 +104,8 @@ public class Elevator {
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
-			elevator.set(b);
+			slowElevator(b);
+
 			pneu.squeezeSet(false);
 			if (!leftLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
@@ -204,7 +205,12 @@ public class Elevator {
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 
 	}
-
+	public void slowElevator(double speed) {
+		if(elevator.getSensorCollection().getQuadraturePosition() > 10000)
+			elevator.set(-speed);
+		else
+			elevator.set(-0.2);
+	}
 	public boolean elevatorSet(double height, double speed) {
 		pneu.brakeSet(off);
 		elevator.set(speed);
