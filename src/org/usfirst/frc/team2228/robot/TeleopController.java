@@ -14,7 +14,7 @@ public class TeleopController {
 	//================================
 	// SWITCHES
 	
-	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isTeleopConsoleDataEnabled = true;
 	private boolean isStopCheckToggleActive = false;
 	
 	
@@ -34,10 +34,10 @@ public class TeleopController {
 	// Range of smoothFactor is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
 	public static double kLowSmoothFactor = 0.5;
 	public static double kHighSmoothFactor = 0.95;
-	public static double kTransitionSmoothFactor = 0.7;
+	//public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max throttle delta values are determined by testing
-	public static double kMaxDeltaVelocity = 0.1;
+	public static double kMaxDeltaVelocity = 0.001;
 	
 	
 	
@@ -51,9 +51,11 @@ public class TeleopController {
 	private double previousStopAccum = 0;
 	private double EMAThrottleValue = 0;
 	private double previousEMAThottleValue = 0;
-	
+	private double accelFltrCheckThrottleValue = 0;
+	private double deltaaccelFltrCheckThrottleValue = 0;
+	//TODO
 	private double maxThrottle = 1;
-	private double maxTurn = .35;
+	private double maxTurn = .4;
 	
 	private boolean isTestBtnActive = false;
 	private double CAL_thottle = 0;
@@ -63,7 +65,7 @@ public class TeleopController {
 	
 	
 	private String lastMsgString = " ";
-	private double maxThottlePowerLevel;
+	private double maxThottlePowerLevel = 0;
 	
     //=========================
 	// ENUMs
@@ -111,9 +113,9 @@ public class TeleopController {
 		double turn = origTurn;
 		double throttle = origThrottle;
 
-		// Check and cap range of throttle and turn
-		throttle = cap(throttle);
-		turn = cap(turn);
+		// Check and normalize range of throttle and turn
+		throttle = normalize(throttle);
+		turn = normalize(turn);
 		
 		if(turn != 0){
 			turn = CheckTurnSensitivityFilter(throttle, turn);
@@ -124,11 +126,11 @@ public class TeleopController {
 		//	throttle = CheckDriverStopping(throttle);
 		}
 		
-		
 		// Limit max throttle / turn
 		throttle *= maxThrottle;
 		turn *= maxTurn;
-		
+		throttle = cap(throttle);
+		turn = cap(turn);
 		// ============================================
 		// drive robot
 		driveBase.setThrottleTurn(throttle, turn);
@@ -136,11 +138,11 @@ public class TeleopController {
 		// ++++++++++++++++++++++++++++++++++++
 		// Display
 		if (isTeleopConsoleDataEnabled){
-			System.out.printf("OrThottle: %-4.2f==Throttle: %-4.2f ==OrigTurn: %-4.2f ==Turn: %-4.2f ==EMA-TV: %-4.2f%n", 
+			System.out.printf("OrThottle: %-4.2f==Throttle: %-4.2f ==OrigTurn: %-4.2f =Delta: %-4.2f ==EMA-TV: %-4.2f%n", 
 								origThrottle,
 								throttle,
 								origTurn,
-								turn,
+								deltaaccelFltrCheckThrottleValue,
 								EMAThrottleValue);
 		}
 	}
@@ -277,13 +279,13 @@ public class TeleopController {
 	
 	
 	public double CheckAccelFilter(double _ThrottleValue) {
-		double AccelFltrCheckThrottleValue = _ThrottleValue;
+		accelFltrCheckThrottleValue = _ThrottleValue;
 		
 		// determine change for last driverIF read
-		double deltaAccelFltrThrottleValue = AccelFltrCheckThrottleValue - previousEMAThottleValue;
+		deltaaccelFltrCheckThrottleValue = accelFltrCheckThrottleValue - previousEMAThottleValue;
 
 		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
-		if (Math.signum(AccelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
+		if (Math.signum(accelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
 
 			// If change is large enough to cause a wheelie or cause the
 			// robot to start to tip - the robot intervenes to see that this does
@@ -292,7 +294,7 @@ public class TeleopController {
 		}
 
 		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
-		else if (Math.abs(deltaAccelFltrThrottleValue) > kMaxDeltaVelocity) {
+		else if (Math.abs(deltaaccelFltrCheckThrottleValue) > kMaxDeltaVelocity) {
 				smoothFactor = kHighSmoothFactor;
 			} else {
 				// If driver behaves
@@ -300,17 +302,17 @@ public class TeleopController {
 			}
 		
 		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
-		if (Math.abs( AccelFltrCheckThrottleValue) < kJoyStickDeadBand) {
-			 AccelFltrCheckThrottleValue = 0; 
+		if (Math.abs(accelFltrCheckThrottleValue) < kJoyStickDeadBand) {
+			 accelFltrCheckThrottleValue = 0; 
 			smoothFactor = kLowSmoothFactor;
 		}
 		
 		// RUN THROUGH SMOOTHING FILTER
 		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
 		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
-		EMAThrottleValue = previousEMAThottleValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
+		EMAThrottleValue = previousEMAThottleValue + (1-smoothFactor) * (deltaaccelFltrCheckThrottleValue);
 		previousEMAThottleValue = EMAThrottleValue;
-		msg("AFCTV" + AccelFltrCheckThrottleValue);
+		
 		return  EMAThrottleValue;
 	}
 	
@@ -321,10 +323,19 @@ public class TeleopController {
 	protected static double cap(double num) {
 		if(Math.abs(num) > 1){
 			num = Math.signum(num)* 1.0;
+		} 
+		return num;
+	}
+	protected static double normalize(double num) {
+		if(Math.abs(num) > 1){
+			num = Math.signum(num)* 1.0;
 		}
 		if (Math.abs(num) < kJoyStickDeadBand) {
 			num = 0;
-		} 
+		} else if((Math.abs(num) >= kJoyStickDeadBand) ){
+			// This normalizes data from (kJoyStickDeadBand - 1) to (0 - 1)
+			num = (num - kJoyStickDeadBand) / (1 - kJoyStickDeadBand);
+		}
 		return num;
 	}
 	private void msg(String _msgString){

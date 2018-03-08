@@ -4,7 +4,7 @@ public class SRXDriveBaseCfg {
 		// program control flags
 		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = true;
+		public static boolean isDriveStraightAssistEnabled = false;
 		
 		
 		// ===============================================
@@ -145,7 +145,7 @@ public class SRXDriveBaseCfg {
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
 		
-		public static double kpivotLimit = .35;
+		public static double kPivotLimit = .35;
 	
 		//================================================
 		// DRIVE TRAIN STALL PARAMETERS
