@@ -502,6 +502,9 @@ public class SRXDriveBase {
 		SmartDashboard.putBoolean("TstBtn-TimeTurn:", false);
 		SmartDashboard.putBoolean("TstBtn-Teleop:", false);
 		
+		SmartDashboard.putNumber("Left Encoder:", leftSensorPositionRead);
+		SmartDashboard.putNumber("Right Encoder:", rightSensorPositionRead);
+		
 		SmartDashboard.putNumber("Kp_encoderHeadingPID:", Kp_encoderHeadingPID);
 		SmartDashboard.putNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
 		SmartDashboard.putNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
@@ -632,7 +635,7 @@ public class SRXDriveBase {
 		// Determine drive straight correction if enabled
 		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled 
 				&& Math.abs(_turnValue) < SRXDriveBaseCfg.kSpeedDeadBand
-				&& ctkThrottle >SRXDriveBaseCfg.kPivotLimit ) {
+				&& leftCmdLevel >SRXDriveBaseCfg.kPivotLimit ) {
 					
 			isSensorCorrectionActive = true;
 			driveStraightDirCorrection = getDriveStraightCorrection();
@@ -773,6 +776,9 @@ public class SRXDriveBase {
 		// Read encoders
 		leftSensorPositionRead = getLeftSensorPosition();
 		rightSensorPositionRead = getRightSensorPosition();
+		
+		SmartDashboard.putNumber("Left Encoder:", leftSensorPositionRead);
+		SmartDashboard.putNumber("Right Encoder:", rightSensorPositionRead);
 		
 		if (!isVelMoveToPositionActive) {
 			isVelMoveToPositionActive = true;
@@ -1264,6 +1270,11 @@ public class SRXDriveBase {
 			Ki_encoderHeadingPID = SmartDashboard.getNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
 			Kd_encoderHeadingPID = SmartDashboard.getNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
 			
+		//	leftSensorPositionRead = getLeftSensorPosition();
+		//	rightSensorPositionRead = getRightSensorPosition();
+			
+		//	SmartDashboard.putNumber("Left Encoder:", leftSensorPositionRead);
+		//	SmartDashboard.putNumber("Right Encoder:", rightSensorPositionRead);
 		} else {
 			if(SmartDashboard.getBoolean("TstBtn-StepFnc:", false)){
 				if(!isTestBtnActive){

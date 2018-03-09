@@ -14,7 +14,7 @@ public class TeleopController {
 	//================================
 	// SWITCHES
 	
-	private boolean isTeleopConsoleDataEnabled = true;
+	private boolean isTeleopConsoleDataEnabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
 	
