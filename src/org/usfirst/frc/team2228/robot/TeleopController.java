@@ -113,9 +113,9 @@ public class TeleopController {
 		double turn = origTurn;
 		double throttle = origThrottle;
 
-		// Check and normalize range of throttle and turn
-		throttle = normalize(throttle);
-		turn = normalize(turn);
+		
+		throttle = cap(throttle);
+		turn = cap(turn);
 		
 		if(turn != 0){
 			turn = CheckTurnSensitivityFilter(throttle, turn);
@@ -131,6 +131,7 @@ public class TeleopController {
 		turn *= maxTurn;
 		throttle = cap(throttle);
 		turn = cap(turn);
+		
 		// ============================================
 		// drive robot
 		driveBase.setThrottleTurn(throttle, turn);
@@ -138,14 +139,15 @@ public class TeleopController {
 		// ++++++++++++++++++++++++++++++++++++
 		// Display
 		if (isTeleopConsoleDataEnabled){
-			System.out.printf("OrThottle: %-4.2f==Throttle: %-4.2f ==OrigTurn: %-4.2f =Delta: %-4.2f ==EMA-TV: %-4.2f%n", 
-								origThrottle,
+			System.out.printf("Thottle: %-4.2f==SmFac: %-4.2f ==accelthrot: %-4.2f ==Delta: %-4.2f ==EMA-TV: %-4.2f%n", 
 								throttle,
-								origTurn,
-								deltaaccelFltrCheckThrottleValue,
+								smoothFactor,
+								accelFltrCheckThrottleValue,
+							deltaaccelFltrCheckThrottleValue,
 								EMAThrottleValue);
 		}
-	}
+	}	
+								
 	
 	//=======================================
 	// SET METHODS
@@ -285,16 +287,17 @@ public class TeleopController {
 		deltaaccelFltrCheckThrottleValue = accelFltrCheckThrottleValue - previousEMAThottleValue;
 
 		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
-		if (Math.signum(accelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
+		//if (Math.signum(accelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
 
 			// If change is large enough to cause a wheelie or cause the
 			// robot to start to tip - the robot intervenes to see that this does
 			// not occur The following caps the change in driverIF movement
-			smoothFactor = kHighSmoothFactor;
-		}
+		//	smoothFactor = kHighSmoothFactor;
+		//}
 
 		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
-		else if (Math.abs(deltaaccelFltrCheckThrottleValue) > kMaxDeltaVelocity) {
+		//else
+		if (Math.abs(deltaaccelFltrCheckThrottleValue) > kMaxDeltaVelocity) {
 				smoothFactor = kHighSmoothFactor;
 			} else {
 				// If driver behaves
@@ -302,10 +305,10 @@ public class TeleopController {
 			}
 		
 		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
-		if (Math.abs(accelFltrCheckThrottleValue) < kJoyStickDeadBand) {
-			 accelFltrCheckThrottleValue = 0; 
-			smoothFactor = kLowSmoothFactor;
-		}
+//		if (Math.abs(accelFltrCheckThrottleValue) < kJoyStickDeadBand) {
+//			 accelFltrCheckThrottleValue = 0; 
+//			smoothFactor = kLowSmoothFactor;
+//		}
 		
 		// RUN THROUGH SMOOTHING FILTER
 		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
@@ -363,7 +366,7 @@ public class TeleopController {
 			System.out.println(CheckThrottleSensitivity(SmartDashboard.getNumber("CAL_thottle", CAL_thottle))); 
 		}
 		if(SmartDashboard.getBoolean("TstBtn-AccelFilter:", false)){
-			// public double CheckAccelFilter(double _ThrottleValue)
+			// public double CheckAccelFilter(double _ckACFLTRThrottle)
 			System.out.println(CheckAccelFilter(SmartDashboard.getNumber("CAL_thottle", CAL_thottle))); 
 		}	
 		
