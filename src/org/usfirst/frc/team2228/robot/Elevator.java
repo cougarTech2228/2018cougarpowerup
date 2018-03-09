@@ -71,6 +71,7 @@ public class Elevator {
 		System.out.println(ElevatorHeights.BOTTOM.height);
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
+		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		raising = false;
 		lowering = true;
 		triggered = false;
@@ -203,13 +204,13 @@ public class Elevator {
 			winch.set(0);
 		}
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
-
+		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 	}
 	public void slowElevator(double speed) {
 		if(elevator.getSensorCollection().getQuadraturePosition() > 10000)
-			elevator.set(-speed);
+			elevator.set(speed);
 		else
-			elevator.set(-0.2);
+			elevator.set(0.2);
 	}
 	public boolean elevatorSet(double height, double speed) {
 		pneu.brakeSet(off);
