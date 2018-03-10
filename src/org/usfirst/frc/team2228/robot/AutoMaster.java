@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2228.robot;
 
+import org.usfirst.frc.team2228.commands.ElevatorAuto;
 import org.usfirst.frc.team2228.commands.EncoderTurn;
 import org.usfirst.frc.team2228.commands.MoveTo;
 import org.usfirst.frc.team2228.commands.PneumaticGrabber;
@@ -22,7 +23,7 @@ public class AutoMaster {
 	private SRXDriveBase base;
 	private String autoSelected;
 	private String input = "";
-	private CommandGroup Cg;
+	private CommandGroup Cg = null;
 	private SendableChooser<String> chooser = new SendableChooser<>();
 	private String robotSide = "Right";
 	private double THISISWRONGSHOULDCALIBRATE = 5.0;
@@ -51,21 +52,27 @@ public class AutoMaster {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// baseLineAuto);
 		StringCommand command = new StringCommand(input);
+
 		// command.start();
 
 	}
 
+	public void teleopInit() {
+		if (Cg != null) {
+			Cg.cancel();
+			System.out.println("auto master cancel...");
+		}
+	}
+
 	public void init() {
+		Cg = new CommandGroup();
 		base.setRightEncPositionToZero();
 		base.setLeftEncPositionToZero();
-
-		Cg = new CommandGroup();
-
 		autoSelected = chooser.getSelected();
 		String gameData = "";
 		gameData += DriverStation.getInstance().getGameSpecificMessage();
 		gameData = gameData.replace(" ", "");
-		
+
 		if (gameData.isEmpty()) {
 			firstIndex = "";
 			System.out.println("No game data");
@@ -109,12 +116,13 @@ public class AutoMaster {
 			// If the left side of the switch is ours, it places the cube, if not, it does
 			// nothing
 			if (data == GameData.firstIndexL) {
-				Cg.addSequential(new RotateTo(base, 90, SRXDriveBaseCfg.kTrackWidthIn + 4, .1, false, true));
-				Cg.addSequential(new MoveTo(base, 18, speed, false), 3);
+				Cg.addSequential(new RotateTo(base, 80, SRXDriveBaseCfg.kTrackWidthIn, .1, false, true));
+				Cg.addSequential(new MoveTo(base, 20, speed, false), 3);
+				Cg.addParallel(new ElevatorAuto(elevator, 2.0), 2.0);
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
 			} else {
-				Cg.addSequential(new MoveTo(base, -6.0, speed, false));
+				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");
 			}
 
@@ -128,7 +136,7 @@ public class AutoMaster {
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
 			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					speed, false));
+					speed, true), 3.0);
 			// While the bot is moving, it continues closing the aquirer arms for another
 			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
@@ -136,6 +144,7 @@ public class AutoMaster {
 			if (data == GameData.firstIndexR) {
 				// If the right side of the switch is ours, it places the cube while opening the
 				// aquirer arms
+				Cg.addParallel(new ElevatorAuto(elevator, 2.0), 2.0);
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
 

@@ -97,7 +97,7 @@ public class SRXDriveBase {
 	private double moveStopTime = 0;
 		
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = true;
+	private boolean isConsoleDataEnabled = false;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	//hi
@@ -388,9 +388,9 @@ public class SRXDriveBase {
 	public double getRightSensorPosition(){
 		// This value is updated every 20ms
 		if(SRXDriveBaseCfg.isDriveRightMasterMtrReversed){
-			return -driveRightMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
-		} else{
 			return driveRightMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
+		} else{
+			return -driveRightMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		}
 	}
 	public double getRightMstrMtrCurrent() {
@@ -424,9 +424,9 @@ public class SRXDriveBase {
 	public double getLeftSensorPosition(){
 		// This value is updated every 20ms
 		if(SRXDriveBaseCfg.isDriveLeftMasterMtrReversed){
-			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
-		} else {
 			return driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
+		} else {
+			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		}
 	}
 	public double getLeftMstrMtrCurrent() {

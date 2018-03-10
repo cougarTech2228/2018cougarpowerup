@@ -53,8 +53,8 @@ public class TeleopController {
 	private double stopAccum = 0;
 	private double previousStopAccum = 0;
 
-	private double maxThrottleLimit = 1;
-	private double maxTurnLimit = .4;
+	private double maxThrottleLimit = .7;
+	private double maxTurnLimit = 1;
 	
 	private String lastMsgString = " ";
 	private double maxThottlePowerLevel = 0;
@@ -298,13 +298,11 @@ public class TeleopController {
 		
 		return num;
 	}
-	// This caps number, dead bands number and remaps to 0 -> 1 range
+	// This caps number and remaps to 0 -> 1 range
 	private double normalize(double num) {
 		if(Math.abs(num) > 1){
 			num = Math.signum(num)* 1.0;
-		}
-		
-		if((Math.abs(num) >= kJoyStickDeadBand) ){
+		} else if((Math.abs(num) >= kJoyStickDeadBand) ){
 			// This normalizes data from (kJoyStickDeadBand -> 1) to (0 -> 1)
 			if(num >= 0){
 				num = (num - kJoyStickDeadBand) / (1 - kJoyStickDeadBand);
@@ -312,6 +310,9 @@ public class TeleopController {
 				num = (num + kJoyStickDeadBand) / (1 - kJoyStickDeadBand);
 			}	
 		}
+//		else {
+//			num = 0;
+//		}
 		return num;
 	}
 	private double joyDeadBand(double num){
