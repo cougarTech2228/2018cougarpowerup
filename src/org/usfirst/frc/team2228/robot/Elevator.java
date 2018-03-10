@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Relay;
 public class Elevator {
 	boolean on = false, off = true;
 	DriverIF driverIF;
+	XboxIF xbox = new XboxIF(2);
 	WPI_TalonSRX elevator;
 	DMC60 conveyor1, conveyor2;
 	WPI_TalonSRX winch;
@@ -76,7 +77,7 @@ public class Elevator {
 		triggered = false;
 		triggered2 = false;
 		timer = new Timer();
-		elevator.configOpenloopRamp(2, 0);
+		elevator.configOpenloopRamp(1, 0);
 		
 	}
 
@@ -105,7 +106,7 @@ public class Elevator {
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
 			elevator.set(b);
-			pneu.squeezeSet(false);
+//			pneu.squeezeSet(false);
 			if (!leftLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
@@ -167,28 +168,16 @@ public class Elevator {
 		// SmartDashboard.getNumber("front conveyor:", 0);
 		// hya
 
-		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
+		if (xbox.Y_BUTTON()) {
 			conveyor1.set(e);
 			conveyor2.set(e);
-			triggered = true;
 			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
-			conveyor1.set(0);
-			conveyor2.set(0);
-			triggered = false;
-			// System.out.println("Co");
 		}
 
-		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
+		else if (xbox.X_BUTTON()) {
 			conveyor1.set(-e);
 			conveyor2.set(-e);
-			triggered2 = true;
 			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
-			conveyor1.set(0);
-			conveyor2.set(0);
-			triggered2 = false;
-			// System.out.println("Co");
 		}
 		lastButton1 = driverIF.conveyorsForward();
 		lastButton2 = driverIF.conveyorsBackward();
@@ -229,6 +218,12 @@ public class Elevator {
 		}
 		return false;
 	}
+	
+	public void elevatorAuto(double _speed){
+		double speed = _speed;
+		elevator.set(speed);
+	}
+	
 	public void conveyors(boolean on){
 		if(on){
 			conveyor1.set(1);

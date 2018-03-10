@@ -153,7 +153,7 @@ public class SRXDriveBaseCfg {
 
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 

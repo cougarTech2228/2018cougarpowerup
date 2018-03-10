@@ -11,11 +11,13 @@ public class Dimensions {
 
 	//Robot dimensions
 	public static final double LENGTH_OF_ROBOT = 27 + 2 * 3.75;
+	public static final double WIDTH_OF_ROBOT = 28.5 + 2 * 3.75 + 2 * 1.75;
 	
 	//Field dimensions
 	public static final double AUTOLINE_WIDTH = 2;
 	public static final double AUTOLINE_TO_ALLIANCE = 120;
-	public static final double ALLIANCE_WALL_TO_SWITCH = 132;
+	public static final double ALLIANCE_WALL_TO_SWITCH_CENTER = 168;
+//	public static final double ALLIANCE_WALL_TO_SWITCH = 132;
 	public static final double EXCHANGEZONE_WIDTH = 36;
 	public static final double EXCHANGEZONE_LENGTH = 48;
 	public static final double ALL_TAPE_WIDTH = 2;
@@ -27,6 +29,7 @@ public class Dimensions {
 	public static final double TOTAL_FIELD_WIDTH = 324;
 	
 	//Scale Dimensions
+	public static final double ALLIANCE_WALL_TO_SCALE_PLATE_EDGE = 300;
 	public static final double SCALE_HIGHEST_POSITION = 72;
 	public static final double SCALE_LOWEST_POSITION = 48;
 	public static final double SCALE_STARTING_POSITION = 60;
@@ -52,15 +55,16 @@ public class Dimensions {
 	public static final double RAMP_ANGLE = 15.35; // NOT IN INCHES, IT IS AN ANGLE!
 	
 	//Switch Dimensions
-	public static final double SWITCHWALL_TO_ALLIANCESTATION= 153;
-	public static final double SWITCHPLATE_LENGTH = 48;
+	public static final double SWITCHWALL_TO_ALLIANCESTATION= 150;
+	public static final double SWITCHPLATE_HEIGHT = 48;
 	public static final double SWITCHPLATE_WIDTH = 36;
+	public static final double SWITCH_LENGTH = 144;
 	public static final double SWITCHPLATE_EDGE_TO_SWITCHPLATE_EDGE = 144;
 	public static final double SWITCHPLATE_STARTINGHEIGHT = 9;
 	public static final double SWITCHPLATE_LOWEST_POSITION = 3;
 	public static final double SWITCHPLATE_TO_SIDESWITCHWALL = 1.5;
 	public static final double SWITCHPLATE_TO_FRONTSWITCHWALL = 2.25;
-	public static final double SWITCHWALL_HIGHT = 18.75;
+	public static final double SWITCHWALL_HEIGHT = 18.75;
 	public static final double SWITCHWALL_TO_SWITCHWALL_LENGTH = 153.5;
 	public static final double SWITCHWALL_TO_SWITCHWALL_WIDTH = 56;
 	
