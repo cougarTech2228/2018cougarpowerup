@@ -100,7 +100,7 @@ public class SRXDriveBase {
 	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
-	
+	//hi
 	private boolean isVelMoveToPositionActive = false;
 	private boolean isRotateToAngleActive = false;
 	private boolean isTurnToAngleActive = false;
