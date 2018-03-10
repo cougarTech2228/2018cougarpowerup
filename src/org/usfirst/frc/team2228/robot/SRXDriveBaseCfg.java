@@ -2,7 +2,7 @@ package org.usfirst.frc.team2228.robot;
 
 public class SRXDriveBaseCfg {
 		// program control flags
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = true;
 		
@@ -51,7 +51,7 @@ public class SRXDriveBaseCfg {
 		public static int    kdriveRightMstrRampRate = 0;
 		public static int    kdriveRightMstrProfile = 0;
 		
-		public static double kdriveLeftMstrFeedForwardGain = 1.58;
+		public static double kdriveLeftMstrFeedForwardGain = 1.7; //1.58
 		public static double kdriveLeftMstrProportionalGain = 0.05;
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 0;

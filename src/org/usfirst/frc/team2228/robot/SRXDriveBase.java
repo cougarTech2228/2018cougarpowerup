@@ -1518,7 +1518,6 @@ public class SRXDriveBase {
 						msg("SHUFFLE END CASCADE TEST=============");
 						isTestBtnActive = false;
 				}
-				
 			}
 		}
 		
