@@ -50,20 +50,18 @@ class FormatterForFileHandler extends java.util.logging.Formatter {
 }
 
 public class DebugLogger {
-
-	private static Logger log;
-	private static Logger csv;
+	private static Logger openlog;
+	private static Logger opencsv;
 	private static FileHandler fh;
 	private static FileHandler fhC;
 	private static boolean is_logging = false;
+	private static boolean is_loggingcsv = false;
 	private static FormatterForFileHandler formatter;
-	
 	private static final SimpleDateFormat format;
-	
 	static {
 		//ISO8601 = new SimpleDateFormat("yyyyMMddHHmmssSSSXXX");
 		format = new SimpleDateFormat("M-d_HHmmssSSS");
-	}
+		}
 	
 	/**
 	 * <pre>
@@ -71,29 +69,44 @@ public class DebugLogger {
 	 * </pre>
 	 * Initializes the current {@code Logger} with the file at the specified location.
 	 */
-	public static synchronized void init(String filePath) {
+	public static synchronized void fopenlog(String filePath) {
 		if (!is_logging) {
 			try {
-				log = Logger.getLogger("DebugLog");
-				csv = Logger.getLogger("DataLog");
+				openlog = Logger.getLogger("DebugLog");
 				formatter = new FormatterForFileHandler();
 				fh = new FileHandler(filePath
 						  + format.format(Calendar.getInstance().getTime()) + ".txt");				
 				fh.setFormatter(formatter);
-				fhC = new FileHandler(filePath
-						  + format.format(Calendar.getInstance().getTime()) + ".csv");				
-				fhC.setFormatter(formatter);
-				log.addHandler(fh);
-				csv.addHandler(fhC);
+				openlog.addHandler(fh);
 				is_logging = true;
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			openlog.setUseParentHandlers(false);
 		}
 	}
 	
+	public static synchronized void fopencsv(String filePath) {
+		if (!is_loggingcsv) {
+			try {
+				opencsv = Logger.getLogger("DataLog");
+				formatter = new FormatterForFileHandler();
+				fhC = new FileHandler(filePath
+						  + format.format(Calendar.getInstance().getTime()) + ".csv");				
+				fhC.setFormatter(formatter);
+				opencsv.addHandler(fhC);  
+				is_loggingcsv = true;
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			opencsv.setUseParentHandlers(false);
+		}
+	}
+
 	/**
 	 * <pre>
 	 * public static synchronized void log(Object... input)
@@ -117,7 +130,7 @@ public class DebugLogger {
 						for (Object o : input)
 							out += o.toString() + '\t';
 						System.out.println(time_prefix + out);
-						log.info(out);
+						openlog.info(out);
 					} catch (Exception e) { 
 						e.printStackTrace(System.out);
 					}
@@ -129,17 +142,17 @@ public class DebugLogger {
 	
 	public static void data(String data){
 
-		if (is_logging) {
+		if (is_loggingcsv) {
 			// Get the time outside of synchronized code so it captures most accurately the time when log() is invoked
-			String time_prefix = "[" + format.format(Calendar.getInstance().getTimeInMillis()) + "]: ";
-			
+			//String time_prefix = "[" + format.format(Calendar.getInstance().getTimeInMillis()) + "]: ";
+			String time_prefix = format.format(Calendar.getInstance().getTimeInMillis());
 			synchronized(DebugLogger.class) {
 				// Check is_logging again in case it changed since the lock was acquired
-				if (is_logging) {
+				if (is_loggingcsv) {
 					try {
 						String out = data;
-						System.out.println(time_prefix + out);
-						csv.info(out);
+						System.out.println(time_prefix + "," + out);
+						opencsv.info(out);
 					} catch (Exception e) { 
 						e.printStackTrace(System.out);
 					}
@@ -191,18 +204,34 @@ public class DebugLogger {
 	 * </pre>
 	 * Closes all the writers and releases the resources related to them.
 	 */
-	public static synchronized void close() {
+	public static synchronized void closelog() {
 		try {
 			is_logging = false;
-			if(log != null){
+			if(openlog != null){
 				if(fh != null) {
 					fh.close();
 					fh = null;
 				}
-				log = null;
+				openlog = null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
 		}
+	}
+		
+		public static synchronized void closecsv() {
+			try {
+				is_loggingcsv = false;
+				if(opencsv != null){
+					if(fhC != null) {
+						fhC.close();
+						fhC = null;
+					}
+					opencsv = null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace(System.out);
+			}
+		
 	}
 }

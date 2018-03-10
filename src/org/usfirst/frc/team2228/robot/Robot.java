@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
-		base.setAngleIF(angleIF);
+//		base.setAngleIF(angleIF);
 		//base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
@@ -123,6 +123,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		base.testMethodSelection();
 	}
 
 }

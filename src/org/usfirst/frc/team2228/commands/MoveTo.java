@@ -30,7 +30,7 @@ public class MoveTo extends Command {
 		startLeftCounts = base.getLeftEncoderPosition();
 		startRightCounts = base.getRightEncoderPosition();
 		System.out.println("initial move: " + moveIn);
-		base.setAngleZero();
+//		base.setAngleZero();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
