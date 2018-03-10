@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2228.robot;
 
+import org.usfirst.frc.team2228.commands.ElevatorAuto;
 import org.usfirst.frc.team2228.commands.EncoderTurn;
 import org.usfirst.frc.team2228.commands.MoveTo;
 import org.usfirst.frc.team2228.commands.PneumaticGrabber;
@@ -111,6 +112,7 @@ public class AutoMaster {
 			if (data == GameData.firstIndexL) {
 				Cg.addSequential(new RotateTo(base, 90, SRXDriveBaseCfg.kTrackWidthIn + 4, .1, false, true));
 				Cg.addSequential(new MoveTo(base, 18, speed, false), 3);
+				Cg.addParallel(new ElevatorAuto(elevator));
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
 			} else {
@@ -137,6 +139,7 @@ public class AutoMaster {
 				// If the right side of the switch is ours, it places the cube while opening the
 				// aquirer arms
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addParallel(new ElevatorAuto(elevator));
 				Cg.addParallel(new Switch(elevator));
 
 			} else {
