@@ -52,9 +52,9 @@ public class Elevator {
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
 		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
-//		limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
+		// limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
-//		rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
+		// rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
 		hookArmDownwards = new DigitalInput(RobotMap.DIO_PORT_2);
 		hookArmUpwards = new DigitalInput(RobotMap.DIO_PORT_3);
 		elevator.set(0);
@@ -78,7 +78,7 @@ public class Elevator {
 		triggered2 = false;
 		timer = new Timer();
 		elevator.configOpenloopRamp(2, 0);
-		
+
 	}
 
 	public void teleopPeriodic() {
@@ -88,7 +88,7 @@ public class Elevator {
 
 		if (driverIF.hookForward() && hookArmUpwards.get()) {
 			hookDown.set(.4);
-		} else if (driverIF.hookBackward()  && hookArmDownwards.get()) {
+		} else if (driverIF.hookBackward() && hookArmDownwards.get()) {
 			hookDown.set(-.4);
 		} else {
 			hookDown.set(0);
@@ -98,10 +98,10 @@ public class Elevator {
 			pneu.brakeSet(off);
 			pneu.squeezeSet(false);
 			elevator.set(-b);
-//			 if(elevator.getSelectedSensorPosition(0) == -1){
-//			 elevator.set(0);
-//			
-//			 }
+			// if(elevator.getSelectedSensorPosition(0) == -1){
+			// elevator.set(0);
+			//
+			// }
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
@@ -112,58 +112,13 @@ public class Elevator {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
 			}
-//			if(!limitSwitch.get()){
-//				elevator.set(0);
-//			}
+			// if(!limitSwitch.get()){
+			// elevator.set(0);
+			// }
 		} else {
 			elevator.set(-0.05);
 			pneu.brakeSet(on);
 		}
-		// if (!driverIF.elevatorToggleUp() && lastButtonUp) {
-		// if (heightCount < 4) {
-		// heightCount++;
-		// }
-		//
-		//
-		// } else if (!driverIF.elevatorToggleDown() && lastButtonDown) {
-		// if (heightCount > 0) {
-		// heightCount--;
-		// }
-		//
-		//
-		// }
-		// lastButtonUp = driverIF.elevatorToggleUp();
-		// lastButtonDown = driverIF.elevatorToggleDown();
-		// previousHeight =
-		// elevator.getSensorCollection().getQuadraturePosition();
-		// if(heightCount == 0){
-		// elevatorSet(ElevatorHeights.BOTTOM.height, .7);
-		// }
-		// else if(heightCount == 1){
-		// elevatorSet(ElevatorHeights.PORTAL.height, .7);
-		// }
-		// else if(heightCount == 2){
-		// elevatorSet(ElevatorHeights.SCALE_LOW.height, .7);
-		// }
-		// else if(heightCount == 3){
-		// elevatorSet(ElevatorHeights.SCALE_NEUTRAL.height, .7);
-		// }
-		// else if(heightCount == 4){
-		// elevatorSet(ElevatorHeights.SCALE_HIGH.height, .7);
-		// }
-		double d = 1;
-		// SmartDashboard.getNumber("back conveyor:", 0);
-		// d is the speed of the elevator motors
-
-		// if (driverIF.BackConveyorForwards()) {
-		// conveyor1.set(d);
-		// System.out.println("BACKFOR");
-		// } else if (driverIF.BackConveyorBackwards()) {
-		// conveyor1.set(-d);
-		// System.out.println("BACKBACK");
-		// } else {
-		// conveyor1.set(0);
-		// }
 
 		double e = .85;
 		// SmartDashboard.getNumber("front conveyor:", 0);
@@ -200,18 +155,21 @@ public class Elevator {
 		}
 		if (driverIF.winchWindUp()) {
 			winch.set(.7);
-		} else  {
+		} else {
 			winch.set(0);
 		}
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 	}
+
 	public void slowElevator(double speed) {
-		if(elevator.getSensorCollection().getQuadraturePosition() > 10000)
+		if (elevator.getSensorCollection().getQuadraturePosition() > 10000) {
 			elevator.set(speed);
-		else
+		} else {
 			elevator.set(0.2);
+		}
 	}
+
 	public boolean elevatorSet(double height, double speed) {
 		pneu.brakeSet(off);
 		elevator.set(speed);
@@ -226,22 +184,23 @@ public class Elevator {
 		}
 		return false;
 	}
+
 	public boolean elevatorPortalSet() {
 		timer.start();
 		elevator.set(.3);
-		if(timer.get() > 2.5) {
+		if (timer.get() > 2.5) {
 			elevator.set(0);
 			timer.stop();
 			return true;
 		}
 		return false;
 	}
-	public void conveyors(boolean on){
-		if(on){
+
+	public void conveyors(boolean on) {
+		if (on) {
 			conveyor1.set(1);
 			conveyor2.set(1);
-		}
-		else{
+		} else {
 			conveyor1.set(0);
 			conveyor2.set(0);
 		}

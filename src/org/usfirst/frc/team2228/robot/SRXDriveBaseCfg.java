@@ -96,7 +96,7 @@ public class SRXDriveBaseCfg {
 		// If direct read of encoder is negative in fwd dir is----EncoderSensorReversed = true
 		public static boolean isRightEncoderSensorReversed = true;
 		//swapped for testing mu
-		public static boolean isLeftEncoderSensorReversed = false;
+		public static boolean isLeftEncoderSensorReversed = true;
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;

@@ -8,6 +8,7 @@ import org.usfirst.frc.team2228.commands.StringCommand;
 import org.usfirst.frc.team2228.commands.Switch;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -27,11 +28,14 @@ public class AutoMaster {
 	private double THISISWRONGSHOULDCALIBRATE = 5.0;
 	private Elevator elevator;
 	private PneumaticController pneu;
-	private double speed = .2;
+	private double speed = .25;
 	private String firstIndex;
-	private boolean firstIndexL, firstIndexR;
-	private boolean noGameData;
-	
+
+	private enum GameData {
+		firstIndexL, firstIndexR, noGameData;
+	}
+
+	private GameData data = GameData.noGameData;
 
 	public AutoMaster(SRXDriveBase srxdb, Elevator _elevator, PneumaticController _pneu) {
 		pneu = _pneu;
@@ -41,15 +45,13 @@ public class AutoMaster {
 		chooser.addObject("Baseline", baseLineAuto);
 		chooser.addObject("Right Switch", rightSwitchAuto);
 		SmartDashboard.putData("Auto choices", chooser);
+		SmartDashboard.putNumber("Wait Time", 0);
 		// BOOP BEEP BOP BEEPEDIE BOOP BOP
 
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// baseLineAuto);
 		StringCommand command = new StringCommand(input);
 		// command.start();
-		firstIndexL = false;
-		firstIndexR = false;
-		noGameData = false;
 
 	}
 
@@ -60,33 +62,33 @@ public class AutoMaster {
 		Cg = new CommandGroup();
 
 		autoSelected = chooser.getSelected();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		String gameData = "";
+		gameData += DriverStation.getInstance().getGameSpecificMessage();
 		gameData = gameData.replace(" ", "");
-		firstIndex = gameData.substring(0, 1);
+		
+		if (gameData.isEmpty()) {
+			firstIndex = "";
+			System.out.println("No game data");
+		} else {
+			firstIndex = gameData.substring(0, 1);
+		}
 		if (gameData.length() >= 3) {
 			gameData = gameData.substring(0, 3);
 		}
-		else if(gameData.isEmpty()) {
-			noGameData = true;
-		}
+
 		SmartDashboard.putString("Game Data", gameData);
-		positions = gameData.toCharArray();
 		System.out.println("Auto selected: " + autoSelected);
 		if (firstIndex.equalsIgnoreCase("l")) {
 			System.out.println("L");
-			firstIndexL = true;
-			firstIndexR = false;
-			noGameData = false;
-		} else if(firstIndex.equalsIgnoreCase("r")) {
+			data = GameData.firstIndexL;
+		} else if (firstIndex.equalsIgnoreCase("r")) {
 			System.out.println("R");
-			firstIndexR = true;
-			firstIndexL = false;
-			noGameData = false;
+			data = GameData.firstIndexR;
 		}
 		switch (autoSelected) {
 
 		case "Baseline":
+			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 			System.out.println("Baseline selected");
 			// Adds movement to the auto sequence
 			Cg.addSequential(
@@ -94,26 +96,25 @@ public class AutoMaster {
 			break;
 
 		case "Left Switch":
+			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 			System.out.println("Left Switch selected");
 			// Adds movement to the auto sequence
-
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
-			Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT + 4.0),
-					speed, false));
+			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
+					speed, true));
 			// While the bot is moving, it continues closing the aquirer arms for another
 			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
-			Cg.addSequential(new RotateTo(base, 50, SRXDriveBaseCfg.kTrackWidthIn + 4, .1, false, true));
-			
-
 			// If the left side of the switch is ours, it places the cube, if not, it does
 			// nothing
-			if (!gameData.isEmpty() && firstIndexL && !noGameData) {
+			if (data == GameData.firstIndexL) {
+				Cg.addSequential(new RotateTo(base, 90, SRXDriveBaseCfg.kTrackWidthIn + 4, .1, false, true));
+				Cg.addSequential(new MoveTo(base, 18, speed, false), 3);
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
-			}
-			else {
+			} else {
+				Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");
 			}
 
@@ -121,8 +122,9 @@ public class AutoMaster {
 			break;
 
 		case "Right Switch":
+			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 			System.out.println("Right Switch selected");
-			// The bot starts closing the aquirer arms for half a second
+			// The bot starts closing the acquirer arms for half a second
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
 			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
@@ -131,14 +133,13 @@ public class AutoMaster {
 			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
 
-			if (!gameData.isEmpty() && firstIndexR && !noGameData) {
+			if (data == GameData.firstIndexR) {
 				// If the right side of the switch is ours, it places the cube while opening the
 				// aquirer arms
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new Switch(elevator));
 
-			}
-			else {
+			} else {
 				System.out.println("Incorrect game data");
 			}
 
