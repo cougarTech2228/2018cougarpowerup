@@ -136,7 +136,7 @@ public class AutoMaster {
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
 			Cg.addSequential(new MoveTo(base, (Dimensions.SWITCHWALL_TO_ALLIANCESTATION - Dimensions.LENGTH_OF_ROBOT),
-					speed, true), 3.0);
+					speed, false));
 			// While the bot is moving, it continues closing the aquirer arms for another
 			// second and a half
 			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
