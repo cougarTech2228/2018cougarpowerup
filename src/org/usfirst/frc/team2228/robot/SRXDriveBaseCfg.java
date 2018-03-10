@@ -2,7 +2,7 @@ package org.usfirst.frc.team2228.robot;
 
 public class SRXDriveBaseCfg {
 		// program control flags
-		public static boolean isSRXClosedLoopEnabled = true;
+		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = true;
 		
@@ -43,16 +43,16 @@ public class SRXDriveBaseCfg {
 		
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
-		public static double kdriveRightMstrFeedForwardGain = 1.58;
-		public static double kdriveRightMstrProportionalGain = 0.05;
+		public static double kdriveRightMstrFeedForwardGain = 2.5; //1.58
+		public static double kdriveRightMstrProportionalGain = 3.0;
 		public static double kdriveRightMstrIntegralGain = 0;
 		public static double kdriveRightMstrDerivativeGain = 0;
 		public static int    kdriveRightMstrIzone = 0;
 		public static int    kdriveRightMstrRampRate = 0;
 		public static int    kdriveRightMstrProfile = 0;
 		
-		public static double kdriveLeftMstrFeedForwardGain = 1.7; //1.58
-		public static double kdriveLeftMstrProportionalGain = 0.05;
+		public static double kdriveLeftMstrFeedForwardGain = 2.5; //1.58
+		public static double kdriveLeftMstrProportionalGain = 0.1;
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 0;
 		public static int    kdriveleftMstrIzone = 0;
@@ -61,7 +61,7 @@ public class SRXDriveBaseCfg {
 		
 		// =============================================
 		// DEADBANDS
-		public static int kClosedLoopErr = 1000;
+		public static int kClosedLoopErr = 0;
 		
 		// 0.001 represents 0.1% - default value is 0.04 or 4%previousEMAAccelFltrThrottleValue;
         public static double kSpeedDeadBand = 0.1;
@@ -76,7 +76,7 @@ public class SRXDriveBaseCfg {
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir => is----EncoderSensorReversed = true
 		public static boolean isRightEncoderSensorReversed = false;
-		public static boolean isLeftEncoderSensorReversed = true;
+		public static boolean isLeftEncoderSensorReversed = false;
 		
 		// =======================================
 		// ROBOT MEASUREMENTS/DATA:
