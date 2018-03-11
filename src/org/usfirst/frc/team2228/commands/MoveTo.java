@@ -17,12 +17,15 @@ public class MoveTo extends Command {
 	private double endLeftCounts;
 	private double endRightCounts;
 	private double endTime;
+	private double timeOut;
 	
-	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove) {
+	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove, double _timeOut) {
+		super(_timeOut);
 		this.base = base;
 		moveIn = _MoveToPositionIn;
 		movePwr = _MoveToPositionPwrLevel;
 		isCascade = _isCascadeMove;
+	
 	}
 	
 	protected void initialize() {
@@ -30,7 +33,7 @@ public class MoveTo extends Command {
 		startLeftCounts = base.getLeftEncoderPosition();
 		startRightCounts = base.getRightEncoderPosition();
 		System.out.println("initial move: " + moveIn);
-		base.setAngleZero();
+//		base.setAngleZero();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -43,12 +46,15 @@ public class MoveTo extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return isDone;
+		return isDone || isTimedOut();
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
+		if(isTimedOut()) {
+			base.setStopMotors();
+		}
 		endLeftCounts = base.getLeftEncoderPosition();
 		endRightCounts = base.getRightEncoderPosition();
 		endTime = Timer.getFPGATimestamp();

@@ -158,7 +158,7 @@ public class SRXDriveBaseCfg {
 		// This value is determined by testDriveStraightCalibration method
 
 		public static double kDriveStraightCorrection = 1.02;
-		public static double kRotateDriveStraightCorrection = 0.93;	
+		public static double kRotateDriveStraightCorrection = 1.00;	
 		        // Mew 0.9150
 				//for test bot 1.0805;
 		        // for Lamda 0.98

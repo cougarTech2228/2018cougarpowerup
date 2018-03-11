@@ -184,6 +184,9 @@ public class Elevator {
 		}
 		return false;
 	}
+	public void elevatorSet(double speed){
+		elevator.set(speed);
+	}
 
 	public boolean elevatorPortalSet() {
 		timer.start();
