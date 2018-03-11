@@ -27,7 +27,8 @@ public class TeleopController {
 	private boolean isButtonCmdActiveX = false;
 	private boolean lastButtonReadX = false;
 	private boolean isStopCheckToggleActive = false;
-
+	private double maxThrottle = 1;
+	private double maxTurn = .25;
 	private double deltaThrottleForStopCheck =0;
 	private double previousThrottleForStopCheck =0;
 	private double stopAccum = 0;
@@ -116,6 +117,8 @@ public class TeleopController {
 			throttle = CheckAccelFilter(limit(throttle));
 			throttle = CheckDriverStopping(limit(throttle));
 		}
+		throttle *= maxThrottle;
+		turn *= maxTurn;
 		
 		//CheckForAdjustSpeedRequest();
 		//driveBase.UpdateSRXDriveDataDisplay();
@@ -129,6 +132,13 @@ public class TeleopController {
 				turn);
 		}
 	}	
+	public void SetMaxThrottlePower(double _maxThrottlePowerLevel) {
+	maxThrottle = _maxThrottlePowerLevel;
+	}
+	
+	public void SetMaxTurnPower(double _maxTurnPowerLevel) {
+	maxTurn = _maxTurnPowerLevel;
+	}
 
 // ===========================================
 // DriverIF Filtering Functions

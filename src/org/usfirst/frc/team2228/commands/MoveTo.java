@@ -54,6 +54,7 @@ public class MoveTo extends Command {
 	protected void end() {
 		if(isTimedOut()) {
 			base.setStopMotors();
+			System.out.println("stop TIMED OUT!");
 		}
 		endLeftCounts = base.getLeftEncoderPosition();
 		endRightCounts = base.getRightEncoderPosition();

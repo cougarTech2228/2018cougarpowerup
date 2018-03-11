@@ -35,7 +35,7 @@ public class Switch extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	elevator.conveyors(false);
-    	System.out.println("Finished at " + Timer.getFPGATimestamp());
+    	System.out.println("Rollers finished at " + Timer.getFPGATimestamp());
     }
 
     // Called when another command which requires one or more of the same

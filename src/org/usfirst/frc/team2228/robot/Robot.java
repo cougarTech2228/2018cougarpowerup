@@ -1,14 +1,9 @@
 package org.usfirst.frc.team2228.robot;
 
-import org.usfirst.frc.team2228.commands.StringCommand;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -23,16 +18,16 @@ public class Robot extends IterativeRobot {
 	private SRXDriveBase base;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
-	private TeleopController chessyDrive;
+	private TeleopController driverDriveBaseControl;
 	private AutoMaster auto;
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	UsbCamera frontCamera;
 	//private CANLED LED;
 	private AngleIF angleIF;
-//	private UsbCamera backCamera;
-//	private UsbCamera cam;
+	private CameraController camController;
+	// private CANLED LED;
+	// private AngleIF angle;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -45,23 +40,24 @@ public class Robot extends IterativeRobot {
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
-		chessyDrive = new TeleopController(driverIF, base);
-
+		driverDriveBaseControl = new TeleopController(driverIF, base);
 		pc = new PneumaticController(driverIF);
-		elevator = new Elevator(driverIF, pc);
+		elevator = new Elevator(driverIF, pc, driverDriveBaseControl);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
-		base.setAngleIF(angleIF);
+		camController = new CameraController();
+//		base.setAngleIF(angleIF);
 		//base.setCorrectionSensor(3); // navx
 		
-//		frontCamera = new UsbCamera("Front Camera", 0);
-//		backCamera = new UsbCamera("Back Camera", 1);
-//		frontCamera = CameraServer.getInstance().startAutomaticCapture();
-//		backCamera = CameraServer.getInstance().startAutomaticCapture();
+
 		// LED = new CANLED();
 		// LED.colorInit();
 		// angle = new AngleIF();
+		// LED = new CANLED();
+		// LED.colorInit();
+		// angle = new AngleIF();
+		
 	}
 
 	/**
@@ -80,6 +76,7 @@ public class Robot extends IterativeRobot {
 		// Gets everything from Autonomous Init from the AutoMaster class
 		angleIF.zeroYaw();
 		auto.init();
+		base.setSRXDriveBaseInit();
 	}
 
 	/**
@@ -93,7 +90,9 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void teleopInit() {
+		auto.teleopInit();
 		angleIF.zeroYaw();
+		base.setSRXDriveBaseInit();
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -103,11 +102,11 @@ public class Robot extends IterativeRobot {
 		// Gets everything from the generic drivebase, the CubeManipulator
 		// class, the Pneumatic class and the Elevatorclass for the teleop
 		// period
-		chessyDrive.teleopPeriodic();
+		driverDriveBaseControl.teleopPeriodic();
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
-
+		camController.cameraCommand();
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
 		// LED.rainbowShift();
@@ -117,12 +116,19 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
 	}
-
+	
+	@Override
+	public void testInit() {
+		base.setSRXDriveBaseInit();
+	}
 	/**
 	 * This function is called periodically during test mode
 	 */
 	@Override
 	public void testPeriodic() {
+		base.testMethodSelection();
 	}
-	
+
+
+
 }

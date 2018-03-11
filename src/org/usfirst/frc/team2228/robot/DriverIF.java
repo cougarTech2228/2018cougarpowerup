@@ -121,4 +121,8 @@ public class DriverIF {
 		}
 	}
 
+	public boolean camSwitch() {
+		return xboxIF.BACK_BUTTON();
+	}
+
 }
