@@ -34,6 +34,7 @@ public class Elevator {
 	boolean lastButton1;
 	boolean lastButton2;
 	boolean triggered2;
+	TeleopController tc;
 	Timer timer;
 
 	public enum ElevatorHeights {
@@ -45,9 +46,10 @@ public class Elevator {
 		}
 	}
 
-	public Elevator(DriverIF _driverIF, PneumaticController _pneu) {
+	public Elevator(DriverIF _driverIF, PneumaticController _pneu, TeleopController _tc) {
 		pneu = _pneu;
 		driverIF = _driverIF;
+		tc = _tc;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
@@ -80,9 +82,18 @@ public class Elevator {
 		elevator.configOpenloopRamp(2, 0);
 
 	}
+	public void SlowRobot() {
+		int encoders = elevator.getSensorCollection().getQuadraturePosition();
+		if(encoders > -500000)
+		tc.SetMaxThrottlePower(1.0);
+		else
+		tc.SetMaxThrottlePower(0.2);
+		System.out.println("Encoder Counts: " + encoders);
+	}
 
 	public void teleopPeriodic() {
 		double b = .5;
+		SlowRobot();
 		// SmartDashboard.getNumber("Elevator Speed:", 0);
 		// b is the speed of the
 
