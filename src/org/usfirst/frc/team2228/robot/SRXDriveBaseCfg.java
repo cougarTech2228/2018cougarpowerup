@@ -4,7 +4,7 @@ public class SRXDriveBaseCfg {
 		// program control flags
 		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = true;
+		public static boolean isDriveStraightAssistEnabled = false;
 		
 		
 		// ===============================================
@@ -43,16 +43,16 @@ public class SRXDriveBaseCfg {
 		
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
-		public static double kdriveRightMstrFeedForwardGain = 2.5; //1.58
-		public static double kdriveRightMstrProportionalGain = 3.0;
+		public static double kdriveRightMstrFeedForwardGain = 2; //1.58
+		public static double kdriveRightMstrProportionalGain = .01;
 		public static double kdriveRightMstrIntegralGain = 0;
 		public static double kdriveRightMstrDerivativeGain = 0;
 		public static int    kdriveRightMstrIzone = 0;
 		public static int    kdriveRightMstrRampRate = 0;
 		public static int    kdriveRightMstrProfile = 0;
 		
-		public static double kdriveLeftMstrFeedForwardGain = 2.5; //1.58
-		public static double kdriveLeftMstrProportionalGain = 0.1;
+		public static double kdriveLeftMstrFeedForwardGain = 2; //1.58
+		public static double kdriveLeftMstrProportionalGain = 0.01;
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 0;
 		public static int    kdriveleftMstrIzone = 0;
@@ -140,7 +140,7 @@ public class SRXDriveBaseCfg {
 		// This value is determined by testDriveStraightCalibration method
 		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
 		
-		public static double kRotateDriveStraightCorrection = 0.93;
+		public static double kRotateDriveStraightCorrection = 0.75;// fwd-.93
 		
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;

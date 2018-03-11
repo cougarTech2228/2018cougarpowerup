@@ -16,6 +16,7 @@ public class TeleopController {
 	private boolean isTeleopConsoleDataEnabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
+	private boolean isToggleFlagState = false;
 	
 	//=================================
 	// SET POINTS
@@ -42,6 +43,12 @@ public class TeleopController {
 	
 	//======================================
 	// VARIABLES
+	private double origThrottle = 0;
+	private double origTurn = 0;
+
+	private double turn = 0;
+	private double throttle = 0;
+	
 	private double accelFltrThrottleValue = 0;
 	private double deltaAccelFltrThrottleValue = 0;
 	private double smoothFactorValue = 0;
@@ -53,8 +60,8 @@ public class TeleopController {
 	private double stopAccum = 0;
 	private double previousStopAccum = 0;
 
-	private double maxThrottleLimit = 1;
-	private double maxTurnLimit = .4;
+	private double maxThrottleLimit = .7;
+	private double maxTurnLimit = .3;
 	
 	private String lastMsgString = " ";
 	private double maxThottlePowerLevel = 0;
@@ -93,12 +100,14 @@ public class TeleopController {
 	// TELEOP PERIODIC
 	public void teleopPeriodic() {
 		// Save the joystick values
-		double origThrottle = -DriverIF.Throttle();
-		double origTurn = DriverIF.Turn();
-
-		double turn = origTurn;
-		double throttle = origThrottle;
-
+		origThrottle = -DriverIF.Throttle();
+		origTurn = DriverIF.Turn();
+		throttle = origThrottle;
+		turn = origTurn;
+		
+		
+		
+		
 		throttle = normalize(throttle);
 		turn = normalize(turn);
 		
@@ -111,18 +120,21 @@ public class TeleopController {
 			throttle = CheckAccelFilter(throttle);
 		//	throttle = CheckDriverStopping(throttle);
 		}
-		//hi
-		// ============================================
-		// Limit max throttle / turn
-		throttle *= maxThrottleLimit;
-		turn *= maxTurnLimit;
+		
 		// Re-check that values are not over 1
 		throttle = cap(throttle);
 		turn = cap(turn);
 		
+		// ============================================
+		// Limit max throttle / turn
+		throttle *= maxThrottleLimit;
+		turn *= maxTurnLimit;
+		
+		// Apply dead band on joysticks
 		throttle = joyDeadBand(throttle);
 		turn = joyDeadBand(turn);
 		
+		// =======================================
 		// DRIVE ROBOT
 		driveBase.setThrottleTurn(throttle, turn);
 		
@@ -265,25 +277,30 @@ public class TeleopController {
 	// 2 - fast accels
 	// 3 - transitions from fwd/rev or rev/fwd
 	public double CheckAccelFilter(double _ThrottleValue) {
-		accelFltrThrottleValue = _ThrottleValue;
 		
-		// determine change for last driverIF read
-		deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
+		// makes execution 2xscan = approx 40ms now
+		isToggleFlagState = !isToggleFlagState;
+		if(isToggleFlagState){
+			accelFltrThrottleValue = _ThrottleValue;
+		
+			// determine change for last driverIF read
+			deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
 
-		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
-		if (Math.abs(deltaAccelFltrThrottleValue) > kMaxDeltaVelocity) {
-				smoothFactorValue = kHighSmoothFactor;
-			} else {
-				// If driver behaves
-				smoothFactorValue = kLowSmoothFactor;
-			}
+			// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
+			if (Math.abs(deltaAccelFltrThrottleValue) > kMaxDeltaVelocity) {
+					smoothFactorValue = kHighSmoothFactor;
+				} else {
+					// If driver behaves
+					smoothFactorValue = kLowSmoothFactor;
+				}
+			
+			// RUN THROUGH SMOOTHING FILTER
+			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
+			// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
+			EMAThrottleValue = previousEMAThottleValue + (1-smoothFactorValue) * (deltaAccelFltrThrottleValue);
+			previousEMAThottleValue = EMAThrottleValue;
 		
-		// RUN THROUGH SMOOTHING FILTER
-		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
-		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
-		EMAThrottleValue = previousEMAThottleValue + (1-smoothFactorValue) * (deltaAccelFltrThrottleValue);
-		previousEMAThottleValue = EMAThrottleValue;
-		
+		}
 		return  EMAThrottleValue;
 	}
 	
@@ -298,13 +315,11 @@ public class TeleopController {
 		
 		return num;
 	}
-	// This caps number, dead bands number and remaps to 0 -> 1 range
+	// This caps number and remaps to 0 -> 1 range
 	private double normalize(double num) {
 		if(Math.abs(num) > 1){
 			num = Math.signum(num)* 1.0;
-		}
-		
-		if((Math.abs(num) >= kJoyStickDeadBand) ){
+		} else if((Math.abs(num) >= kJoyStickDeadBand) ){
 			// This normalizes data from (kJoyStickDeadBand -> 1) to (0 -> 1)
 			if(num >= 0){
 				num = (num - kJoyStickDeadBand) / (1 - kJoyStickDeadBand);
