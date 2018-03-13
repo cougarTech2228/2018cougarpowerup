@@ -20,7 +20,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SRXDriveBase {
@@ -87,7 +87,8 @@ public class SRXDriveBase {
 	private double leftEncoderPosition = 0;
 	private double leftSensorPositionRaw = 0;
 	
-	private double CAL_kDriveStraightCorrection = SRXDriveBaseCfg.kDriveStraightCorrection;
+	private double CAL_kDriveStraightFwdCorrection = SRXDriveBaseCfg.kDriveStraightFwdCorrection;
+	private double CAL_kDriveStraightRevCorrection = SRXDriveBaseCfg.kDriveStraightRevCorrection;
 	private double CAL_RightDriveCmdLevel = 0;
 	private double CAL_LeftDriveCmdLevel = 0;
 	private double CAL_Throttle = 0;
@@ -114,6 +115,7 @@ public class SRXDriveBase {
 	private boolean isPulse_SqWaveFnctStartActive = false;
 	private boolean isMovePerpendicularActive = false;
 	private boolean isTestMoveForStraightCalActive = false;
+	private boolean isCalAtStop = false;
 	private boolean isDelayActive = false;
 	private boolean isDriveTrainMoving = false;
 	private boolean isSensorStopReached = false;
@@ -343,6 +345,7 @@ public class SRXDriveBase {
 		isPulse_SqWaveFnctStartActive = false;
 		isMovePerpendicularActive = false;
 		isTestMoveForStraightCalActive = false;
+		isCalAtStop = false;
 		isDelayActive = false;
 		isSensorStopReached = false;
 		isTestMethodSelectionActive = false;
@@ -358,11 +361,12 @@ public class SRXDriveBase {
 		isTestTeleopCTkThrottleTurnActive = false;
 		isAutoTurnMoveDone = false;
 		
-		loadShuffleBoardParmeters();
+		loadSmartDashBoardParmeters();
 		setDriveTrainRamp(0);
 		setRightSensorPositionToZero();
 		setLeftSensorPositionToZero();
 		
+		isConsoleDataEnabled = SmartDashboard.getBoolean("TstBtn-EnableSRXDriveBaseConsoleDisplay:", isConsoleDataEnabled);
 		
 		
 	}
@@ -496,7 +500,7 @@ public class SRXDriveBase {
 	// =======================================================================================
 	// ======================================================================================
 	
-	public void loadShuffleBoardParmeters() {
+	private void loadSmartDashBoardParmeters() {
 		SmartDashboard.putBoolean("TstBtn-StepFnc:", false);
 		SmartDashboard.putBoolean("TstBtn-DrvStraightCal:", false);
 		SmartDashboard.putBoolean("TstBtn-DrvStrghtAutoCal:", false);
@@ -509,6 +513,7 @@ public class SRXDriveBase {
 		SmartDashboard.putBoolean("TstBtn-TimeRotate:", false);
 		SmartDashboard.putBoolean("TstBtn-TimeTurn:", false);
 		SmartDashboard.putBoolean("TstBtn-Teleop:", false);
+		SmartDashboard.putBoolean("TstBtn-EnableSRXDriveBaseConsoleDisplay:", isConsoleDataEnabled);
 		
 		SmartDashboard.putNumber("Left Encoder:", leftSensorPositionRead);
 		SmartDashboard.putNumber("Right Encoder:", rightSensorPositionRead);
@@ -517,7 +522,8 @@ public class SRXDriveBase {
 		SmartDashboard.putNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
 		SmartDashboard.putNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
 		
-		SmartDashboard.putNumber("CAL_kDriveStraightCorrection:", CAL_kDriveStraightCorrection);
+		SmartDashboard.putNumber("CAL_kDriveStraightFwdCorrection:", CAL_kDriveStraightFwdCorrection);
+		SmartDashboard.putNumber("CAL_kDriveStraightRevCorrection:", CAL_kDriveStraightRevCorrection);
 		
 		SmartDashboard.putNumber("CAL_RightDriveCmdLevel:", CAL_RightDriveCmdLevel);
 		SmartDashboard.putNumber("CAL_LeftDriveCmdLevel:", CAL_LeftDriveCmdLevel);
@@ -641,7 +647,7 @@ public class SRXDriveBase {
 	public void setThrottleTurn(double _throttleValue, double _turnValue) {
 			// Calculate cmd level in terms of PercentVbus; range (-1 to 1)
 			leftCmdLevel = _throttleValue + (_turnValue/2);
-			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightCorrection) - (_turnValue/2));
+			rightCmdLevel = ((_throttleValue* SRXDriveBaseCfg.kDriveStraightFwdCorrection) - (_turnValue/2));
 		
 		// Determine drive straight correction if enabled
 		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled && Math.abs(_turnValue) < SRXDriveBaseCfg.kSpeedDeadBand){
@@ -671,101 +677,6 @@ public class SRXDriveBase {
 		}
 	}
 	
-	// =======================================
-	// SET COUGARTECH THROTTLE-TURN
-	// =======================================
-	// setThrottleRotateTurn is both open loop and closed loop control with drive straight correction
-	
-	public void setCTkThrottleTurn(double _throttleValue, double _turnValue) {
-		ctkThrottle = _throttleValue;
-		ctkTurn = _turnValue;
-		// Determine which drive(left/right) will be modified for the robot turn
-		// We slow down the drive(left/right) on direction we want to go
-		if(ctkThrottle >= 0){
-			// Forward - turn right
-			if (ctkTurn >= 0){ 
-				leftCmdLevel = 1;
-				rightCmdLevel =  1 - ctkTurn;
-			}
-			else{
-				// Forward - turn left
-				leftCmdLevel = 1 + ctkTurn;
-				rightCmdLevel = 1;
-			}
-		} else{
-			// Reverse - turn right
-			if (ctkTurn >= 0){ 
-				leftCmdLevel = 1 - ctkTurn;
-				rightCmdLevel = 1; 
-			}
-			else{
-				// Reverse - turn left
-				leftCmdLevel = 1;
-				rightCmdLevel = 1 + ctkTurn;
-			}
-		}
-		leftCmdLevel = leftCmdLevel * ctkThrottle;
-		rightCmdLevel = rightCmdLevel * ctkThrottle * SRXDriveBaseCfg.kDriveStraightCorrection;
-		
-		// Determine drive straight correction if enabled
-		if (SRXDriveBaseCfg.isDriveStraightAssistEnabled 
-				&& Math.abs(_turnValue) < SRXDriveBaseCfg.kSpeedDeadBand
-				&& ctkThrottle >SRXDriveBaseCfg.kPivotLimit ) {
-					
-			isSensorCorrectionActive = true;
-			driveStraightDirCorrection = getDriveStraightCorrection();
-			rightCmdLevel += driveStraightDirCorrection;
-		} else{
-			// Reset drive straight correction
-			isSensorCorrectionActive = false;
-			driveStraightDirCorrection = getDriveStraightCorrection();
-		}
-		
-		// Determine pivot turn at low speed values
-		if((Math.abs(ctkThrottle) > SRXDriveBaseCfg.kPivotLimit)){
-			pivotScale = 0;
-		}
-		else{
-			pivotScale =  1 - (Math.abs(ctkThrottle) / SRXDriveBaseCfg.kPivotLimit);
-		}
-		leftCmdLevel = ((1 - pivotScale) * leftCmdLevel) + (pivotScale * ctkTurn);
-		rightCmdLevel = ((1 - pivotScale) * rightCmdLevel) - (pivotScale * ctkTurn) + driveStraightDirCorrection;
-		
-		// In feedback mode output commands to SRX modules set as [% from (-1 to 1)] x MaxVel_VelNativeUnits for feedback control
-		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
-		
-		
-		//++++++++++++++++++++++++++++++++
-		// LOGGING AND DISPLAY
-		if (isLoggingDataEnabled) {
-			if(!isLoggingActive){
-				logString = ",LeftCmd,RightCmd,LeftVel,RightVel,LeftCur,RightCur,Heading,SensorCor";
-				DebugLogger.data(logString);	
-			} else {
-				logString = String.format(",%4.3f,%4.3f,%5.2f,%5.2f,%5.2f,%5.2f,%4.3f,%4.3f", 
-									leftCmdLevel, 
-									rightCmdLevel,
-									getLeftSensorVelocity(),
-									getRightSensorVelocity(),
-									getLeftMstrMtrCurrent(),
-									getRightMstrMtrCurrent(),
-									encoderHeadingDeg,
-									driveStraightDirCorrection);							
-				DebugLogger.data(logString);
-			}
-		}
-		if (isConsoleDataEnabled){
-			System.out.printf("LCmd:%-4.3f=RCmd:%-4.3f=LVel:%-5.2f=RVel:%-5.2f=LCur:%-5.2f=RCur:%-5.2f=H:%-4.3f=C:%-4.3f%n", 
-									leftCmdLevel, 
-									rightCmdLevel,
-									getLeftSensorVelocity(),
-									getRightSensorVelocity(),
-									getLeftMstrMtrCurrent(),
-									getRightMstrMtrCurrent(),
-									encoderHeadingDeg,
-									driveStraightDirCorrection);
-		}
-	}
 	// ======================================================================================
 	// =======================================================================================
 	// AUTONOMOUS METHODS
@@ -806,7 +717,11 @@ public class SRXDriveBase {
 			}
 			// Direction is determined by sign of _MoveToPositionIn				
 			leftCmdLevel = ((_isDirectionRev)? -_moveToPositionPwrLevel : _moveToPositionPwrLevel);
-			rightCmdLevel = ((_isDirectionRev)? -_moveToPositionPwrLevel : _moveToPositionPwrLevel) * SRXDriveBaseCfg.kDriveStraightCorrection;
+			if(_isDirectionRev){
+				rightCmdLevel = _moveToPositionPwrLevel * SRXDriveBaseCfg.kDriveStraightFwdCorrection;
+			} else {
+				rightCmdLevel = -_moveToPositionPwrLevel * SRXDriveBaseCfg.kDriveStraightRevCorrection;
+			}
 			
 		} else {
 			// Determine drive straight correction if enabled
@@ -869,12 +784,11 @@ public class SRXDriveBase {
 		//+++++++++++++++++++++++
 		// LOGGING AND DISPLAY
 		if (isConsoleDataEnabled){
-			System.out.printf("StopCnt:%-8.0f ==LftPos:%-8.2f ==RgtPos:%-8.2f ==Angle:%-8.3f ==PID:%-8.3f= =Correct:%-8.3f%n",
+			System.out.printf("StopCnt:%-8.0f ==LftPos:%-8.2f ==RgtPos:%-8.2f ==Angle:%-8.3f ==Correct:%-8.3f%n",
 									moveStopCount,
 									leftSensorPositionRead, 
 									rightSensorPositionRead,
 									encoderHeadingDeg,
-									encoderPIDCorrection,
 									driveStraightDirCorrection);		
 		}
 		return isVelMoveToPositionActive;
@@ -895,8 +809,11 @@ public class SRXDriveBase {
 			msg("ROTATE TO ANGLE IS ACTIVE===========================");
 			
 			leftCmdLevel = Math.signum(_rotateToAngle) * _rotatePowerLevel;
-			rightCmdLevel = -Math.signum(_rotateToAngle) * _rotatePowerLevel * SRXDriveBaseCfg.kRotateDriveStraightCorrection; 
-			
+			if(_rotateToAngle >= 0){
+				rightCmdLevel = -_rotatePowerLevel * SRXDriveBaseCfg.kRotateCCWDriveStraightCorrection;
+			} else{
+				rightCmdLevel = _rotatePowerLevel * SRXDriveBaseCfg.kRotateCWDriveStraightCorrection;
+			}
 			
 			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
 			rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kEncoderCountsPerIn * (_rotateToAngle / 360))
@@ -962,7 +879,7 @@ public class SRXDriveBase {
 					leftCmdLevel = -_turnPowerLevel * (1 - (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
 				} else {
 					rightCmdLevel = _turnPowerLevel * (1 - (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
-					leftCmdLevel = _turnPowerLevel * (1 + (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
+					leftCmdLevel = _turnPowerLevel * (1 + (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn))) * SRXDriveBaseCfg.kTurnRightDriveStraightCorrection;
 				}
 				
 			// Turn Left
@@ -971,7 +888,7 @@ public class SRXDriveBase {
 					rightCmdLevel = -_turnPowerLevel * (1 - (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
 					leftCmdLevel = -_turnPowerLevel * (1 + (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
 				} else {
-					rightCmdLevel = _turnPowerLevel * (1 + (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
+					rightCmdLevel = _turnPowerLevel * (1 + (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn))) * SRXDriveBaseCfg.kTurnLeftDriveStraightCorrection;
 					leftCmdLevel = _turnPowerLevel * (1 - (SRXDriveBaseCfg.kTrackWidthIn / (2 * _turnRadiusIn)));
 				}
 				
@@ -1106,7 +1023,7 @@ public class SRXDriveBase {
 	
 	// ==============================================
 	// ===============================================
-	// TIMER AUTONOMOUS METHODS 
+	// TIMER AUTONOMOUS METHODS - Forward only
 	// ===============================================
 	// ==============================================
 	
@@ -1136,7 +1053,7 @@ public class SRXDriveBase {
 			moveStopTime = methodAutoTime + _MoveToPositionSec;
 							
 			leftCmdLevel = (Math.signum(_MoveToPositionSec) * _MoveToPositionPwrLevel);
-			rightCmdLevel = (Math.signum(_MoveToPositionSec) * _MoveToPositionPwrLevel) * SRXDriveBaseCfg.kDriveStraightCorrection;
+			rightCmdLevel = (Math.signum(_MoveToPositionSec) * _MoveToPositionPwrLevel) * SRXDriveBaseCfg.kDriveStraightFwdCorrection;
 			
 		} else {
 			// Determine drive straight correction if enabled
@@ -1217,7 +1134,7 @@ public class SRXDriveBase {
 			msg("TIMED ROTATE TO ANGLE IS ACTIVE===========================");
 			
 			leftCmdLevel = Math.signum(_rotateTimeToAngleSec) * _rotatePowerLevel;
-			rightCmdLevel = -Math.signum(_rotateTimeToAngleSec) * _rotatePowerLevel * SRXDriveBaseCfg.kRotateDriveStraightCorrection; 
+			rightCmdLevel = -Math.signum(_rotateTimeToAngleSec) * _rotatePowerLevel * SRXDriveBaseCfg.kRotateCWDriveStraightCorrection; 
 			
 			moveStopTime = methodStartTime + _rotateTimeToAngleSec;
 			
@@ -1330,9 +1247,9 @@ public class SRXDriveBase {
 		if(!isTestMethodSelectionActive){
 			isTestMethodSelectionActive = true;
 			
-			//Kp_encoderHeadingPID = SmartDashboard.getNumber("Kp_encoderHeadingPID:", Kp_encoderHeadingPID);
-			Ki_encoderHeadingPID = SmartDashboard.getNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
-			Kd_encoderHeadingPID = SmartDashboard.getNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
+			Kp_encoderHeadingPID = SmartDashboard.getNumber("Kp_encoderHeadingPID:", Kp_encoderHeadingPID);
+			//Ki_encoderHeadingPID = SmartDashboard.getNumber("Ki_encoderHeadingPID:", Ki_encoderHeadingPID);
+			//Kd_encoderHeadingPID = SmartDashboard.getNumber("Kd_encoderHeadingPID:", Kd_encoderHeadingPID);
 			
 		} else {
 			if(SmartDashboard.getBoolean("TstBtn-StepFnc:", false)){
@@ -1363,7 +1280,7 @@ public class SRXDriveBase {
 			
 			if(SmartDashboard.getBoolean("TstBtn-DrvStraightCal:", false)){
 				
-				CAL_kDriveStraightCorrection = SmartDashboard.getNumber("CAL_kDriveStraightCorrection:", CAL_kDriveStraightCorrection);
+				CAL_kDriveStraightFwdCorrection = SmartDashboard.getNumber("CAL_kDriveStraightFwdCorrection:", CAL_kDriveStraightFwdCorrection);
 				if(!isTestBtnActive){
 					msg("SHUFFLE START DRIVE STRAIGHT CAL=============");
 					isTestBtnActive = true;
@@ -1376,8 +1293,8 @@ public class SRXDriveBase {
 					Timer.delay(0.2);
 				}
 				
-				// testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel)
-				if(!testDriveStraightCalibration(50.0, .3)){
+				// testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel, boolean isDirectionRev)
+				if(!testDriveStraightCalibration(50.0, .3, true)){
 					isTestMethodSelectionActive = false;
 					isTestBtnActive = false;
 					if(isLoggingDataEnabled){
@@ -1504,27 +1421,27 @@ public class SRXDriveBase {
 				isTestMethodSelectionActive = false;
 			}
 			
-			if (SmartDashboard.getBoolean("TstBtn-Teleop:", false)){
-				if(!isTestBtnActive){
-					msg("TELEOP CTK-THROTTLE-TURN=============");
-					isTestBtnActive = true;
-					isTestTeleopCTkThrottleTurnActive = true;
-					if (isLoggingDataEnabled){
-						DebugLogger.fopencsv("/home/lvuser/log/CTkThrottleTurn-" + loggingDataIncrement);
-					}
-				}
-				//setCTkThrottleTurn(double _throttleValue, double _turnValue) 
-				setCTkThrottleTurn(SmartDashboard.getNumber("CAL_Throttle:", CAL_Throttle), SmartDashboard.getNumber("CAL_turn:", CAL_turn));
-			} else if(isTestTeleopCTkThrottleTurnActive){
-				if(isLoggingDataEnabled){
-					isLoggingActive = false;
-					loggingDataIncrement += 1;
-					DebugLogger.closecsv();
-				}
-				isTestMethodSelectionActive = false;
-				isTestBtnActive = false; 
-				isTestTeleopCTkThrottleTurnActive = false;
-			}
+//			if (SmartDashboard.getBoolean("TstBtn-Teleop:", false)){
+//				if(!isTestBtnActive){
+//					msg("TELEOP CTK-THROTTLE-TURN=============");
+//					isTestBtnActive = true;
+//					isTestTeleopCTkThrottleTurnActive = true;
+//					if (isLoggingDataEnabled){
+//						DebugLogger.fopencsv("/home/lvuser/log/CTkThrottleTurn-" + loggingDataIncrement);
+//					}
+//				}
+//					//setCTkThrottleTurn(double _throttleValue, double _turnValue) 
+//					setCTkThrottleTurn(SmartDashboard.getNumber("CAL_Throttle:", CAL_Throttle), SmartDashboard.getNumber("CAL_turn:", CAL_turn));
+//				} else if(isTestTeleopCTkThrottleTurnActive){
+//					if(isLoggingDataEnabled){
+//						isLoggingActive = false;
+//						loggingDataIncrement += 1;
+//						DebugLogger.closecsv();
+//					}
+//					isTestMethodSelectionActive = false;
+//					isTestBtnActive = false; 
+//					isTestTeleopCTkThrottleTurnActive = false;
+//				}
 			
 			if (SmartDashboard.getBoolean("TstBtn-MotorEncoderTest:", true)){
 				if(!isMtrTestBtnActive){
@@ -1688,7 +1605,7 @@ public class SRXDriveBase {
 	//===================================
 	// TEST DRIVE STRAIGHT CALIBRATION
 	//===================================
-	public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel){
+	public boolean testDriveStraightCalibration(double _testDistanceIn, double _pwrLevel, boolean _isDirectionRev){
 		
 		leftSensorPositionRead = getLeftSensorPosition();
 		rightSensorPositionRead = getRightSensorPosition();
@@ -1697,12 +1614,19 @@ public class SRXDriveBase {
 			msg("START CALIBARTION======================================");
 			methodStartTime = Timer.getFPGATimestamp();
 			isTestMoveForStraightCalActive = true;
+			CAL_kDriveStraightFwdCorrection = SmartDashboard.getNumber("CAL_kDriveStraightFwdCorrection:", CAL_kDriveStraightFwdCorrection);
+			CAL_kDriveStraightRevCorrection = SmartDashboard.getNumber("CAL_kDriveStraightRevCorrection:", CAL_kDriveStraightRevCorrection);
 			
-			leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount);
-			
-			leftCmdLevel = _pwrLevel;
-			rightCmdLevel = (_pwrLevel * CAL_kDriveStraightCorrection); 
-			
+			if(_isDirectionRev){
+				leftCmdLevel = -_pwrLevel;
+				rightCmdLevel = (-_pwrLevel * CAL_kDriveStraightRevCorrection); 
+				leftEncoderStopCount = -(_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount);
+			}
+			else{
+				leftCmdLevel = _pwrLevel;
+				rightCmdLevel = (_pwrLevel * CAL_kDriveStraightFwdCorrection); 
+				leftEncoderStopCount = (_testDistanceIn / SRXDriveBaseCfg.kLeftInchesPerCount);
+			}
 			
 			if (isConsoleDataEnabled){
 			System.out.printf("StopCnt:%-8.0f+++LftEnc:%-8.0f +++RgtEnc:%-8.0f+++LftCmd:%-8.4f+++RgtCmd:%-8.4f%n", 
@@ -1712,9 +1636,14 @@ public class SRXDriveBase {
 								leftCmdLevel,
 								rightCmdLevel);
 			}
-		
+			
+	
 		// Test for stopping movement
-		} else if (leftSensorPositionRead >= leftEncoderStopCount) {
+		} else {
+			isCalAtStop = ((_isDirectionRev)? (leftSensorPositionRead <= leftEncoderStopCount) : (leftSensorPositionRead >= leftEncoderStopCount));	
+		}
+		
+		if(isCalAtStop)	{
 			msg("CALIBRATION AT STOP ===========================================");
 			
 			setDriveTrainRamp(0);
@@ -1724,6 +1653,7 @@ public class SRXDriveBase {
 			if (!delay(1)) {
 				msg("CALIBRATION END ==================================");
 				isTestMoveForStraightCalActive = false;
+				isCalAtStop = false;
 				rightCmdLevel = 0;
 				leftCmdLevel = 0;
 				methodTime = Timer.getFPGATimestamp() - methodStartTime;
@@ -1788,7 +1718,7 @@ public class SRXDriveBase {
 	*/
 	
 	// This method performs a SRX magic motion command from user calculated values
-	// User should note that the right drive distance needs to be corrected by kDriveStraightCorrection
+	// User should note that the right drive distance needs to be corrected by kDriveStraightFwdCorrection
 	public boolean magicMove(int _rightCruiseVel, int _rightAccel, int _rightDistance, int _leftCruiseVel,
 			int _leftAccel, int _leftDistance) {
 		
@@ -1811,7 +1741,7 @@ public class SRXDriveBase {
 			driveLeftMasterMtr.configMotionCruiseVelocity(_leftCruiseVel, SRXTimeoutValueMs);
 			driveLeftMasterMtr.configMotionAcceleration(_leftAccel, SRXTimeoutValueMs);
 
-			_rightDistance = (int)(_rightDistance * SRXDriveBaseCfg.kDriveStraightCorrection);
+			_rightDistance = (int)(_rightDistance * SRXDriveBaseCfg.kDriveStraightFwdCorrection);
 			_leftDistance = (int)(_leftDistance);
 		} else {
 			if (leftSensorStartPositionRead >= _leftDistance) {

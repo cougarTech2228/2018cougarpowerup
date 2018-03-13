@@ -14,6 +14,7 @@ public class TeleopController {
 	// SWITCHES
 	
 	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isJoyStick2SRXDriveBaseDisabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
 	private boolean isToggleFlagState = false;
@@ -93,21 +94,24 @@ public class TeleopController {
 	//==========================================
 	// TELEOP INIT
 	public void teleopInit(){
-
+		loadSmartDashBoardParmeters(); 
 	}
 		
 	//==========================================
 	// TELEOP PERIODIC
 	public void teleopPeriodic() {
+		
+		// Flag for console display
+		isTeleopConsoleDataEnabled = SmartDashboard.getBoolean("TstBtn-EnableTeleopConsoleDisplay:", isTeleopConsoleDataEnabled);
+		// Flag for disable joysticks to drive base for testing joysticks and accel filter
+		isJoyStick2SRXDriveBaseDisabled = SmartDashboard.getBoolean("TstBtn-DisableJoy2SRXDrvBase:", isJoyStick2SRXDriveBaseDisabled);
+		
 		// Save the joystick values
 		origThrottle = -DriverIF.Throttle();
 		origTurn = DriverIF.Turn();
 		throttle = origThrottle;
 		turn = origTurn;
-		
-		
-		
-		
+
 		throttle = normalize(throttle);
 		turn = normalize(turn);
 		
@@ -136,7 +140,9 @@ public class TeleopController {
 		
 		// =======================================
 		// DRIVE ROBOT
-		driveBase.setThrottleTurn(throttle, turn);
+		if(!isJoyStick2SRXDriveBaseDisabled){
+			driveBase.setThrottleTurn(throttle, turn);
+		}
 		
 		// ++++++++++++++++++++++++++++++++++++
 		// Display
@@ -160,8 +166,14 @@ public class TeleopController {
 	public void SetMaxTurnPower(double _maxTurnLimitPowerLevel) {
 	maxTurnLimit = _maxTurnLimitPowerLevel;
 	}
-// ===========================================
-// DRIVERIF FILTERING FUNCTIONS
+	// ========================================
+	// SHUFFLEBOARD
+	private void loadSmartDashBoardParmeters() {
+		SmartDashboard.putBoolean("TstBtn-EnableTeleopConsoleDisplay:", isTeleopConsoleDataEnabled);
+		SmartDashboard.putBoolean("TstBtn-DisableJoy2SRXDrvBase:", isJoyStick2SRXDriveBaseDisabled);
+	}
+	// ===========================================
+	// DRIVERIF FILTERING FUNCTIONS
 
 	public double CheckTurnSensitivityFilter(double _throttle, double _turn) {
 		
@@ -312,7 +324,6 @@ public class TeleopController {
 		if(Math.abs(num) > 1){
 			num = Math.signum(num)* 1.0;
 		} 
-		
 		return num;
 	}
 	// This caps number and remaps to 0 -> 1 range
@@ -329,8 +340,9 @@ public class TeleopController {
 		}
 		return num;
 	}
+	
 	private double joyDeadBand(double num){
-		if (Math.abs(num) < kJoyStickDeadBand) {
+		if (Math.abs(num) <= kJoyStickDeadBand) {
 			num = 0;
 		}
 		return num;

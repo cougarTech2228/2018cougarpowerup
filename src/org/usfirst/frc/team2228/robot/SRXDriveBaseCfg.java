@@ -138,14 +138,17 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
+		public static double kDriveStraightFwdCorrection = 0.93; // Hard floor correction 0.87;
+		public static double kDriveStraightRevCorrection = 0.93;
 		
-		public static double kRotateDriveStraightCorrection = 0.75;// fwd-.93
+		public static double kRotateCWDriveStraightCorrection = 0.75;// fwd-.93
+		public static double kRotateCCWDriveStraightCorrection = 0.75;
+		
+		public static double kTurnRightDriveStraightCorrection = 1;
+		public static double kTurnLeftDriveStraightCorrection = 1;
 		
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
-		
-		public static double kPivotLimit = .35;
 	
 		//================================================
 		// DRIVE TRAIN STALL PARAMETERS
