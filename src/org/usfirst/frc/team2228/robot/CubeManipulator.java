@@ -1,64 +1,82 @@
 package org.usfirst.frc.team2228.robot;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator {
 	public DriverIF driverIf;
-	public XboxController xbox;
-	private WPI_TalonSRX left;
-	private WPI_TalonSRX right;
-	private WPI_TalonSRX squeeze;
+	private Spark left;
+	private Spark right;
 	private double cubeCollectionValue;
 	private double cubeExpulsionValue;
-	private double cubeGripValue;
-	private double cubeReleaseValue;
+	private boolean triggered = false;
+	boolean triggered2 = false;
+	private boolean lastButton = false;
+	boolean lastButton2 = false;
 
 	public CubeManipulator(DriverIF _driverIf) {
 		driverIf = _driverIf;
-		left = new WPI_TalonSRX(RobotMap.CAN_ID_5);
-		right = new WPI_TalonSRX(RobotMap.CAN_ID_6);
-		squeeze = new WPI_TalonSRX(RobotMap.CAN_ID_7);
-		// XboxController xbox = new XboxController();
-		SmartDashboard.putNumber("CollectionValue", 0.1);
-		SmartDashboard.putNumber("ExpulsionValue", -0.1);
-		SmartDashboard.putNumber("GripValue", 0.1);
-		SmartDashboard.putNumber("ReleaseValue", -0.1);
+		left = new Spark(RobotMap.PWM_PORT_0);
+		right = new Spark(RobotMap.PWM_PORT_1);
 		
+		SmartDashboard.putNumber("CollectionValue", 0.75);
+		SmartDashboard.putNumber("ExpulsionValue", -0.75);
 		
-		left.set(ControlMode.PercentOutput, 0);
-		right.set(ControlMode.PercentOutput, 0);
-		right.setInverted(true);
-		squeeze.set(ControlMode.PercentOutput, 0);
+		// positive is clockwise, negative is counter clockwise
+		left.set(0);
+		right.set(0);
+		left.setInverted(true);
 		// Nice code dude
 	}
 
 	public void teleopPeriodic() {
-		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.1);
-		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.1);
-		cubeGripValue = SmartDashboard.getNumber("GripValue", 0.1);
-		cubeReleaseValue = SmartDashboard.getNumber("ReleaseValue", -0.1);
-		right.set(0);
-		left.set(0);
-		squeeze.set(0);
-
-		if (driverIf.collection()) {
+		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.8);
+		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.8);
+//		if (driverIf.collection()) {
+//			left.set(cubeCollectionValue);
+//			right.set(cubeCollectionValue);
+//			triggered = true;
+//		}
+//		else if (driverIf.expulsion()) {
+//			left.set(cubeExpulsionValue);
+//			right.set(cubeExpulsionValue);
+//			triggered = false;
+//		}
+//		else{
+//			left.set(0);
+//			right.set(0);
+//		}
+		
+		if (!driverIf.collectionToggle() && lastButton && triggered == false) {
 			left.set(cubeCollectionValue);
-			right.set(-cubeCollectionValue);
+			right.set(cubeCollectionValue);
+			triggered = true;
+			System.out.println("Suck in");
 		}
-		if (driverIf.expulsion()) {
+		else if (!driverIf.collectionToggle() && lastButton && triggered == true) {
+			left.set(0);
+			right.set(0);
+			triggered = false;
+		}
+		if (!driverIf.expulsion() && lastButton2 && triggered2 == false) {
 			left.set(cubeExpulsionValue);
-			right.set(-cubeExpulsionValue);
+			right.set(cubeExpulsionValue);
+			triggered2 = true;
 		}
-		if (driverIf.squeeze()) {
-			squeeze.set(cubeGripValue);
+		else if (!driverIf.expulsion() && lastButton2 && triggered2 == true) {
+			left.set(0);
+			right.set(0);
+			triggered2 = false;
 		}
-		if (driverIf.release()) {
-			squeeze.set(cubeReleaseValue);
-		}
+		
+//		else if(driverIf.expulsion()){
+//		left.set(cubeExpulsionValue);
+//		right.set(cubeExpulsionValue);
+//		}
+		lastButton = driverIf.collectionToggle();
+		lastButton2 = driverIf.expulsion();
+		
 	}
-
+			
 }
+
+

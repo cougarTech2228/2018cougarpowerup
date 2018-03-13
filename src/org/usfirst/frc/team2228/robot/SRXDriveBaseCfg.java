@@ -4,7 +4,7 @@ public class SRXDriveBaseCfg {
 		// program control flags
 		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		
 		
 		// ===============================================
@@ -26,16 +26,16 @@ public class SRXDriveBaseCfg {
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
 		public static boolean isBrakeEnabled = true;
 		
-		public static double kAutoRightMoveStopBrakeValue = 0.0;
-		public static double kAutoLeftMoveStopBrakeValue = 0.0;
+		public static double kAutoRightMoveStopBrakeValue = 0.5;
+		public static double kAutoLeftMoveStopBrakeValue = 0.5;
 		
-		public static double kAutoRightRotateStopBrakeValue = 0.0;
-		public static double kAutoLeftRotateStopBrakeValue = 0.0;
+		public static double kAutoRightRotateStopBrakeValue = .5;
+		public static double kAutoLeftRotateStopBrakeValue = 0.5;
 		
 		public static double kAutoRightTurnStopBrakeValue = 0.0;
 		public static double kAutoLeftTurnStopBrakeValue = 0.0;
 		
-		public static double kTeleStopBrakeValue = 0.05;
+		public static double kTeleStopBrakeValue = 0;
 		
 		public static double kAutoMoveCoastToStopCounts = 0;
 		public static double kAutoRotateCoastToStopCounts = 0;
@@ -75,8 +75,8 @@ public class SRXDriveBaseCfg {
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir => is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = false;
-		public static boolean isLeftEncoderSensorReversed = false;
+		public static boolean isRightEncoderSensorReversed = true;
+		public static boolean isLeftEncoderSensorReversed = true;
 		
 		// =======================================
 		// ROBOT MEASUREMENTS/DATA:
@@ -138,7 +138,7 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightCorrection = 0.93; // Hard floor correction 0.87;
+		public static double kDriveStraightCorrection = 0.95; // Hard floor correction 0.87;
 		
 		public static double kRotateDriveStraightCorrection = 0.75;// fwd-.93
 		

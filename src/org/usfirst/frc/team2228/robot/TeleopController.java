@@ -118,7 +118,7 @@ public class TeleopController {
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(throttle);
 			throttle = CheckAccelFilter(throttle);
-		//	throttle = CheckDriverStopping(throttle);
+			//throttle = CheckDriverStopping(throttle);
 		}
 		
 		// Re-check that values are not over 1

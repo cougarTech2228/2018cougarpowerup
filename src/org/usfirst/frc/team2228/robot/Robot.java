@@ -1,12 +1,9 @@
 package org.usfirst.frc.team2228.robot;
 
-import org.usfirst.frc.team2228.commands.StringCommand;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -17,36 +14,52 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	private String input = "";
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
-	String autoSelected;
-	SendableChooser<String> chooser = new SendableChooser<>();
+
 	private SRXDriveBase base;
-	//private TestSRXDriveBase testSRXDriveBase;
-	private StringCommand command;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
-	private TeleopController chessyDrive;
-	
+	private TeleopController driverDriveBaseControl;
+	private AutoMaster auto;
+	private Elevator elevator;
+	private PneumaticController pc;
+	private AnalogUltrasonic au;
+	//private CANLED LED;
+	private AngleIF angleIF;
+	private CameraController camController;
+	// private CANLED LED;
+	// private AngleIF angle;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	
+
 	@Override
 	public void robotInit() {
+
 		driverIF = new DriverIF();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
-		chessyDrive = new TeleopController(driverIF, base);
-		//testSRXDriveBase = new TestSRXDriveBase(base);
+		driverDriveBaseControl = new TeleopController(driverIF, base);
+		pc = new PneumaticController(driverIF);
+		elevator = new Elevator(driverIF, pc, driverDriveBaseControl);
+		auto = new AutoMaster(base, elevator, pc);
+		au = new AnalogUltrasonic();
+		angleIF = new AngleIF();
+		camController = new CameraController();
+//		base.setAngleIF(angleIF);
+		//base.setCorrectionSensor(3); // navx
+		
+
+		// LED = new CANLED();
+		// LED.colorInit();
+		// angle = new AngleIF();
+		// LED = new CANLED();
+		// LED.colorInit();
+		// angle = new AngleIF();
+		
 	}
 
-	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -60,30 +73,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-		StringCommand command = new StringCommand(input);
-		//command.start();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		if(gameData.charAt(0) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(1) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(2) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
+		// Gets everything from Autonomous Init from the AutoMaster class
+		angleIF.zeroYaw();
+		auto.init();
+		base.setSRXDriveBaseInit();
 	}
 
 	/**
@@ -91,41 +84,43 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		//Scheduler.getInstance().run();
-		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
-			break;
-		case defaultAuto:
-		default:
-			// Put default auto code here
-			break;
-		}
+		// Gets everything from the Autonomous Periodic from the AutoMaster
+		// class
+		auto.run();
 	}
-
+	
 	public void teleopInit() {
-		System.out.println("teleopInit() fi!");
-		//chessyDrive.teleopInit();
-		System.out.println("Teleop Init done");
+		auto.teleopInit();
+		angleIF.zeroYaw();
+		base.setSRXDriveBaseInit();
 	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
-		chessyDrive.teleopPeriodic();
-		//base.teleopPeriodic();
-		//cube.teleopPeriodic();
+		// Gets everything from the generic drivebase, the CubeManipulator
+		// class, the Pneumatic class and the Elevatorclass for the teleop
+		// period
+		driverDriveBaseControl.teleopPeriodic();
+		cube.teleopPeriodic();
+		pc.teleopPeriodic();
+		elevator.teleopPeriodic();
+		camController.cameraCommand();
+		// LED.allianceColorLED();
+		// LED.autonomousColorInit();
+		// LED.rainbowShift();
+		//au.roundTo(0.0001);
+		// System.out.println(au.getDistance1());
+		SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+
 	}
 	
-	/**
-	 * This function is called once during test mode
-	 */
 	@Override
 	public void testInit() {
 		base.setSRXDriveBaseInit();
 	}
-	
 	/**
 	 * This function is called periodically during test mode
 	 */
@@ -133,6 +128,7 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		base.testMethodSelection();
 	}
-				
-}
 
+
+
+}
