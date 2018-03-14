@@ -436,7 +436,7 @@ public class SRXDriveBase {
 	public double getLeftSensorPosition(){
 		// This value is updated every 20ms
 		if (SRXDriveBaseCfg.isLeftEncoderSensorReversed){
-
+			//changed for lamda as of 3/9/18
 			return driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);
 		} else{
 			return -driveLeftMasterMtr.getSelectedSensorPosition(SRXDriveBaseCfg.kPIDLoopIDx);

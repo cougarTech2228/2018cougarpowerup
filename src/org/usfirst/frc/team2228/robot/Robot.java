@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 		chessyDrive = new TeleopController(driverIF, base);
 
 		pc = new PneumaticController(driverIF);
-		elevator = new Elevator(driverIF, pc);
+		elevator = new Elevator(driverIF, pc, chessyDrive);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
@@ -124,5 +124,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
-
+	
 }

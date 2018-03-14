@@ -4,7 +4,7 @@ import org.usfirst.frc.team2228.robot.SRXDriveBase;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class RotateTo extends Command {
+public class TurnTo extends Command {
 	private boolean isDone;
 	private SRXDriveBase base;
 	private double ToAngle, PowerLvl;
@@ -13,21 +13,23 @@ public class RotateTo extends Command {
 	private double turnAngleDeg;
 	private double turnRadiusIn;
 	
-	public RotateTo(SRXDriveBase base, double _turnAngleDeg, double _PowerLvl) {
+	public TurnTo(SRXDriveBase base, double _turnAngleDeg, double _turnRadiusIn, double _PowerLvl, boolean _isDirectionReversed, boolean _isCascadeTurn) {
 		PowerLvl = _PowerLvl;
 		this.base = base;
+		isDirectionReversed = _isDirectionReversed;
+		isCascadeTurn = _isCascadeTurn;
 		turnAngleDeg = _turnAngleDeg;
+		turnRadiusIn = _turnRadiusIn;
 	}
 	
 	protected void initialize() {
-		base.setLeftEncPositionToZero();
-		base.setRightEncPositionToZero();
+		
 		System.out.println("initialized");
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.rotateToAngle(turnAngleDeg, PowerLvl);
+		isDone = !base.turnByEncoderToAngle(turnAngleDeg, turnRadiusIn, PowerLvl, isDirectionReversed, isCascadeTurn);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

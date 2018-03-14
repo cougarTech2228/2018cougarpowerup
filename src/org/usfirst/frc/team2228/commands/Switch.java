@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class Switch extends Command {
 	Elevator elevator;
-    public Switch(Elevator _elevator) {
-    	super(3.0);
+    public Switch(Elevator _elevator, double timeout) {
+    	super(timeout);
     	elevator = _elevator;
     	
         // Use requires() here to declare subsystem dependencies
