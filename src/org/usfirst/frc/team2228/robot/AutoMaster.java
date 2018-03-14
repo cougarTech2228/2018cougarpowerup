@@ -20,7 +20,7 @@ public class AutoMaster {
 	final String baseLineAuto = "Baseline";
 	final String leftSwitchAuto = "Left Switch";
 	final String rightSwitchAuto = "Right Switch";
-	private char[] positions;
+	final String rightSwitchTurnAuto = "Right Switch Turn";
 	private SRXDriveBase base;
 	private String autoSelected;
 	private String input = "";
@@ -46,6 +46,7 @@ public class AutoMaster {
 		elevator = _elevator;
 		chooser.addObject("Baseline", baseLineAuto);
 		chooser.addObject("Right Switch", rightSwitchAuto);
+		chooser.addObject("Right Switch Turn", rightSwitchTurnAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		SmartDashboard.putNumber("Wait Time", 0);
 		// BOOP BEEP BOP BEEPEDIE BOOP BOP
@@ -69,8 +70,7 @@ public class AutoMaster {
 		Scheduler.getInstance().removeAll();
 		Cg = new CommandGroup();
 		
-		base.setRightEncPositionToZero();
-		base.setLeftEncPositionToZero();
+		base.setSRXDriveBaseInit();
 		autoSelected = chooser.getSelected();
 		String gameData = "";
 		gameData += DriverStation.getInstance().getGameSpecificMessage();
@@ -103,7 +103,7 @@ public class AutoMaster {
 //			// Adds movement to the auto sequence
 //			Cg.addSequential(
 //					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
-			
+			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			Cg.addSequential(new RotateTo(base, 45, speed));
 			break;
 
@@ -160,7 +160,35 @@ public class AutoMaster {
 
 			// Scale cube command
 			break;
+		case "Right Switch Turn":
+			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
+			System.out.println("Left Switch selected");
+			// Adds movement to the auto sequence
+			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
+			// After half a second the bot starts moving
+			Cg.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH - Dimensions.LENGTH_OF_ROBOT + 12.0),
+					speed, false, 4.0));
+			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
+			// While the bot is moving, it continues closing the aquirer arms for another
+			// second and a half
+			Cg.addParallel(new PneumaticGrabber(pneu, true, 1.5));
+			// If the left side of the switch is ours, it places the cube, if not, it does
+			// nothing
+			if (data == GameData.firstIndexR) {
+				Cg.addSequential(new RotateTo(base, 180, speed));
+				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
+				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
+				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addParallel(new Switch(elevator, 2.0));
+			} else {
+				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
+				System.out.println("Incorrect game data");
+			}
+
+			// Scale cube command
+			break;
 		}
+
 		Cg.start();
 	}
 

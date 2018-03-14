@@ -80,14 +80,21 @@ public class Elevator {
 		triggered2 = false;
 		timer = new Timer();
 		elevator.configOpenloopRamp(2, 0);
+		
 
 	}
 	public void SlowRobot() {
+		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
-		if(encoders > -500000)
-		tc.SetMaxThrottlePower(1.0);
+		if(encoders > -500000) {
+			if(!pneu.lift.get())
+				tc.SetMaxThrottlePower(0.5);
+			else
+				tc.SetMaxThrottlePower(0.75);
+		}
 		else
 		tc.SetMaxThrottlePower(0.2);
+		
 		System.out.println("Encoder Counts: " + encoders);
 	}
 
