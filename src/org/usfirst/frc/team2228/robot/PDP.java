@@ -14,4 +14,7 @@ public class PDP {
 	public double getCurrent(int port) {
 		return p.getCurrent(port);
 	}
+	public double getVoltage() {
+		return p.getVoltage();
+	}
 }

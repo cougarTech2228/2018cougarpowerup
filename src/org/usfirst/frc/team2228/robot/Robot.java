@@ -31,6 +31,8 @@ public class Robot extends IterativeRobot {
 	UsbCamera frontCamera;
 	//private CANLED LED;
 	private AngleIF angleIF;
+	private PDP pdp;
+	private boolean lowVoltage;
 //	private UsbCamera backCamera;
 //	private UsbCamera cam;
 
@@ -44,7 +46,7 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		cube = new CubeManipulator(driverIF);
+		cube = new CubeManipulator(driverIF, pc);
 		chessyDrive = new TeleopController(driverIF, base);
 
 		pc = new PneumaticController(driverIF);
@@ -107,6 +109,14 @@ public class Robot extends IterativeRobot {
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
+		SmartDashboard.putNumber("Battery Voltage", pdp.getVoltage());
+		if(pdp.getVoltage() < 11.8) {
+			lowVoltage = true;
+		}
+		else {
+			lowVoltage = false;
+		}
+		
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
@@ -115,7 +125,7 @@ public class Robot extends IterativeRobot {
 		// System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
-
+		SmartDashboard.putBoolean("Low Voltage", lowVoltage);
 	}
 
 	/**

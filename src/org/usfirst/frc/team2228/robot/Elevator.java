@@ -18,7 +18,6 @@ public class Elevator {
 	WPI_TalonSRX elevator;
 	DMC60 conveyor1, conveyor2;
 	WPI_TalonSRX winch;
-	Relay hook;
 	Spark hookDown;
 	PneumaticController pneu;
 	DigitalInput limitSwitch, leftLimitSwitch, rightLimitSwitch, hookArmDownwards, hookArmUpwards;
@@ -60,8 +59,6 @@ public class Elevator {
 		hookArmDownwards = new DigitalInput(RobotMap.DIO_PORT_2);
 		hookArmUpwards = new DigitalInput(RobotMap.DIO_PORT_3);
 		elevator.set(0);
-		hook = new Relay(0, Relay.Direction.kForward);
-		hook.set(Relay.Value.kForward);
 		hookDown = new Spark(RobotMap.PWM_PORT_4);
 		hookDown.set(0);
 		SmartDashboard.putNumber("back conveyor:", 0);
@@ -82,12 +79,13 @@ public class Elevator {
 		elevator.configOpenloopRamp(2, 0);
 
 	}
+
 	public void SlowRobot() {
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
-		if(encoders > -500000)
-		tc.SetMaxThrottlePower(1.0);
+		if (encoders > -500000)
+			tc.SetMaxThrottlePower(1.0);
 		else
-		tc.SetMaxThrottlePower(0.2);
+			tc.SetMaxThrottlePower(0.2);
 		System.out.println("Encoder Counts: " + encoders);
 	}
 
@@ -96,13 +94,14 @@ public class Elevator {
 		SlowRobot();
 		// SmartDashboard.getNumber("Elevator Speed:", 0);
 		// b is the speed of the
-
-		if (driverIF.hookForward() && hookArmUpwards.get()) {
-			hookDown.set(.4);
-		} else if (driverIF.hookBackward() && hookArmDownwards.get()) {
-			hookDown.set(-.4);
-		} else {
-			hookDown.set(0);
+		if (Timer.getFPGATimestamp() > 105) {
+			if (driverIF.hookForward() && hookArmUpwards.get()) {
+				hookDown.set(.4);
+			} else if (driverIF.hookBackward() && hookArmDownwards.get()) {
+				hookDown.set(-.4);
+			} else {
+				hookDown.set(0);
+			}
 		}
 
 		if (driverIF.RaiseElevator()) {
@@ -161,11 +160,8 @@ public class Elevator {
 		lastButton1 = driverIF.conveyorsForward();
 		lastButton2 = driverIF.conveyorsBackward();
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
-		if (LaunchValue == 1) {
-			hook.set(Relay.Value.kOff);
-		}
 		if (driverIF.winchWindUp()) {
-			winch.set(.7);
+			winch.set(1);
 		} else {
 			winch.set(0);
 		}
@@ -195,7 +191,8 @@ public class Elevator {
 		}
 		return false;
 	}
-	public void elevatorSet(double speed){
+
+	public void elevatorSet(double speed) {
 		elevator.set(speed);
 	}
 

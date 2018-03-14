@@ -23,6 +23,7 @@ public class PneumaticController {
 	public PneumaticController(DriverIF _driverIF) {
 		driverIF = _driverIF;
 		brakeSet(false);
+		SmartDashboard.putBoolean("Arm State", !lift.get());
 	}
 
 	public void teleopPeriodic() {
@@ -56,6 +57,8 @@ public class PneumaticController {
 			System.out.println("cubeRotatedown toggle active");
 		}
 		lastButton2 = driverIF.cubeRotateToggle();
+		SmartDashboard.putBoolean("Arm State", !lift.get());
+		SmartDashboard.putBoolean("Squeeze State", squeezies.get());
 	}
 	public void liftSet(boolean state){
 		lift.set(state);

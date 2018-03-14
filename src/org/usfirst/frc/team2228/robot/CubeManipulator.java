@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator {
@@ -12,9 +13,13 @@ public class CubeManipulator {
 	boolean triggered2 = false;
 	private boolean lastButton = false;
 	boolean lastButton2 = false;
+	private PneumaticController pc;
+	private Timer timer;
+	
 
-	public CubeManipulator(DriverIF _driverIf) {
+	public CubeManipulator(DriverIF _driverIf, PneumaticController _pc) {
 		driverIf = _driverIf;
+		pc = _pc;
 		left = new Spark(RobotMap.PWM_PORT_0);
 		right = new Spark(RobotMap.PWM_PORT_1);
 		
@@ -66,6 +71,14 @@ public class CubeManipulator {
 			left.set(0);
 			right.set(0);
 			triggered2 = false;
+		}
+		if(pc.squeezies.get() && triggered) {
+			timer.start();
+			if(timer.get() >= 0.5) {
+				left.set(0);
+				right.set(0);
+				triggered = false;
+			}
 		}
 		
 //		else if(driverIf.expulsion()){
