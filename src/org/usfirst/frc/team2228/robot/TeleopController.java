@@ -13,7 +13,7 @@ public class TeleopController {
 	//================================
 	// SWITCHES
 	
-	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isTeleopConsoleDataEnabled = true;
 	private boolean isJoyStick2SRXDriveBaseDisabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
@@ -33,8 +33,8 @@ public class TeleopController {
     public static double kTurnSensitivityGain = 0.3;
 	
 	// Range of smoothFactorValue is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
-	public static double kLowSmoothFactor = 0.5;
-	public static double kHighSmoothFactor = 0.95;
+	public static double kLowSmoothFactor = 0.4;
+	public static double kHighSmoothFactor = 0.7;
 	//public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max throttle delta values are determined by testing
@@ -44,6 +44,7 @@ public class TeleopController {
 	
 	//======================================
 	// VARIABLES
+	private int scanCounter = 0;
 	private double origThrottle = 0;
 	private double origTurn = 0;
 
@@ -62,7 +63,7 @@ public class TeleopController {
 	private double previousStopAccum = 0;
 
 	private double maxThrottleLimit = .7;
-	private double maxTurnLimit = .3;
+	private double maxTurnLimit = .5;
 	
 	private String lastMsgString = " ";
 	private double maxThottlePowerLevel = 0;
@@ -122,7 +123,7 @@ public class TeleopController {
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(throttle);
 			throttle = CheckAccelFilter(throttle);
-		//	throttle = CheckDriverStopping(throttle);
+			//throttle = CheckDriverStopping(throttle);
 		}
 		
 		// Re-check that values are not over 1
@@ -140,9 +141,9 @@ public class TeleopController {
 		
 		// =======================================
 		// DRIVE ROBOT
-		if(!isJoyStick2SRXDriveBaseDisabled){
-			driveBase.setThrottleTurn(throttle, turn);
-		}
+		//if(!isJoyStick2SRXDriveBaseDisabled){
+		driveBase.setThrottleTurn(throttle, turn);
+		//}
 		
 		// ++++++++++++++++++++++++++++++++++++
 		// Display
@@ -250,7 +251,35 @@ public class TeleopController {
 		}
 		return adjustedValue;
 	}
-	// ANTI-LOCK BRAKING IN TELEOP
+//	// ANTI-LOCK BRAKING IN TELEOP
+//	public double CheckDriverStopping(double _throttleForStopCheck){
+//		// check every two scans
+//		if(isStopCheckToggleActive){
+//			deltaThrottleForStopCheck = _throttleForStopCheck - previousThrottleForStopCheck;
+//			previousThrottleForStopCheck = _throttleForStopCheck;
+//		}
+//		isStopCheckToggleActive = !isStopCheckToggleActive;
+//		
+//		// check if decelerating
+//		if((_throttleForStopCheck > 0) && (deltaThrottleForStopCheck < 0 ) ||
+//					(_throttleForStopCheck < 0) && (deltaThrottleForStopCheck > 0 )){
+//				
+//			// Decelerating
+//			if(Math.abs(_throttleForStopCheck) < 0.5) {
+//				_throttleForStopCheck = _throttleForStopCheck - Math.signum(_throttleForStopCheck)*stopAccum;
+//				// add delta to stopAccum
+//				stopAccum = previousStopAccum + Math.abs(deltaThrottleForStopCheck);
+//				cap(stopAccum);
+//				previousStopAccum = stopAccum;
+//			}
+//		} else {
+//			stopAccum = 0;
+//			previousStopAccum = 0;
+//		}
+//		
+//		return _throttleForStopCheck;
+//	}
+//	
 	public double CheckDriverStopping(double _throttleForStopCheck){
 		// check every two scans
 		if(isStopCheckToggleActive){
@@ -268,7 +297,7 @@ public class TeleopController {
 				_throttleForStopCheck = _throttleForStopCheck - Math.signum(_throttleForStopCheck)*stopAccum;
 				// add delta to stopAccum
 				stopAccum = previousStopAccum + Math.abs(deltaThrottleForStopCheck);
-				cap(stopAccum);
+				stopAccum = cap(stopAccum);
 				previousStopAccum = stopAccum;
 			}
 		} else {
@@ -278,8 +307,6 @@ public class TeleopController {
 		
 		return _throttleForStopCheck;
 	}
-	
-
 	// ACCELERATION FILTER
 	// The accel filter follows the actions of the driver. If the
 	// driver exceeds the cap of robot accel/decel capability the tipping
@@ -291,8 +318,8 @@ public class TeleopController {
 	public double CheckAccelFilter(double _ThrottleValue) {
 		
 		// makes execution 2xscan = approx 40ms now
-		isToggleFlagState = !isToggleFlagState;
-		if(isToggleFlagState){
+		scanCounter += 1;
+		if(scanCounter % 3 == 0){
 			accelFltrThrottleValue = _ThrottleValue;
 		
 			// determine change for last driverIF read
