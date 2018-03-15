@@ -54,6 +54,7 @@ public class MoveTo extends Command {
 	protected void end() {
 		if(isTimedOut()) {
 			base.setStopMotors();
+			base.setInitialStateForSRXDrvBasePrgFlgs();
 		}
 		endLeftCounts = base.getLeftEncoderPosition();
 		endRightCounts = base.getRightEncoderPosition();

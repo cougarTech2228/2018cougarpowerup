@@ -15,7 +15,7 @@ public class SRXDriveBaseCfg {
 //		public static boolean isDriveRightMasterMtrReversed = true;
 //		public static boolean isDriveRightFollowerMtrReversed = true;
 //		public static boolean isDriveLeftMasterMtrReversed = false;
-//		public static boolean isDriveLeftFollowerMtrReversed = false;
+//		public static boolean isDriveLeftFollowerMtrReversed = false;s
 //		//I created a boolean that reverses turn in TeleopController by adding a - symbol
 //		public static boolean isTurnReversed = true;
 ////		public static boolean isThrottleReversed = false;
@@ -159,7 +159,9 @@ public class SRXDriveBaseCfg {
 
 		public static double kDriveStraightCorrection = 1.02;
 		public static double kRotateDriveStraightCorrection = 1.00;	
-		        // Mew 0.9150
+		public static double kRotateCWDriveStraightCorrection = 1.00;
+		public static double kRotateCCWDriveStraightCorrection = 1.00;
+				// Mew 0.9150
 				//for test bot 1.0805;
 		        // for Lamda 0.98
 				//for robox 0.93; 

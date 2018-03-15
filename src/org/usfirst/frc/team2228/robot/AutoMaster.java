@@ -101,10 +101,10 @@ public class AutoMaster {
 //			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 //			System.out.println("Baseline selected");
 //			// Adds movement to the auto sequence
-//			Cg.addSequential(
-//					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
+			Cg.addSequential(
+					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
-			Cg.addSequential(new RotateTo(base, 45, speed));
+			
 			break;
 
 		case "Left Switch":
@@ -175,7 +175,7 @@ public class AutoMaster {
 			// If the left side of the switch is ours, it places the cube, if not, it does
 			// nothing
 			if (data == GameData.firstIndexR) {
-				Cg.addSequential(new RotateTo(base, 180, speed));
+				Cg.addSequential(new RotateTo(base, -45, speed));
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
 				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
 				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
