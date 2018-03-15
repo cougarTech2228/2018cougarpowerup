@@ -12,24 +12,24 @@ public class SRXDriveBaseCfg {
 		// ==============================================================
 		// SET MOTOR DIRECTION
 //		// THESE ARE FOR MU
-//		public static boolean isDriveRightMasterMtrReversed = true;
-//		public static boolean isDriveRightFollowerMtrReversed = true;
-//		public static boolean isDriveLeftMasterMtrReversed = false;
-//		public static boolean isDriveLeftFollowerMtrReversed = false;s
-//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-//		public static boolean isTurnReversed = true;
-////		public static boolean isThrottleReversed = false;
-		
-		//===============================================
-		// SET MOTOR DIRECTION
-		// THESE ARE FOR MU 2
 		public static boolean isDriveRightMasterMtrReversed = false;
 		public static boolean isDriveRightFollowerMtrReversed = false;
 		public static boolean isDriveLeftMasterMtrReversed = true;
 		public static boolean isDriveLeftFollowerMtrReversed = true;
 		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-		public static boolean isTurnReversed = false;
+		public static boolean isTurnReversed = true;
 //		public static boolean isThrottleReversed = false;
+		
+		//===============================================
+		// SET MOTOR DIRECTION
+		// THESE ARE FOR MU 2
+//		public static boolean isDriveRightMasterMtrReversed = false;
+//		public static boolean isDriveRightFollowerMtrReversed = false;
+//		public static boolean isDriveLeftMasterMtrReversed = true;
+//		public static boolean isDriveLeftFollowerMtrReversed = true;
+//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+//		public static boolean isTurnReversed = false;
+////		public static boolean isThrottleReversed = false;
 //		===============================================
 		// BRAKE AND COAST PARAMETERS
 		// sets SRX zero speed brake mode to brake(true) and coast(false)

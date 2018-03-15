@@ -150,8 +150,9 @@ public class AutoMaster {
 			if (data == GameData.firstIndexR) {
 				// If the right side of the switch is ours, it places the cube while opening the
 				// aquirer arms
+				Cg.addParallel(new MoveTo(base, 3, speed / 2, false, 2.0));
 				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
-				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
+				Cg.addParallel(new ElevatorAuto(elevator, 4.0));
 				Cg.addParallel(new Switch(elevator, 2.0));
 
 			} else {
@@ -162,7 +163,7 @@ public class AutoMaster {
 			break;
 		case "Right Switch Turn":
 			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
-			System.out.println("Left Switch selected");
+			System.out.println("Right Switch turn selected");
 			// Adds movement to the auto sequence
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving

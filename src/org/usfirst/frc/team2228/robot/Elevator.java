@@ -115,7 +115,7 @@ public class Elevator {
 		if (driverIF.RaiseElevator()) {
 			pneu.brakeSet(off);
 			pneu.squeezeSet(false);
-			elevator.set(-b);
+			elevator.set(b);
 			// if(elevator.getSelectedSensorPosition(0) == -1){
 			// elevator.set(0);
 			//
@@ -123,7 +123,7 @@ public class Elevator {
 
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
-			slowElevator(b);
+			slowElevator(-b);
 
 			pneu.squeezeSet(false);
 			if (!leftLimitSwitch.get()) {
@@ -134,7 +134,7 @@ public class Elevator {
 			// elevator.set(0);
 			// }
 		} else {
-			elevator.set(-0.05);
+			elevator.set(0.05);
 			pneu.brakeSet(on);
 		}
 
@@ -172,7 +172,7 @@ public class Elevator {
 			hook.set(Relay.Value.kOff);
 		}
 		if (driverIF.winchWindUp()) {
-			winch.set(.7);
+			winch.set(1);
 		} else {
 			winch.set(0);
 		}
@@ -182,9 +182,10 @@ public class Elevator {
 
 	public void slowElevator(double speed) {
 		if (elevator.getSensorCollection().getQuadraturePosition() > 10000) {
-			elevator.set(speed);
+			elevator.set(-speed);
 		} else {
-			elevator.set(0.2);
+			elevator.set(-0.2);
+			System.out.println("Slowing elevator");
 		}
 	}
 

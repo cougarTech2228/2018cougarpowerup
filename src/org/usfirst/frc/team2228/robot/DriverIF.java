@@ -51,7 +51,7 @@ public class DriverIF {
 	}
 
 	public boolean expulsion() {
-		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
+		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
 			return true;
 		} else {
 			return false;
@@ -59,11 +59,11 @@ public class DriverIF {
 	}
 
 	public boolean collectionToggle() {
-		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
+		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
 			return true;
 		} else {
 			return false;
-		}
+		}//
 	}
 
 	public double Turn() {
@@ -119,6 +119,10 @@ public class DriverIF {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean camSwitch() {
+		return xboxIF.POV_LEFT();
 	}
 
 }
