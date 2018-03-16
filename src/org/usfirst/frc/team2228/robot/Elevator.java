@@ -86,7 +86,7 @@ public class Elevator {
 	public void SlowRobot() {
 		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
-		if(encoders > -500000) {
+		if(encoders < 500000) {
 			if(!pneu.lift.get())
 				tc.SetMaxThrottlePower(0.5);
 			else
@@ -178,10 +178,11 @@ public class Elevator {
 		}
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
+		System.out.println("Elevator Encoder cts:" + elevator.getSensorCollection().getQuadraturePosition());
 	}
 
 	public void slowElevator(double speed) {
-		if (elevator.getSensorCollection().getQuadraturePosition() > 10000) {
+		if (elevator.getSensorCollection().getQuadraturePosition() < 10000) {
 			elevator.set(-speed);
 		} else {
 			elevator.set(-0.2);

@@ -15,9 +15,9 @@ public class CameraController {
 	private boolean cam0Used;
 	private boolean cam1Used;
 
-	public CameraController() {
-
+	public CameraController(DriverIF _driverIF) {
 		toggler = new Toggler(2);
+		this.driverIF = _driverIF;
 		int intcam0 = 0;
 		int intcam1 = 1;
 		// camera0 = new UsbCamera("USB Camera " + intcam0, intcam0);
@@ -28,9 +28,6 @@ public class CameraController {
 		server = CameraServer.getInstance().getServer();
 		// CameraServer.getInstance().addCamera(camera1);
 		server.setSource(camera0);
-	}
-	public CameraController(DriverIF _driverIF) {
-		this.driverIF = _driverIF;
 	}
 
 	public void cameraCommand() {
