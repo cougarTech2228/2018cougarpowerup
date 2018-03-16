@@ -31,7 +31,7 @@ public class TeleopController {
 	private boolean isStopCheckToggleActive = false;
 	
 	private double maxThrottle = 1;
-	private double maxTurn = .25;
+	private double maxTurn = .5;
 
 	private double accelFltrThrottleValue = 0;
 	private double deltaThrottleForStopCheck =0;
@@ -136,6 +136,7 @@ public class TeleopController {
 				throttle,
 				origTurn,
 				turn);
+//			System.out.println("Left Encoders: " + driveBase.getLeftEncoderPosition() + " Right Encoders: " + driveBase.getRightEncoderPosition());
 		}
 	}
 	public void SetMaxThrottlePower(double _maxThrottlePowerLevel) {

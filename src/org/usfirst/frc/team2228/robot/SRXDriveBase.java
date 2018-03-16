@@ -54,9 +54,9 @@ public class SRXDriveBase {
 	//private double rightDrvTrainTargetPosSetPt;
 	//private double leftDrvTrainTargetPosSetPt;
 	
-	private double leftCmdLevel = 0;
+	public double leftCmdLevel = 0;
 	//private double lastLeftCmdLevel = 0;
-	private double rightCmdLevel = 0;
+	public double rightCmdLevel = 0;
 	private double leftSensorVelocity = 0;
 	private double rotationEncoderStopCount = 0;
 	private double driveStraightDirCorrection = 0;
@@ -99,7 +99,7 @@ public class SRXDriveBase {
 	private double methodTime = 0;
 	
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = false;
+	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	

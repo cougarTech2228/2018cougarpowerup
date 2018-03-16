@@ -15,23 +15,25 @@ public class CameraController {
 	private boolean cam0Used;
 	private boolean cam1Used;
 
-	public CameraController(DriverIF _driverIF) {
+	public CameraController() {
+
+		driverIF = new DriverIF();
 		toggler = new Toggler(2);
-		this.driverIF = _driverIF;
 		int intcam0 = 0;
 		int intcam1 = 1;
 		// camera0 = new UsbCamera("USB Camera " + intcam0, intcam0);
+		
 		camera0 = CameraServer.getInstance().startAutomaticCapture(0);
 		// server = CameraServer.getInstance().addServer("serve_" + camera0.getName());
 		// camera1 = new UsbCamera("USB Camera " + intcam1, intcam1);
 		camera1 = CameraServer.getInstance().startAutomaticCapture(1);
-		server = CameraServer.getInstance().getServer();
 		// CameraServer.getInstance().addCamera(camera1);
+		server = CameraServer.getInstance().getServer();
 		server.setSource(camera0);
 	}
 
 	public void cameraCommand() {
-		if (toggler.toggle(driverIF.camSwitch()) == 0) {
+		if (driverIF.camSwitch()) {
 			if (cam0Used) {
 				server.setSource(camera1);
 				cam0Used = false;

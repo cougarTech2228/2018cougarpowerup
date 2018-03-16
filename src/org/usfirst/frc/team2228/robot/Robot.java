@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		cam = new CameraController(driverIF);
+		cam = new CameraController();
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc, chessyDrive);
 		auto = new AutoMaster(base, elevator, pc);
@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 		angleIF = new AngleIF();
 		base.setAngleIF(angleIF);
 		
-		//base.setCorrectionSensor(3); // navx
+//		base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
 //		backCamera = new UsbCamera("Back Camera", 1);
