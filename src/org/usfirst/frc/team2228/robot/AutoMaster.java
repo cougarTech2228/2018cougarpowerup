@@ -46,7 +46,7 @@ public class AutoMaster {
 		elevator = _elevator;
 		chooser.addObject("Baseline", baseLineAuto);
 		chooser.addObject("Right Switch", rightSwitchAuto);
-		chooser.addObject("Right Switch Turn", rightSwitchTurnAuto);
+		chooser.addObject("Turn Right Switch", rightSwitchTurnAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		SmartDashboard.putNumber("Wait Time", 0);
 		// BOOP BEEP BOP BEEPEDIE BOOP BOP
@@ -176,10 +176,10 @@ public class AutoMaster {
 			// If the left side of the switch is ours, it places the cube, if not, it does
 			// nothing
 			if (data == GameData.firstIndexR) {
-				Cg.addSequential(new RotateTo(base, -45, speed));
+				Cg.addSequential(new RotateTo(base, -43, speed));
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
-				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
-				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0));
+				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addSequential(new Switch(elevator, 2.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
