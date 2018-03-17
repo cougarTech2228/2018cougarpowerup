@@ -20,7 +20,6 @@ public class Elevator {
 	WPI_TalonSRX winch;
 	Relay hook;
 	Spark hookDown;
-	PneumaticController pneu;
 	DigitalInput limitSwitch, leftLimitSwitch, rightLimitSwitch, hookArmDownwards, hookArmUpwards;
 	FeedbackDevice encoder;
 	private boolean lastButtonDown;
@@ -37,6 +36,7 @@ public class Elevator {
 	boolean elevatorBackwards = false;
 	TeleopController tc;
 	Timer timer;
+	CubeManipulator cube;
 
 	public enum ElevatorHeights {
 		BOTTOM(0), PORTAL(100), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
@@ -47,9 +47,9 @@ public class Elevator {
 		}
 	}
 
-	public Elevator(DriverIF _driverIF, PneumaticController _pneu, TeleopController _tc) {
-		pneu = _pneu;
+	public Elevator(DriverIF _driverIF, CubeManipulator _cube, TeleopController _tc) {
 		driverIF = _driverIF;
+		cube = _cube;
 		tc = _tc;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
@@ -89,7 +89,7 @@ public class Elevator {
 		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
 		if(encoders > -15000000 ) {
-			if(!pneu.lift.get())
+			if(!cube.lift.get())
 				tc.SetMaxThrottlePower(0.5);
 			else
 				tc.SetMaxThrottlePower(0.75);
@@ -124,8 +124,8 @@ public class Elevator {
 		}
 
 		if (driverIF.RaiseElevator()) {
-			pneu.brakeSet(off);
-//			pneu.squeezeSet(false);
+			cube.brakeSet(off);
+//			cube.squeezeSet(false);
 			elevator.set(b);
 			// if(elevator.getSelectedSensorPosition(0) == -1){
 			// elevator.set(0);
@@ -133,10 +133,10 @@ public class Elevator {
 			// }
 
 		} else if (driverIF.LowerElevator()) {
-			pneu.brakeSet(off);
+			cube.brakeSet(off);
 			slowElevator(-0.8);
-			if(!pneu.lift.get()) {
-				pneu.squeezeSet(false);	
+			if(!cube.lift.get()) {
+				cube.squeezeSet(false);	
 			}
 			if (!leftLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
@@ -147,7 +147,7 @@ public class Elevator {
 			// }
 		} else {
 			elevator.set(0.05);
-			pneu.brakeSet(on);
+			cube.brakeSet(on);
 		}
 
 		double e = .85;
@@ -212,15 +212,15 @@ public class Elevator {
 	}
 
 	public boolean elevatorSet(double height, double speed) {
-		pneu.brakeSet(off);
+		cube.brakeSet(off);
 		elevator.set(speed);
 		if (raising = true && elevator.getSensorCollection().getQuadraturePosition() >= height) {
 			elevator.set(0);
-			pneu.brakeSet(on);
+			cube.brakeSet(on);
 			return true;
 		} else if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
 			elevator.set(0);
-			pneu.brakeSet(on);
+			cube.brakeSet(on);
 			return true;
 		}
 		return false;

@@ -26,7 +26,6 @@ public class Robot extends IterativeRobot {
 	private TeleopController chessyDrive;
 	private AutoMaster auto;
 	private Elevator elevator;
-	private PneumaticController pc;
 	private AnalogUltrasonic au;
 	private CameraController cam;
 	private CANLED LED;
@@ -48,9 +47,8 @@ public class Robot extends IterativeRobot {
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
 		cam = new CameraController();
-		pc = new PneumaticController(driverIF);
-		elevator = new Elevator(driverIF, pc, chessyDrive);
-		auto = new AutoMaster(base, elevator, pc);
+		elevator = new Elevator(driverIF, cube, chessyDrive);
+		auto = new AutoMaster(base, elevator, cube);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
 		base.setAngleIF(angleIF);
@@ -108,7 +106,6 @@ public class Robot extends IterativeRobot {
 		// period
 		chessyDrive.teleopPeriodic();
 		cube.teleopPeriodic();
-		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
 		cam.cameraCommand();
 

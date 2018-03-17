@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2228.commands;
 
+import org.usfirst.frc.team2228.robot.CubeManipulator;
 import org.usfirst.frc.team2228.robot.DebugLogger;
-import org.usfirst.frc.team2228.robot.PneumaticController;
 import org.usfirst.frc.team2228.robot.RobotMap;
 import org.usfirst.frc.team2228.robot.SRXDriveBase;
 
@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PneumaticGrabber extends Command {
-		private PneumaticController pneu;
+		private CubeManipulator cube;
 		private boolean grabbing;
 	
 	
-	public PneumaticGrabber(PneumaticController _pneu, boolean _grab, double timeWait) {
+	public PneumaticGrabber(CubeManipulator _cube, boolean _grab, double timeWait) {
 		//It's actually ahhhhhhhhhhhhhhhhhhh
 		super(timeWait);
-		pneu = _pneu;
+		cube = _cube;
 		grabbing = _grab;
 	}
 	
@@ -33,7 +33,7 @@ public class PneumaticGrabber extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		pneu.squeeze(grabbing);
+		cube.squeeze(grabbing);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
