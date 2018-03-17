@@ -94,7 +94,7 @@ public class SRXDriveBaseCfg {
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = false;
+		public static boolean isRightEncoderSensorReversed = true;
 		//swapped for testing mu
 		public static boolean isLeftEncoderSensorReversed = true;
 		
@@ -153,11 +153,11 @@ public class SRXDriveBaseCfg {
 
 		// Cap sensor correction to % of throttle power level
 		public static double kThrottlePowerRatio = 0.2;
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 
-		public static double kDriveStraightCorrection = .99;
+		public static double kDriveStraightCorrection = 1.01;
 		public static double kRotateDriveStraightCorrection = 1.00;	
 		public static double kRotateCWDriveStraightCorrection = 1.00;
 		public static double kRotateCCWDriveStraightCorrection = 1.00;
