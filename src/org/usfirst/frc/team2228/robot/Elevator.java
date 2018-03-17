@@ -125,7 +125,7 @@ public class Elevator {
 
 		if (driverIF.RaiseElevator()) {
 			pneu.brakeSet(off);
-			pneu.squeezeSet(false);
+//			pneu.squeezeSet(false);
 			elevator.set(b);
 			// if(elevator.getSelectedSensorPosition(0) == -1){
 			// elevator.set(0);
@@ -135,8 +135,9 @@ public class Elevator {
 		} else if (driverIF.LowerElevator()) {
 			pneu.brakeSet(off);
 			slowElevator(-0.8);
-
-			pneu.squeezeSet(false);
+			if(!pneu.lift.get()) {
+				pneu.squeezeSet(false);	
+			}
 			if (!leftLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
