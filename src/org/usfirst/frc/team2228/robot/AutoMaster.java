@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2228.robot;
 
+import org.usfirst.frc.team2228.commands.AutoRollers;
+import org.usfirst.frc.team2228.commands.CubeRotate;
 import org.usfirst.frc.team2228.commands.ElevatorAuto;
 import org.usfirst.frc.team2228.commands.EncoderTurn;
 import org.usfirst.frc.team2228.commands.MoveTo;
@@ -126,7 +128,8 @@ public class AutoMaster {
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
 				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
 				Cg.addParallel(new PneumaticGrabber(cube, false, 2.0));
-				Cg.addParallel(new Switch(elevator, 2.0));
+				Cg.addSequential(new CubeRotate(cube, false));
+				Cg.addSequential(new AutoRollers(cube, speed, 3.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");
@@ -153,7 +156,8 @@ public class AutoMaster {
 //				Cg.addParallel(new MoveTo(base, 3, speed / 2, false, 2.0));
 				Cg.addParallel(new PneumaticGrabber(cube, false, 2.0));
 				Cg.addParallel(new ElevatorAuto(elevator, 4.0));
-				Cg.addParallel(new Switch(elevator, 2.0));
+				Cg.addParallel(new CubeRotate(cube, false));
+				Cg.addParallel(new AutoRollers(cube, speed, 3.0));
 
 			} else {
 				System.out.println("Incorrect game data");
@@ -180,7 +184,7 @@ public class AutoMaster {
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
 				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
 				Cg.addParallel(new PneumaticGrabber(cube, false, 2.0));
-				Cg.addSequential(new Switch(elevator, 2.0));
+				Cg.addSequential(new AutoRollers(cube, speed, 3.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");

@@ -116,6 +116,10 @@ public class CubeManipulator {
 			squeezies.set(false);
 		}
 	}
+	public void rollerSet(double speed) {
+		left.set(speed);
+		right.set(speed);
+	}
 	// beep bop boopedy beep beep
 
 }
