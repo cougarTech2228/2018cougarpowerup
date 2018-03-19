@@ -16,7 +16,6 @@ public class Elevator {
 	boolean on = false, off = true;
 	DriverIF driverIF;
 	WPI_TalonSRX elevator;
-	DMC60 conveyor1, conveyor2;
 	WPI_TalonSRX winch;
 	Relay hook;
 	Spark hookDown;
@@ -53,8 +52,6 @@ public class Elevator {
 		tc = _tc;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
-		conveyor1 = new DMC60(RobotMap.PWM_PORT_2);
-		conveyor2 = new DMC60(RobotMap.PWM_PORT_3);
 		// limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
 		// rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_1);
@@ -154,31 +151,6 @@ public class Elevator {
 		// SmartDashboard.getNumber("front conveyor:", 0);
 		// hya
 
-		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
-			conveyor1.set(e);
-			conveyor2.set(e);
-			triggered = true;
-			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
-			conveyor1.set(0);
-			conveyor2.set(0);
-			triggered = false;
-			// System.out.println("Co");
-		}
-
-		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
-			conveyor1.set(-e);
-			conveyor2.set(-e);
-			triggered2 = true;
-			// System.out.println("Suck in");
-		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
-			conveyor1.set(0);
-			conveyor2.set(0);
-			triggered2 = false;
-			// System.out.println("Co");
-		}
-		lastButton1 = driverIF.conveyorsForward();
-		lastButton2 = driverIF.conveyorsBackward();
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
 		if (LaunchValue == 1) {
 			hook.set(Relay.Value.kOff);
@@ -240,13 +212,4 @@ public class Elevator {
 		return false;
 	}
 
-	public void conveyors(boolean on) {
-		if (on) {
-			conveyor1.set(1);
-			conveyor2.set(1);
-		} else {
-			conveyor1.set(0);
-			conveyor2.set(0);
-		}
-	}
 }

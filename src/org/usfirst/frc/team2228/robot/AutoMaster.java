@@ -8,7 +8,6 @@ import org.usfirst.frc.team2228.commands.MoveTo;
 import org.usfirst.frc.team2228.commands.PneumaticGrabber;
 import org.usfirst.frc.team2228.commands.RotateTo;
 import org.usfirst.frc.team2228.commands.StringCommand;
-import org.usfirst.frc.team2228.commands.Switch;
 import org.usfirst.frc.team2228.commands.TurnTo;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
