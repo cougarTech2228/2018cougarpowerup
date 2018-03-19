@@ -23,23 +23,25 @@ public class TeleopController {
 	// SET POINTS
 	
 	//  defines minimum joystick moves to be acted on 
-    public static double kJoyStickDeadBand = 0.13;
+    private static double kJoyStickDeadBand = 0.13;
 	
 	// used to vary the affect when using cubed sensitivity
 	// 0 to 1; 0 is linear (output==input) 1 is cubed (output=input**3)
-    public static double kThrottleCubedGain = 1.0; 
+    private static double kThrottleCubedGain = 1.0; 
 	
     // 0.1 to 1.0 used for turn sine control
-    public static double kTurnSensitivityGain = 0.3;
+    private static double kTurnSensitivityGain = 0.3;
 	
 	// Range of smoothFactorValue is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
-	public static double kLowSmoothFactor = 0.4;
-	public static double kHighSmoothFactor = 0.7;
+	private static double kLowSmoothFactor = 0.4;
+	private static double kHighSmoothFactor = 0.7;
 	//public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max throttle delta values are determined by testing
-	public static double kMaxDeltaVelocity = 0.001;
+	private static double kMaxDeltaVelocity = 0.001;
 	
+	// throttle joystick power range 
+	private double kmaxBrakeRange = .25;
 	
 	
 	//======================================
@@ -56,6 +58,7 @@ public class TeleopController {
 	private double smoothFactorValue = 0;
 	private double EMAThrottleValue = 0;
 	private double previousEMAThottleValue = 0;
+	
 
 	private double deltaThrottleForStopCheck =0;
 	private double previousThrottleForStopCheck =0;
@@ -131,7 +134,7 @@ public class TeleopController {
 		turn = cap(turn);
 		
 		// ============================================
-		// Limit max throttle / turn
+		// Limit ax throttle / turn
 		throttle *= maxThrottleLimit;
 		turn *= maxTurnLimit;
 		
@@ -251,62 +254,8 @@ public class TeleopController {
 		}
 		return adjustedValue;
 	}
-//	// ANTI-LOCK BRAKING IN TELEOP
-//	public double CheckDriverStopping(double _throttleForStopCheck){
-//		// check every two scans
-//		if(isStopCheckToggleActive){
-//			deltaThrottleForStopCheck = _throttleForStopCheck - previousThrottleForStopCheck;
-//			previousThrottleForStopCheck = _throttleForStopCheck;
-//		}
-//		isStopCheckToggleActive = !isStopCheckToggleActive;
-//		
-//		// check if decelerating
-//		if((_throttleForStopCheck > 0) && (deltaThrottleForStopCheck < 0 ) ||
-//					(_throttleForStopCheck < 0) && (deltaThrottleForStopCheck > 0 )){
-//				
-//			// Decelerating
-//			if(Math.abs(_throttleForStopCheck) < 0.5) {
-//				_throttleForStopCheck = _throttleForStopCheck - Math.signum(_throttleForStopCheck)*stopAccum;
-//				// add delta to stopAccum
-//				stopAccum = previousStopAccum + Math.abs(deltaThrottleForStopCheck);
-//				cap(stopAccum);
-//				previousStopAccum = stopAccum;
-//			}
-//		} else {
-//			stopAccum = 0;
-//			previousStopAccum = 0;
-//		}
-//		
-//		return _throttleForStopCheck;
-//	}
-//	
-	public double CheckDriverStopping(double _throttleForStopCheck){
-		// check every two scans
-		if(isStopCheckToggleActive){
-			deltaThrottleForStopCheck = _throttleForStopCheck - previousThrottleForStopCheck;
-			previousThrottleForStopCheck = _throttleForStopCheck;
-		}
-		isStopCheckToggleActive = !isStopCheckToggleActive;
-		
-		// check if decelerating
-		if((_throttleForStopCheck > 0) && (deltaThrottleForStopCheck < 0 ) ||
-					(_throttleForStopCheck < 0) && (deltaThrottleForStopCheck > 0 )){
-				
-			// Decelerating
-			if(Math.abs(_throttleForStopCheck) < 0.5) {
-				_throttleForStopCheck = _throttleForStopCheck - Math.signum(_throttleForStopCheck)*stopAccum;
-				// add delta to stopAccum
-				stopAccum = previousStopAccum + Math.abs(deltaThrottleForStopCheck);
-				stopAccum = cap(stopAccum);
-				previousStopAccum = stopAccum;
-			}
-		} else {
-			stopAccum = 0;
-			previousStopAccum = 0;
-		}
-		
-		return _throttleForStopCheck;
-	}
+
+
 	// ACCELERATION FILTER
 	// The accel filter follows the actions of the driver. If the
 	// driver exceeds the cap of robot accel/decel capability the tipping
@@ -315,12 +264,12 @@ public class TeleopController {
 	// 1 - wheelies
 	// 2 - fast accels
 	// 3 - transitions from fwd/rev or rev/fwd
-	public double CheckAccelFilter(double _ThrottleValue) {
+	public double CheckAccelFilter(double _filterThrottleValue) {
 		
 		// makes execution 2xscan = approx 40ms now
 		scanCounter += 1;
 		if(scanCounter % 3 == 0){
-			accelFltrThrottleValue = _ThrottleValue;
+			accelFltrThrottleValue = _filterThrottleValue;
 		
 			// determine change for last driverIF read
 			deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
@@ -332,12 +281,19 @@ public class TeleopController {
 					// If driver behaves
 					smoothFactorValue = kLowSmoothFactor;
 				}
+			//Check if in joystick throttle decel and brake at a low speed
+			if(((previousEMAThottleValue > .1) && (deltaAccelFltrThrottleValue < 0)) 
+					|| ((previousEMAThottleValue < -.1) && (deltaAccelFltrThrottleValue > 0))){
+				driveBase.setJoyStickBrake();
+			} 
 			
 			// RUN THROUGH SMOOTHING FILTER
 			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
 			// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
 			EMAThrottleValue = previousEMAThottleValue + (1-smoothFactorValue) * (deltaAccelFltrThrottleValue);
 			previousEMAThottleValue = EMAThrottleValue;
+			
+			
 		
 		}
 		return  EMAThrottleValue;

@@ -2,9 +2,9 @@ package org.usfirst.frc.team2228.robot;
 
 public class SRXDriveBaseCfg {
 		// program control flags
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isDriveStraightAssistEnabled = true;
 		
 		
 		// ===============================================
@@ -44,17 +44,17 @@ public class SRXDriveBaseCfg {
 		// ====================================================
 		// SRX CLOSE LOOP SETUP PARAMETERS
 		public static double kdriveRightMstrFeedForwardGain = 2; //1.58
-		public static double kdriveRightMstrProportionalGain = .01;
+		public static double kdriveRightMstrProportionalGain = 2; //.01
 		public static double kdriveRightMstrIntegralGain = 0;
-		public static double kdriveRightMstrDerivativeGain = 0;
+		public static double kdriveRightMstrDerivativeGain = 10;
 		public static int    kdriveRightMstrIzone = 0;
 		public static int    kdriveRightMstrRampRate = 0;
 		public static int    kdriveRightMstrProfile = 0;
 		
 		public static double kdriveLeftMstrFeedForwardGain = 2; //1.58
-		public static double kdriveLeftMstrProportionalGain = 0.01;
+		public static double kdriveLeftMstrProportionalGain = 2;
 		public static double kdriveLeftMstrIntegralGain = 0;
-		public static double kdriveLeftMstrDerivativeGain = 0;
+		public static double kdriveLeftMstrDerivativeGain = 10;
 		public static int    kdriveleftMstrIzone = 0;
 		public static int    kdriveLeftMstrRampRate = 0;
 		public static int    kdriveLeftMstrProfile = 0;
@@ -130,7 +130,7 @@ public class SRXDriveBaseCfg {
 		// MaxVel_VelNativeUnits = RPM * 1/60sec * 1/[10 => 100ms samples/sec] * kCountsPerRevolution = counts/100ms
 		//From RoboRio WebDashBoard:
 		public static double MaxVel_VelNativeUnits = 563.69;
-		
+	
 		// kTopRPM = (vel(cnts/100ms) * 600) / kCountsPerRevolution
 		public static double kTopRPM = 645.9;
 		
@@ -138,8 +138,8 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightFwdCorrection = 0.93; // Hard floor correction 0.87;
-		public static double kDriveStraightRevCorrection = 0.93;
+		public static double kDriveStraightFwdCorrection = 1.02; // Hard floor correction 0.87;
+		public static double kDriveStraightRevCorrection = 1.02;
 		
 		public static double kRotateCWDriveStraightCorrection = 0.75;// fwd-.93
 		public static double kRotateCCWDriveStraightCorrection = 0.75;
