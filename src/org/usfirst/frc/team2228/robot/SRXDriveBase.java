@@ -54,9 +54,10 @@ public class SRXDriveBase {
 	//private double rightDrvTrainTargetPosSetPt;
 	//private double leftDrvTrainTargetPosSetPt;
 	
-	private double leftCmdLevel = 0;
+	public double leftCmdLevel = 0;
 	//private double lastLeftCmdLevel = 0;
-	private double rightCmdLevel = 0;
+	public double rightCmdLevel = 0;
+	private double leftSensorVelocity = 0;
 	private double rotationEncoderStopCount = 0;
 	private double driveStraightDirCorrection = 0;
 	private double speedRatio = 0;
@@ -94,6 +95,8 @@ public class SRXDriveBase {
 	private double maxSensorCorrection = 0;
 	private double correction = 0.93;
 	private double stepFunctionSpeed = 0;
+	private double  methodStartTime =  0;
+	private double methodTime = 0;
 	
 	//  Program flow switches
 	private boolean isConsoleDataEnabled = true;
@@ -110,7 +113,8 @@ public class SRXDriveBase {
 	private boolean isTestMoveForStraightCalActive = false;
 	private boolean isDelayActive = false;
 	private boolean isDriveTrainMoving = false;
-
+	private boolean isRotateAtStop = false;
+	
 	private boolean isSensorStopReached = false;
 	private boolean isTestMethodSelectionActive = false;
 	private boolean isSensorCorrectionActive = false;
@@ -119,6 +123,7 @@ public class SRXDriveBase {
 	private boolean isLastTuneDirectionPos = false;
 	private boolean isTestStepFunctionActive = false;
 	private boolean isEcoderReset = false;
+	private boolean isJoyStickThrottleDecelBrakeEnabled = false;
 	
 	private String logSRXDriveString = " ";
 	private String lastMsgString = " ";
@@ -340,7 +345,42 @@ public class SRXDriveBase {
 	}
 
 	
+//	public void setSRXDriveBaseInit() {
+//		isVelMoveToPositionActive = false;
+//		isRotateToAngleActive = false;
+//		isTurnToAngleActive = false;
+//		isSRXMagicMoveActive = false;
+//		isLowTimeActive = false;
+//		isPulse_SqWaveFnctStartActive = false;
+//		isMovePerpendicularActive = false;
+//		isTestMoveForStraightCalActive = false;
+//		isDelayActive = false;
+//
+//		isSensorStopReached = false;
+//		isTestMethodSelectionActive = false;
+//		isSensorCorrectionActive = false;
+//		isAutoTuneCorrectionFactorActive = false;
+//		isTestStepFunctionActive = false;
+//		isEcoderReset = false;
+//		
+//		loadShuffleBoardParmeters();
+//		setDriveTrainRamp(0);
+//		setRightSensorPositionToZero();
+//		setLeftSensorPositionToZero();
+//	}
+	
 	public void setSRXDriveBaseInit() {
+		setStopMotors();
+		setInitialStateForSRXDrvBasePrgFlgs();
+		loadShuffleBoardParmeters();
+		setDriveTrainRamp(0);
+		setRightSensorPositionToZero();
+		setLeftSensorPositionToZero();
+		
+		isConsoleDataEnabled = SmartDashboard.getBoolean("TstBtn-EnableSRXDriveBaseConsoleDisplay:", isConsoleDataEnabled);
+	}
+	
+	public void setInitialStateForSRXDrvBasePrgFlgs() {
 		isVelMoveToPositionActive = false;
 		isRotateToAngleActive = false;
 		isTurnToAngleActive = false;
@@ -349,19 +389,23 @@ public class SRXDriveBase {
 		isPulse_SqWaveFnctStartActive = false;
 		isMovePerpendicularActive = false;
 		isTestMoveForStraightCalActive = false;
+		//isCalAtStop = false;
 		isDelayActive = false;
-
 		isSensorStopReached = false;
 		isTestMethodSelectionActive = false;
 		isSensorCorrectionActive = false;
 		isAutoTuneCorrectionFactorActive = false;
 		isTestStepFunctionActive = false;
-		isEcoderReset = false;
-		
-		loadShuffleBoardParmeters();
-		setDriveTrainRamp(0);
-		setRightSensorPositionToZero();
-		setLeftSensorPositionToZero();
+		//isTestBtnActive = false;
+		//isMtrTestBtnActive = false;
+		//isTimeVelMoveToPositionActive = false;
+		//isTimeRotateToAngleActive = false;
+		//isTimeTurnToAngleActive = false;
+		//isLoggingActive = false;
+		//isTestTeleopCTkThrottleTurnActive = false;
+		//isAutoTurnMoveDone = false;
+		isJoyStickThrottleDecelBrakeEnabled = false;
+		isRotateAtStop = false;
 	}
 	
 	public void setDriveTrainRamp(double _SecToMaxPower){
@@ -372,6 +416,9 @@ public class SRXDriveBase {
 			driveRightMasterMtr.configOpenloopRamp(_SecToMaxPower, SRXTimeoutValueMs);
 			driveLeftMasterMtr.configOpenloopRamp(_SecToMaxPower, SRXTimeoutValueMs);
 		}
+	}
+	public void setJoyStickBrake() {
+		//isJoyStickThrottleDecelBrakeEnabled = true;
 	}
 	
 	/**
@@ -636,6 +683,14 @@ public class SRXDriveBase {
 			leftCmdLevel = _throttleValue  +_turnValue;
 			rightCmdLevel = ((_throttleValue * SRXDriveBaseCfg.kDriveStraightCorrection) - _turnValue);
 		}
+		//check for a joystick decel brake
+				if((isJoyStickThrottleDecelBrakeEnabled) 
+					&& ((Math.abs(leftSensorVelocity) < 112) 
+					&& (Math.abs(leftSensorVelocity) > 50))){
+						
+					leftCmdLevel = -leftCmdLevel;
+					rightCmdLevel = -rightCmdLevel;
+				}
 		//msg("TopRPM" + SRXDriveBaseCfg.kTopRPM + "Cycles Per Rev" + SRXDriveBaseCfg.kDriveEncoderCyclesPerRev + "CNT-PER-REV" + //SRXDriveBaseCfg.kCountsPerRevolution + "MaxRPM" +SRXDriveBaseCfg.MaxVel_VelNativeUnits);
 		
 
@@ -746,59 +801,125 @@ public class SRXDriveBase {
 		
 	}
 
+//	//====================================
+//	// ROTATE TO ANGLE
+//	//====================================
+//	public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel) {
+//
+//		
+//		leftSensorPositionRead = getLeftSensorPosition();
+//		rightSensorPositionRead = getRightSensorPosition();
+//		
+//		if (!isRotateToAngleActive) {
+//			isRotateToAngleActive = true;
+//			msg("ROTATE TO ANGLE IS ACTIVE===========================");
+//			
+//
+//			leftCmdLevel = Math.signum(_rotateToAngle) * _rotatePowerLevel;
+//			rightCmdLevel = -Math.signum(_rotateToAngle) * _rotatePowerLevel * SRXDriveBaseCfg.kRotateDriveStraightCorrection; 
+//			
+//			
+//			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
+//			rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kLeftEncoderCountsPerIn * (_rotateToAngle / 360))
+//			                                 - SRXDriveBaseCfg.kAutoRotateCoastToStopCounts;
+//
+//			
+//		// use left encoder to mark rotation distance
+//
+//		} else if (leftSensorPositionRead >= rotationEncoderStopCount){
+//				msg("ROTATE TO ANGLE IS AT STOP===========================");
+//				setDriveTrainRamp(0);
+//				// Apply power level in opposite direction to brake
+//				rightCmdLevel = (Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoRightRotateStopBrakeValue);
+//				leftCmdLevel = -(Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoLeftRotateStopBrakeValue);
+//			if (!delay(1)) {
+//				isRotateToAngleActive = false;
+//
+//				msg("ROTATE TO ANGLE IS DONE=========================");
+//				rightCmdLevel = 0;
+//				leftCmdLevel = 0;
+//			}		
+//		}
+//
+//		
+//		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
+//		
+//		//++++++++++++++++++++++++++++++++++++++++++++++
+//		// Display data
+//		if (isConsoleDataEnabled){
+//			System.out.printf("StopCnt:%-8.2f ===LftEnc:%-8.2f ===RgtEnc:%-8.2f%n",
+//									rotationEncoderStopCount,
+//									leftSensorPositionRead, 
+//									rightSensorPositionRead);
+//		}
+//		return isRotateToAngleActive;
+//	}
 	//====================================
-	// ROTATE TO ANGLE
-	//====================================
-	public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel) {
-
-		
-		leftSensorPositionRead = getLeftSensorPosition();
-		rightSensorPositionRead = getRightSensorPosition();
-		
-		if (!isRotateToAngleActive) {
-			isRotateToAngleActive = true;
-			msg("ROTATE TO ANGLE IS ACTIVE===========================");
+		// ROTATE TO ANGLE - LEFT/RIGHT FWD
+		//====================================
+		public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel) {
 			
-
-			leftCmdLevel = Math.signum(_rotateToAngle) * _rotatePowerLevel;
-			rightCmdLevel = -Math.signum(_rotateToAngle) * _rotatePowerLevel * SRXDriveBaseCfg.kRotateDriveStraightCorrection; 
+			leftSensorPositionRead = getLeftSensorPosition();
+			rightSensorPositionRead = getRightSensorPosition();
 			
-			
-			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
-			rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kLeftEncoderCountsPerIn * (_rotateToAngle / 360))
-			                                 - SRXDriveBaseCfg.kAutoRotateCoastToStopCounts;
-
-			
-		// use left encoder to mark rotation distance
-
-		} else if (leftSensorPositionRead >= rotationEncoderStopCount){
+			if (!isRotateToAngleActive) {
+				isRotateToAngleActive = true;
+				methodStartTime = Timer.getFPGATimestamp();
+				msg("ROTATE TO ANGLE IS ACTIVE===========================");
+				
+				leftCmdLevel = Math.signum(_rotateToAngle) * _rotatePowerLevel;
+				if(_rotateToAngle >= 0){
+					rightCmdLevel = -_rotatePowerLevel * SRXDriveBaseCfg.kRotateCWDriveStraightCorrection;
+				} else{
+					rightCmdLevel = _rotatePowerLevel * SRXDriveBaseCfg.kRotateCCWDriveStraightCorrection;
+				}
+				
+				// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
+				rotationEncoderStopCount = leftSensorPositionRead 
+					+ Math.signum(_rotateToAngle) * (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kLeftEncoderCountsPerIn * (Math.abs(_rotateToAngle) / 360)) 
+					- Math.signum(_rotateToAngle) * SRXDriveBaseCfg.kAutoRotateCoastToStopCounts;
+				System.out.println("Rotation Encoder Count" + rotationEncoderStopCount + " " + leftSensorPositionRead);
+				
+			// use left encoder to mark rotation distance
+			} else if (_rotateToAngle > 0){
+				if(leftSensorPositionRead >= rotationEncoderStopCount){
+					isRotateAtStop = true;
+				}
+			} else {
+				if(leftSensorPositionRead <= rotationEncoderStopCount){
+					isRotateAtStop = true;
+				}
+			} 
+			if(isRotateAtStop){
 				msg("ROTATE TO ANGLE IS AT STOP===========================");
+				
 				setDriveTrainRamp(0);
 				// Apply power level in opposite direction to brake
 				rightCmdLevel = (Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoRightRotateStopBrakeValue);
 				leftCmdLevel = -(Math.signum(_rotateToAngle)*SRXDriveBaseCfg.kAutoLeftRotateStopBrakeValue);
-			if (!delay(1)) {
-				isRotateToAngleActive = false;
-
-				msg("ROTATE TO ANGLE IS DONE=========================");
-				rightCmdLevel = 0;
-				leftCmdLevel = 0;
-			}		
-		}
-
-		
-		SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
-		
-		//++++++++++++++++++++++++++++++++++++++++++++++
-		// Display data
-		if (isConsoleDataEnabled){
-			System.out.printf("StopCnt:%-8.2f ===LftEnc:%-8.2f ===RgtEnc:%-8.2f%n",
-									rotationEncoderStopCount,
-									leftSensorPositionRead, 
-									rightSensorPositionRead);
-		}
-		return isRotateToAngleActive;
-	} 
+				if (!delay(1)) {
+					isRotateToAngleActive = false;
+					isRotateAtStop = false;
+					rightCmdLevel = 0;
+					leftCmdLevel = 0;
+					methodTime = Timer.getFPGATimestamp() - methodStartTime;
+					msg("Rotate to angle Time(Sec) = " + methodTime);
+					msg("ROTATE TO ANGLE IS DONE=========================");
+				}		
+			}
+			
+			SetDriveTrainCmdLevel(rightCmdLevel, leftCmdLevel);
+			
+			//++++++++++++++++++++++++++++++++++++++++++++++
+			// Display data
+			if (isConsoleDataEnabled){
+				System.out.printf("StopCnt:%-8.2f ===LftPos:%-8.2f ===RgtPos:%-8.2f%n",
+										rotationEncoderStopCount,
+										leftSensorPositionRead, 
+										rightSensorPositionRead);
+			}
+			return isRotateToAngleActive;
+		} 
 	//===================================
 	// TURN BY ENCODER TO ANGLE
 	//===================================

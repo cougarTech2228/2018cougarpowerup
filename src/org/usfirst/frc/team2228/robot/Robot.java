@@ -28,8 +28,8 @@ public class Robot extends IterativeRobot {
 	private Elevator elevator;
 	private PneumaticController pc;
 	private AnalogUltrasonic au;
-	UsbCamera frontCamera;
-	//private CANLED LED;
+	private CameraController cam;
+	private CANLED LED;
 	private AngleIF angleIF;
 //	private UsbCamera backCamera;
 //	private UsbCamera cam;
@@ -46,21 +46,22 @@ public class Robot extends IterativeRobot {
 		base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-
+		cam = new CameraController();
 		pc = new PneumaticController(driverIF);
 		elevator = new Elevator(driverIF, pc, chessyDrive);
 		auto = new AutoMaster(base, elevator, pc);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
 		base.setAngleIF(angleIF);
-		//base.setCorrectionSensor(3); // navx
+		
+//		base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
 //		backCamera = new UsbCamera("Back Camera", 1);
 //		frontCamera = CameraServer.getInstance().startAutomaticCapture();
 //		backCamera = CameraServer.getInstance().startAutomaticCapture();
-		// LED = new CANLED();
-		// LED.colorInit();
+//		 LED = new CANLED();
+//		 LED.colorInit();
 		// angle = new AngleIF();
 	}
 
@@ -107,6 +108,7 @@ public class Robot extends IterativeRobot {
 		cube.teleopPeriodic();
 		pc.teleopPeriodic();
 		elevator.teleopPeriodic();
+		cam.cameraCommand();
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();

@@ -28,7 +28,7 @@ public class ElevatorAuto extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		elevator.elevatorSet(-.3);
+		elevator.elevatorSet(.3);
 
 	}
 
@@ -39,7 +39,7 @@ public class ElevatorAuto extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		elevator.elevatorSet(-0.05);
+		elevator.elevatorSet(0.05);
 		System.out.println("Finished at " + Timer.getFPGATimestamp());
 	}
 

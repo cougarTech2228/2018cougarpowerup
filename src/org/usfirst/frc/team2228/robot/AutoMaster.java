@@ -46,7 +46,7 @@ public class AutoMaster {
 		elevator = _elevator;
 		chooser.addObject("Baseline", baseLineAuto);
 		chooser.addObject("Right Switch", rightSwitchAuto);
-		chooser.addObject("Right Switch Turn", rightSwitchTurnAuto);
+		chooser.addObject("Turn Right Switch", rightSwitchTurnAuto);
 		SmartDashboard.putData("Auto choices", chooser);
 		SmartDashboard.putNumber("Wait Time", 0);
 		// BOOP BEEP BOP BEEPEDIE BOOP BOP
@@ -101,10 +101,10 @@ public class AutoMaster {
 //			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 //			System.out.println("Baseline selected");
 //			// Adds movement to the auto sequence
-//			Cg.addSequential(
-//					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
+			Cg.addSequential(
+					new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
-			Cg.addSequential(new RotateTo(base, 45, speed));
+			System.out.println("Left Encoders: " + base.getLeftEncoderPosition() + " Right Encoders: " + base.getRightEncoderPosition());
 			break;
 
 		case "Left Switch":
@@ -141,7 +141,7 @@ public class AutoMaster {
 			// The bot starts closing the acquirer arms for half a second
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
-			Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT),
+			Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT) + 3,
 					speed, false, 4.0));
 			// While the bot is moving, it continues closing the aquirer arms for another
 			// second and a half
@@ -150,8 +150,9 @@ public class AutoMaster {
 			if (data == GameData.firstIndexR) {
 				// If the right side of the switch is ours, it places the cube while opening the
 				// aquirer arms
+//				Cg.addParallel(new MoveTo(base, 3, speed / 2, false, 2.0));
 				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
-				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
+				Cg.addParallel(new ElevatorAuto(elevator, 4.0));
 				Cg.addParallel(new Switch(elevator, 2.0));
 
 			} else {
@@ -162,7 +163,7 @@ public class AutoMaster {
 			break;
 		case "Right Switch Turn":
 			Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
-			System.out.println("Left Switch selected");
+			System.out.println("Right Switch turn selected");
 			// Adds movement to the auto sequence
 			Cg.addSequential(new PneumaticGrabber(pneu, true, 0.5));
 			// After half a second the bot starts moving
@@ -175,11 +176,11 @@ public class AutoMaster {
 			// If the left side of the switch is ours, it places the cube, if not, it does
 			// nothing
 			if (data == GameData.firstIndexR) {
-				Cg.addSequential(new RotateTo(base, 180, speed));
+				Cg.addSequential(new RotateTo(base, -43, speed));
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
-				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0), 3);
-				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
-				Cg.addParallel(new Switch(elevator, 2.0));
+				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0));
+				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
+				Cg.addSequential(new Switch(elevator, 2.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");

@@ -12,24 +12,24 @@ public class SRXDriveBaseCfg {
 		// ==============================================================
 		// SET MOTOR DIRECTION
 //		// THESE ARE FOR MU
-//		public static boolean isDriveRightMasterMtrReversed = true;
-//		public static boolean isDriveRightFollowerMtrReversed = true;
-//		public static boolean isDriveLeftMasterMtrReversed = false;
-//		public static boolean isDriveLeftFollowerMtrReversed = false;
-//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-//		public static boolean isTurnReversed = true;
-////		public static boolean isThrottleReversed = false;
-		
-		//===============================================
-		// SET MOTOR DIRECTION
-		// THESE ARE FOR MU 2
 		public static boolean isDriveRightMasterMtrReversed = false;
 		public static boolean isDriveRightFollowerMtrReversed = false;
 		public static boolean isDriveLeftMasterMtrReversed = true;
 		public static boolean isDriveLeftFollowerMtrReversed = true;
 		//I created a boolean that reverses turn in TeleopController by adding a - symbol
-		public static boolean isTurnReversed = false;
+		public static boolean isTurnReversed = true;
 //		public static boolean isThrottleReversed = false;
+		
+		//===============================================
+		// SET MOTOR DIRECTION
+		// THESE ARE FOR MU 2
+//		public static boolean isDriveRightMasterMtrReversed = false;
+//		public static boolean isDriveRightFollowerMtrReversed = false;
+//		public static boolean isDriveLeftMasterMtrReversed = true;
+//		public static boolean isDriveLeftFollowerMtrReversed = true;
+//		//I created a boolean that reverses turn in TeleopController by adding a - symbol
+//		public static boolean isTurnReversed = false;
+////		public static boolean isThrottleReversed = false;
 //		===============================================
 		// BRAKE AND COAST PARAMETERS
 		// sets SRX zero speed brake mode to brake(true) and coast(false)
@@ -94,7 +94,7 @@ public class SRXDriveBaseCfg {
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = true;
+		public static boolean isRightEncoderSensorReversed = false;
 		//swapped for testing mu
 		public static boolean isLeftEncoderSensorReversed = true;
 		
@@ -157,9 +157,11 @@ public class SRXDriveBaseCfg {
 		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 
-		public static double kDriveStraightCorrection = 1.02;
+		public static double kDriveStraightCorrection = 1.07;
 		public static double kRotateDriveStraightCorrection = 1.00;	
-		        // Mew 0.9150
+		public static double kRotateCWDriveStraightCorrection = 1.00;
+		public static double kRotateCCWDriveStraightCorrection = 1.00;
+				// Mew 0.9150
 				//for test bot 1.0805;
 		        // for Lamda 0.98
 				//for robox 0.93; 

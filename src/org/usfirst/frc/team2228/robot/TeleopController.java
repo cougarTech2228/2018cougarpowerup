@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // 
 public class TeleopController {
 	
-	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isTeleopConsoleDataEnabled = true;
 	
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;
@@ -14,11 +14,13 @@ public class TeleopController {
 	private short loggerThreshold = 20;
 	
 	private int autoCmdSequence = 1;
+	private int scanCounter = 0;
 	//private int timePeriodSF = TeleopControllerCfg.kHighSmoothPeriod;
 	
 	private double previousEMAValue = 0.0; // -1 to 1
 	private static double test = 0;
-	private double smoothFactor = 0;
+	private double smoothFactorValue = 0;
+	private double deltaAccelFltrThrottleValue = 0;
 	
 	private boolean isButtonCmdActiveA = false;
 	private boolean lastButtonReadA = false;
@@ -29,8 +31,9 @@ public class TeleopController {
 	private boolean isStopCheckToggleActive = false;
 	
 	private double maxThrottle = 1;
-	private double maxTurn = .25;
+	private double maxTurn = .666;
 
+	private double accelFltrThrottleValue = 0;
 	private double deltaThrottleForStopCheck =0;
 	private double previousThrottleForStopCheck =0;
 	private double stopAccum = 0;
@@ -117,7 +120,7 @@ public class TeleopController {
 		if(throttle != 0){
 			throttle = CheckThrottleSensitivity(limit(throttle));
 			throttle = CheckAccelFilter(limit(throttle));
-			throttle = CheckDriverStopping(limit(throttle));
+			//throttle = CheckDriverStopping(limit(throttle));
 		}
 		
 		throttle *= maxThrottle;
@@ -133,6 +136,7 @@ public class TeleopController {
 				throttle,
 				origTurn,
 				turn);
+//			System.out.println("Left Encoders: " + driveBase.getLeftEncoderPosition() + " Right Encoders: " + driveBase.getRightEncoderPosition());
 		}
 	}
 	public void SetMaxThrottlePower(double _maxThrottlePowerLevel) {
@@ -268,49 +272,83 @@ public class TeleopController {
 	// 3) Within the driverIF deadband - reset filter
 	// Determination of kMaxDeltaVel is determined by testing.
 	
-	public double CheckAccelFilter(double _ThrottleValue) {
-		double AccelFltrCheckThrottleValue = _ThrottleValue;
+//	public double CheckAccelFilter(double _ThrottleValue) {
+//		double AccelFltrCheckThrottleValue = _ThrottleValue;
+//		
+//		// determine change for last driverIF read
+//		double deltaAccelFltrThrottleValue = AccelFltrCheckThrottleValue - EMAThrottleValue;
+//
+//		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
+//		if (Math.signum(AccelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
+//
+//			// If driverIF change is large enough to cause a wheelie or cause the
+//			// robot to start to tip - the robot intervenes to see that this does
+//			// not occur The following limits the change in driverIF movement
+//			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kTransitionMaxDelta) {
+//				smoothFactor = TeleopControllerCfg.kTransitionSmoothFactor;
+//			} else {
+//
+//				// If driver behaves
+//				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
+//			}
+//		}
+//
+//		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
+//		else if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
+//				smoothFactor = TeleopControllerCfg.kHighSmoothFactor;
+//			} else {
+//				// If driver behaves
+//				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
+//			}
+//		
+//
+//		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
+//		if (Math.abs( AccelFltrCheckThrottleValue) < TeleopControllerCfg.kJoyStickDeadBand) {
+//			 AccelFltrCheckThrottleValue = 0; 
+//			smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
+//		}
+//		// Run through smoothing filter
+//		
+//		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
+//		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
+//		EMAThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
+//		previousEMAThottleValue = EMAThrottleValue;
+//		
+//		return  AccelFltrCheckThrottleValue;
+//	}
+public double CheckAccelFilter(double _filterThrottleValue) {
 		
-		// determine change for last driverIF read
-		double deltaAccelFltrThrottleValue = AccelFltrCheckThrottleValue - EMAThrottleValue;
+		// makes execution 2xscan = approx 40ms now
+		scanCounter += 1;
+		if(scanCounter % 3 == 0){
+			accelFltrThrottleValue = _filterThrottleValue;
+		
+			// determine change for last driverIF read
+			deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
 
-		// Check driverIF _AccelFltrThrottleValue transition from one side of zero to the other side of zero
-		if (Math.signum(AccelFltrCheckThrottleValue) != Math.signum(EMAThrottleValue)) {
-
-			// If driverIF change is large enough to cause a wheelie or cause the
-			// robot to start to tip - the robot intervenes to see that this does
-			// not occur The following limits the change in driverIF movement
-			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kTransitionMaxDelta) {
-				smoothFactor = TeleopControllerCfg.kTransitionSmoothFactor;
-			} else {
-
-				// If driver behaves
-				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
-			}
+			// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
+			if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
+					smoothFactorValue = TeleopControllerCfg.kHighSmoothFactor;
+				} else {
+					// If driver behaves
+					smoothFactorValue = TeleopControllerCfg.kLowSmoothFactor;
+				}
+			//Check if in joystick throttle decel and brake at a low speed
+			if(((previousEMAThottleValue > .1) && (deltaAccelFltrThrottleValue < 0)) 
+					|| ((previousEMAThottleValue < -.1) && (deltaAccelFltrThrottleValue > 0))){
+				driveBase.setJoyStickBrake();
+			} 
+			
+			// RUN THROUGH SMOOTHING FILTER
+			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
+			// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
+			EMAThrottleValue = previousEMAThottleValue + (1-smoothFactorValue) * (deltaAccelFltrThrottleValue);
+			previousEMAThottleValue = EMAThrottleValue;
+			
+			
+		
 		}
-
-		// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
-		else if (Math.abs(deltaAccelFltrThrottleValue) > TeleopControllerCfg.kMaxDeltaVelocity) {
-				smoothFactor = TeleopControllerCfg.kHighSmoothFactor;
-			} else {
-				// If driver behaves
-				smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
-			}
-		
-
-		// Check if the smoothing filter is within the driverIF dead band and put filter in high response gain
-		if (Math.abs( AccelFltrCheckThrottleValue) < TeleopControllerCfg.kJoyStickDeadBand) {
-			 AccelFltrCheckThrottleValue = 0; 
-			smoothFactor = TeleopControllerCfg.kLowSmoothFactor;
-		}
-		// Run through smoothing filter
-		
-		// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
-		// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
-		EMAThrottleValue = previousEMAValue + (1-smoothFactor) * (deltaAccelFltrThrottleValue);
-		previousEMAThottleValue = EMAThrottleValue;
-		
-		return  AccelFltrCheckThrottleValue;
+		return  EMAThrottleValue;
 	}
 
 	//helper function to keep inside of acceptable %power range
