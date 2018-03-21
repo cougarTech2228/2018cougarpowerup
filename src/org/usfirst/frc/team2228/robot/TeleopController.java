@@ -18,6 +18,7 @@ public class TeleopController {
 	private boolean isStopCheckToggleActive = false;
 	
 	private boolean isToggleFlagState = false;
+	private boolean isrobotAccelerating = false;
 	
 	//=================================
 	// SET POINTS
@@ -273,6 +274,16 @@ public class TeleopController {
 		
 			// determine change for last driverIF read
 			deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
+			
+			// Check if accelerating
+			if((accelFltrThrottleValue >= 0 && deltaAccelFltrThrottleValue >= 0)
+				|| (accelFltrThrottleValue < 0 && deltaAccelFltrThrottleValue < 0 )){
+					isrobotAccelerating = true;
+			}
+			// high smoothing factor if driver accelerates from stop - to stop a wheelie
+			if(Math.abs(accelFltrThrottleValue) < .2 && isrobotAccelerating){
+				smoothFactorValue = kHighSmoothFactor;
+			}
 
 			// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
 			if (Math.abs(deltaAccelFltrThrottleValue) > kMaxDeltaVelocity) {
@@ -281,11 +292,6 @@ public class TeleopController {
 					// If driver behaves
 					smoothFactorValue = kLowSmoothFactor;
 				}
-			//Check if in joystick throttle decel and brake at a low speed
-			if(((previousEMAThottleValue > .1) && (deltaAccelFltrThrottleValue < 0)) 
-					|| ((previousEMAThottleValue < -.1) && (deltaAccelFltrThrottleValue > 0))){
-				driveBase.setJoyStickBrake();
-			} 
 			
 			// RUN THROUGH SMOOTHING FILTER
 			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
