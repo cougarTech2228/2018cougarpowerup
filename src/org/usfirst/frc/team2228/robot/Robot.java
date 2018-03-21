@@ -65,6 +65,7 @@ public class Robot extends IterativeRobot {
 		// defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
 		StringCommand command = new StringCommand(input);
+		base.setSRXDriveBaseInit();
 		//command.start();
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -105,6 +106,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		System.out.println("teleopInit() fi!");
+		base.setSRXDriveBaseInit();
 		//chessyDrive.teleopInit();
 		System.out.println("Teleop Init done");
 	}

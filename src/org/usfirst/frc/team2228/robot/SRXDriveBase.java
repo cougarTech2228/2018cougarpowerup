@@ -1401,7 +1401,7 @@ public class SRXDriveBase {
 					Timer.delay(0.2);
 				}
 				// rotateToAngle(double _rotateToAngle, double _rotatePowerLevel)
-				if(!rotateToAngle(45, .3)) {
+				if(!rotateToAngle(-90, .3)) {
 					isTestMethodSelectionActive = false;
 					isTestBtnActive = false;
 					SmartDashboard.putBoolean("TstBtn-RotateToAngle:", false);
@@ -1469,12 +1469,12 @@ public class SRXDriveBase {
 					msg("START MAGIC MOTION TEST=============");
 					isTestBtnActive = true;
 				
-				// SRXCalStdTrapezoidMoveMagic(double _SRXRightDistanceIn, double _SRXRightTimeSec, double _SRXLeftDistanceIn, double _SRXLeftTimeSec) 
-				// SRXMoveMagic(double _SRXMoveDistanceIn, double _SRXMoveTimeSec)
-				// SRXRotateMagic(double _SRXRotateAngleDeg, double _SRXRotateTimeSec)
+			  // SRXCalStdTrapezoidMoveMagic(double _SRXRightDistanceIn, double _SRXRightTimeSec, double _SRXLeftDistanceIn, double _SRXLeftTimeSec) 
+			  // SRXMoveMagic(double _SRXMoveDistanceIn, double _SRXMoveTimeSec)
+			  // SRXRotateMagic(double _SRXRotateAngleDeg, double _SRXRotateTimeSec)
 			  //} else if(!SRXCalStdTrapezoidMoveMagic(60, 2.5, 60, 2.5)){
-				//} else if(!SRXMoveMagic(60, 2)){
-		      } else if(!SRXRotateMagic(90, 2)){	
+			  } else if(!SRXMoveMagic(60, 2)){
+		      //} else if(!SRXRotateMagic(90, 2)){	
 					isTestMethodSelectionActive = false;
 					isTestBtnActive = false;
 					SmartDashboard.putBoolean("TstBtn-MagicMotion:", false);
@@ -1818,20 +1818,20 @@ public class SRXDriveBase {
 			methodStartTime = Timer.getFPGATimestamp();
 			
 			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)			                                
-			mmLeftDistance = (int)(Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kEncoderCountsPerIn * (Math.abs(_SRXRotateAngleDeg) / 360));;
+			mmLeftDistance = (int)(Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kEncoderCountsPerIn * (_SRXRotateAngleDeg / 360));;
 			mmLeftCruiseVel = (int)(15 * (mmLeftDistance/(_SRXRotateTimeSec / SRXDriveBaseCfg.kvelMeasurePeriodSec)));
 			mmLeftAccel = (int)((45 * mmLeftDistance) / ((_SRXRotateTimeSec / SRXDriveBaseCfg.kvelMeasurePeriodSec) * (_SRXRotateTimeSec / SRXDriveBaseCfg.kvelMeasurePeriodSec)));
 			
 			
-			if(_SRXRotateAngleDeg >= 0){
+			//if(_SRXRotateAngleDeg >= 0){
 				mmRightDistance = -mmLeftDistance;
 				mmRightCruiseVel = -mmLeftCruiseVel;
 				mmRightAccel = -mmLeftAccel;
-			} else{
-				mmRightDistance = mmLeftDistance;
-				mmRightCruiseVel = mmLeftCruiseVel;
-				mmRightAccel = mmLeftAccel;
-			}
+			//} else{
+			//	mmRightDistance = mmLeftDistance;
+			//	mmRightCruiseVel = mmLeftCruiseVel;
+			//	mmRightAccel = mmLeftAccel;
+			//}
 			if (isConsoleDataEnabled){
 				System.out.printf("RgtD:%-8.2f ++RgtV:%-8d ++RgtA:%-8d ++LftD:%-8.2f ++LftV:%-8d ++LftA:%-8d%n", 
 						mmRightDistance, 
