@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 	private CameraController cam;
 	private CANLED LED;
 	private AngleIF angleIF;
-	private PDP pdp;
+//	private PDP pdp;
 //	private UsbCamera backCamera;
 //	private UsbCamera cam;
 
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
 		base.setAngleIF(angleIF);
-		pdp = new PDP(0);
+//		pdp = new PDP(0);
 		
 //		base.setCorrectionSensor(3); // navx
 		
@@ -116,8 +116,8 @@ public class Robot extends IterativeRobot {
 		// System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());
 		SmartDashboard.putNumber("Sensor2", au.getDistance2());
-		SmartDashboard.putNumber("Voltage: ", pdp.getVoltage());
-		SmartDashboard.putNumber("Elevator Current", pdp.getCurrent(0));
+//		SmartDashboard.putNumber("Voltage: ", pdp.getVoltage());
+//		SmartDashboard.putNumber("Elevator Current", pdp.getCurrent(0));
 
 	}
 
