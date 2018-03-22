@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
 	//	auto.init();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
- base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit();
 		//command.start();
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();

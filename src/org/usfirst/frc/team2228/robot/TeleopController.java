@@ -34,8 +34,8 @@ public class TeleopController {
     private static double kTurnSensitivityGain = 0.3;
 	
 	// Range of smoothFactorValue is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
-	private static double kLowSmoothFactor = 0.4;
-	private static double kHighSmoothFactor = 0.7;
+	private static double kLowSmoothFactor = 0.6;
+	private static double kHighSmoothFactor = 0.9;
 	//public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max throttle delta values are determined by testing
@@ -146,7 +146,9 @@ public class TeleopController {
 		// =======================================
 		// DRIVE ROBOT
 		//if(!isJoyStick2SRXDriveBaseDisabled){
+		
 		driveBase.setThrottleTurn(throttle, turn);
+		
 		//}
 		
 		// ++++++++++++++++++++++++++++++++++++
@@ -283,6 +285,9 @@ public class TeleopController {
 			// high smoothing factor if driver accelerates from stop - to stop a wheelie
 			if(Math.abs(accelFltrThrottleValue) < .2 && isrobotAccelerating){
 				smoothFactorValue = kHighSmoothFactor;
+			}
+			if(Math.abs(accelFltrThrottleValue) > .2){
+				smoothFactorValue = kLowSmoothFactor;
 			}
 
 			// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity

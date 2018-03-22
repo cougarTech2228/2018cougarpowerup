@@ -105,7 +105,7 @@ public class SRXDriveBase {
 	
 		
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = true;
+	private boolean isConsoleDataEnabled = false;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	private boolean isVelMoveToPositionActive = false;

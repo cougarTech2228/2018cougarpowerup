@@ -3,9 +3,9 @@ package org.usfirst.frc.team2228.robot;
 public class SRXDriveBaseCfg {
 		//=======================================
 		// SRXDRIVEBASE CONTROL FLAGS
-		public static boolean isSRXClosedLoopEnabled = true;
+		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
-		public static boolean isDriveStraightAssistEnabled = true;
+		public static boolean isDriveStraightAssistEnabled = false;
 		
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
