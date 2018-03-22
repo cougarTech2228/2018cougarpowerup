@@ -21,16 +21,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	private SRXDriveBase base;
-	private CubeManipulator cube;
+	//private CubeManipulator cube;
 	private DriverIF driverIF;
 	private TeleopController chessyDrive;
-	private AutoMaster auto;
-	private Elevator elevator;
-	private PneumaticController pc;
-	private AnalogUltrasonic au;
-	private CameraController cam;
-	private CANLED LED;
-	private AngleIF angleIF;
+	//private AutoMaster auto;
+	//private Elevator elevator;
+	//private PneumaticController pc;
+	//private AnalogUltrasonic au;
+	//private CameraController cam;
+	//private CANLED LED;
+	//private AngleIF angleIF;
+	
 //	private UsbCamera backCamera;
 //	private UsbCamera cam;
 
@@ -44,17 +45,16 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		cube = new CubeManipulator(driverIF);
+		//cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		cam = new CameraController();
-		pc = new PneumaticController(driverIF);
-		elevator = new Elevator(driverIF, pc, chessyDrive);
-		auto = new AutoMaster(base, elevator, pc);
-		au = new AnalogUltrasonic();
-		angleIF = new AngleIF();
-		base.setAngleIF(angleIF);
+		//cam = new CameraController();
+		//pc = new PneumaticController(driverIF);
+		//elevator = new Elevator(driverIF, pc, chessyDrive);
+		//auto = new AutoMaster(base, elevator, pc);
+		//au = new AnalogUltrasonic();
+		//angleIF = new AngleIF();
 		
-//		base.setCorrectionSensor(3); // navx
+		base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
 //		backCamera = new UsbCamera("Back Camera", 1);
@@ -63,6 +63,7 @@ public class Robot extends IterativeRobot {
 //		 LED = new CANLED();
 //		 LED.colorInit();
 		// angle = new AngleIF();
+		//testSRXDriveBase = new TestSRXDriveBase(base);
 	}
 
 	/**
@@ -79,8 +80,30 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// Gets everything from Autonomous Init from the AutoMaster class
-		angleIF.zeroYaw();
-		auto.init();
+	  //angleIF.zeroYaw();
+	//	auto.init();
+		// autoSelected = SmartDashboard.getString("Auto Selector",
+		// defaultAuto);
+ base.setSRXDriveBaseInit();
+		//command.start();
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		
+		if(gameData.charAt(0) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if(gameData.charAt(1) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
+		if(gameData.charAt(2) == 'L') {
+			System.out.println("L");
+		} else {
+			System.out.println("R");
+		}
 	}
 
 	/**
@@ -90,11 +113,15 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Gets everything from the Autonomous Periodic from the AutoMaster
 		// class
-		auto.run();
+	//auto.run();
 	}
 	
 	public void teleopInit() {
-		angleIF.zeroYaw();
+		//angleIF.zeroYaw();
+		System.out.println("teleopInit() fi!");
+		base.setSRXDriveBaseInit();
+		chessyDrive.teleopInit();
+		System.out.println("Teleop Init done");
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -105,26 +132,35 @@ public class Robot extends IterativeRobot {
 		// class, the Pneumatic class and the Elevatorclass for the teleop
 		// period
 		chessyDrive.teleopPeriodic();
-		cube.teleopPeriodic();
-		pc.teleopPeriodic();
-		elevator.teleopPeriodic();
-		cam.cameraCommand();
+		//cube.teleopPeriodic();
+		//pc.teleopPeriodic();
+		//elevator.teleopPeriodic();
+		//cam.cameraCommand();
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
 		// LED.rainbowShift();
 		//au.roundTo(0.0001);
 		// System.out.println(au.getDistance1());
-		SmartDashboard.putNumber("Sensor1", au.getDistance1());
-		SmartDashboard.putNumber("Sensor2", au.getDistance2());
+		//SmartDashboard.putNumber("Sensor1", au.getDistance1());
+		//SmartDashboard.putNumber("Sensor2", au.getDistance2());
 
 	}
-
+	
+	/**
+	 * This function is called once during test mode
+	 */
+	@Override
+	public void testInit() {
+		base.setSRXDriveBaseInit();
+	}
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
 	@Override
 	public void testPeriodic() {
+		base.testMethodSelection();
 	}
 	
 }

@@ -18,13 +18,15 @@ public class MoveTo extends Command {
 	private double endRightCounts;
 	private double endTime;
 	private double timeOut;
+	private boolean isReversed;
 	
-	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove, double _timeOut) {
+	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean isReversed, boolean _isCascadeMove, double _timeOut) {
 		super(_timeOut);
 		this.base = base;
 		moveIn = _MoveToPositionIn;
 		movePwr = _MoveToPositionPwrLevel;
 		isCascade = _isCascadeMove;
+		this.isReversed = isReversed;
 	
 	}
 	
@@ -38,7 +40,7 @@ public class MoveTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.velMoveToPosition(moveIn, movePwr, isCascade);
+		isDone = !base.velMoveToPosition(moveIn, movePwr, isReversed, isCascade);
 //		isDone = !base.testDriveStraightCalibration(moveIn, movePwr);
 //		base.SetDriveTrainCmdLevel(.2, .2);
 	}
