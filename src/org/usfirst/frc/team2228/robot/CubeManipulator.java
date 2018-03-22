@@ -73,8 +73,8 @@ public class CubeManipulator {
 			triggered2 = false;
 		}
 		if(pc.squeezies.get() && triggered) {
-			timer.start();
-			if(timer.get() >= 0.5) {
+			double initTime = Timer.getFPGATimestamp();
+			if(Timer.getFPGATimestamp() - initTime >= 1) {
 				left.set(0);
 				right.set(0);
 				triggered = false;
