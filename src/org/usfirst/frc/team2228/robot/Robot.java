@@ -21,16 +21,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	private SRXDriveBase base;
-	//private CubeManipulator cube;
+	private CubeManipulator cube;
 	private DriverIF driverIF;
 	private TeleopController chessyDrive;
-	//private AutoMaster auto;
-	//private Elevator elevator;
-	//private PneumaticController pc;
-	//private AnalogUltrasonic au;
-	//private CameraController cam;
-	//private CANLED LED;
-	//private AngleIF angleIF;
+	private AutoMaster auto;
+	private Elevator elevator;
+	private PneumaticController pc;
+	private AnalogUltrasonic au;
+	private CameraController cam;
+	private CANLED LED;
+	private AngleIF angleIF;
 	
 //	private UsbCamera backCamera;
 //	private UsbCamera cam;
@@ -45,14 +45,14 @@ public class Robot extends IterativeRobot {
 
 		driverIF = new DriverIF();
 		base = new SRXDriveBase();
-		//cube = new CubeManipulator(driverIF);
+		cube = new CubeManipulator(driverIF);
 		chessyDrive = new TeleopController(driverIF, base);
-		//cam = new CameraController();
-		//pc = new PneumaticController(driverIF);
-		//elevator = new Elevator(driverIF, pc, chessyDrive);
-		//auto = new AutoMaster(base, elevator, pc);
-		//au = new AnalogUltrasonic();
-		//angleIF = new AngleIF();
+		cam = new CameraController();
+		pc = new PneumaticController(driverIF);
+		elevator = new Elevator(driverIF, pc, chessyDrive);
+		auto = new AutoMaster(base, elevator, pc);
+		au = new AnalogUltrasonic();
+		angleIF = new AngleIF();
 		
 		base.setCorrectionSensor(3); // navx
 		
@@ -80,30 +80,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// Gets everything from Autonomous Init from the AutoMaster class
-	  //angleIF.zeroYaw();
-	//	auto.init();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		base.setSRXDriveBaseInit();
-		//command.start();
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		
-		if(gameData.charAt(0) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(1) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
-		if(gameData.charAt(2) == 'L') {
-			System.out.println("L");
-		} else {
-			System.out.println("R");
-		}
+	    angleIF.zeroYaw();
+		auto.init();
+		base.setSRXDriveBaseInit(1);
 	}
 
 	/**
@@ -113,13 +92,13 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Gets everything from the Autonomous Periodic from the AutoMaster
 		// class
-	//auto.run();
+	auto.run();
 	}
 	
 	public void teleopInit() {
-		//angleIF.zeroYaw();
+		angleIF.zeroYaw();
 		System.out.println("teleopInit() fi!");
-		base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit(2);
 		chessyDrive.teleopInit();
 		System.out.println("Teleop Init done");
 	}
@@ -132,10 +111,10 @@ public class Robot extends IterativeRobot {
 		// class, the Pneumatic class and the Elevatorclass for the teleop
 		// period
 		chessyDrive.teleopPeriodic();
-		//cube.teleopPeriodic();
-		//pc.teleopPeriodic();
-		//elevator.teleopPeriodic();
-		//cam.cameraCommand();
+		cube.teleopPeriodic();
+		pc.teleopPeriodic();
+		elevator.teleopPeriodic();
+		cam.cameraCommand();
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
@@ -152,7 +131,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testInit() {
-		base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit(3);
 	}
 	
 	/**

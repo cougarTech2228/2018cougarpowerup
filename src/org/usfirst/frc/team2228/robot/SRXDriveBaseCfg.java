@@ -3,24 +3,24 @@ package org.usfirst.frc.team2228.robot;
 public class SRXDriveBaseCfg {
 		//=======================================
 		// SRXDRIVEBASE CONTROL FLAGS
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = false;
 		
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
 		// SET MOTOR DIRECTION
-		public static boolean isDriveRightMasterMtrReversed = true;
-		public static boolean isDriveRightFollowerMtrReversed = true;
-		public static boolean isDriveLeftMasterMtrReversed = false;
-		public static boolean isDriveLeftFollowerMtrReversed = false;
+		public static boolean isDriveRightMasterMtrReversed = false;
+		public static boolean isDriveRightFollowerMtrReversed = false;
+		public static boolean isDriveLeftMasterMtrReversed = true;
+		public static boolean isDriveLeftFollowerMtrReversed = true;
 				
 		// =======
 		// FEEDBACK SENSOR - ENCODER DIRECTION
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir => is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = false;
+		public static boolean isRightEncoderSensorReversed = true;
 		public static boolean isLeftEncoderSensorReversed = true;
 		
 		//========
