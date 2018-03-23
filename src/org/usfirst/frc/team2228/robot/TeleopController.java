@@ -277,19 +277,12 @@ public class TeleopController {
 			// determine change for last driverIF read
 			deltaAccelFltrThrottleValue = accelFltrThrottleValue - previousEMAThottleValue;
 			
-			// Check if accelerating
+			// Check if robot is accelerating
 			if((accelFltrThrottleValue >= 0 && deltaAccelFltrThrottleValue >= 0)
 				|| (accelFltrThrottleValue < 0 && deltaAccelFltrThrottleValue < 0 )){
 					isrobotAccelerating = true;
 			}
-			// high smoothing factor if driver accelerates from stop - to stop a wheelie
-			if(Math.abs(accelFltrThrottleValue) < .2 && isrobotAccelerating){
-				smoothFactorValue = kHighSmoothFactor;
-			}
-			if(Math.abs(accelFltrThrottleValue) > .2){
-				smoothFactorValue = kLowSmoothFactor;
-			}
-
+			
 			// Check for large same sign delta value that may cause a wheelie or rotation torque to a high Center of gravity
 			if (Math.abs(deltaAccelFltrThrottleValue) > kMaxDeltaVelocity) {
 					smoothFactorValue = kHighSmoothFactor;
@@ -297,7 +290,16 @@ public class TeleopController {
 					// If driver behaves
 					smoothFactorValue = kLowSmoothFactor;
 				}
+			// high smoothing factor if driver accelerates from stop - to stop a wheelie
+			if(Math.abs(accelFltrThrottleValue) < .2 && isrobotAccelerating){
+				driveBase.setDriveTrainRamp(2);
+				smoothFactorValue = kHighSmoothFactor;
+			}
 			
+			if(Math.abs(accelFltrThrottleValue) > .2){
+				driveBase.setDriveTrainRamp(0);
+				smoothFactorValue = kLowSmoothFactor;
+			}
 			// RUN THROUGH SMOOTHING FILTER
 			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
 			// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
