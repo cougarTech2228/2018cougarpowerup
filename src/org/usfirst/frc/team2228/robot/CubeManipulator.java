@@ -3,6 +3,7 @@ package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CubeManipulator {
@@ -28,7 +29,7 @@ public class CubeManipulator {
 	boolean triggered2 = false;
 	private boolean lastButton = false;
 	boolean lastButton2 = false;
-
+	double initTime;
 	public CubeManipulator(DriverIF _driverIF) {
 		driverIF = _driverIF;
 		brakeSet(false);
@@ -48,6 +49,7 @@ public class CubeManipulator {
 		c.setClosedLoopControl(true);
 		//System.out.println(brake.get());
 		if (!driverIF.squeezeToggle() && lastButton3 && triggered3 == false) {
+			initTime = Timer.getFPGATimestamp();
 			squeezies.set(true);
 			triggered3  = true;
 		}
@@ -90,6 +92,13 @@ public class CubeManipulator {
 			left.set(0);
 			right.set(0);
 			triggered2 = false;
+		}
+		if(squeezies.get() && triggered) {
+			if(Timer.getFPGATimestamp() - initTime >= 1) {
+				left.set(0);
+				right.set(0);
+				triggered = false;
+			}
 		}
 		
 //		else if(driverIf.expulsion()){
