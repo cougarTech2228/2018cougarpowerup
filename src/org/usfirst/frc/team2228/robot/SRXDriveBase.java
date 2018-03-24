@@ -107,7 +107,7 @@ public class SRXDriveBase {
 	
 		
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = true;
+	private boolean isConsoleDataEnabled = false;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	private boolean isVelMoveToPositionActive = false;
@@ -830,15 +830,15 @@ public class SRXDriveBase {
 		} else if (!isVelMoveToPositionActive) {
 			isVelMoveToPositionActive = true;
 			methodStartTime = Timer.getFPGATimestamp();
-			msg("START VELOCITY MOVE===========================");
+			msg("START VELOCITY MOTION MAGIC MOVE===========================");
 			magicMoveDistance = ((_isDirectionRev)? -_moveToPositionIn : _moveToPositionIn);
 			
 			} else if(!SRXMoveMagic(magicMoveDistance, _moveToPositionPwrLevel)){
-				msg("AT VELOCITY MOVE STOP==================================");
+				msg("AT VELOCITY MOTION MAGIC MOVE STOP==================================");
 				isVelMoveToPositionActive = false;
 				methodTime = Timer.getFPGATimestamp() - methodStartTime;
 				msg("Vel move to position Time(Sec) = " + methodTime);
-				msg("VELOCITY MOVE COMPLETE=======================");
+				msg("VELOCITY MOTION MAGIC MOVE COMPLETE=======================");
 			}
 		return isVelMoveToPositionActive;
 	}
@@ -900,14 +900,14 @@ public class SRXDriveBase {
 		} else if (!isRotateToAngleActive) {
 			isRotateToAngleActive = true;
 			methodStartTime = Timer.getFPGATimestamp();
-			msg("ROTATE TO ANGLE IS ACTIVE===========================");
+			msg("ROTATE TO ANGLE MOTION MAGIC IS ACTIVE===========================");
 			
 			} else if (!SRXRotateMagic(_rotateToAngle,  _rotatePowerLevel)) {
-				msg("ROTATE TO ANGLE IS AT STOP===========================");
+				msg("ROTATE TO ANGLE IS AT MOTION MAGIC STOP===========================");
 				isRotateToAngleActive = false;
 				methodTime = Timer.getFPGATimestamp() - methodStartTime;
 				msg("Rotate to angle Time(Sec) = " + methodTime);
-				msg("ROTATE TO ANGLE IS DONE=========================");
+				msg("ROTATE TO ANGLE IS MAGIC MOTION DONE=========================");
 			}		
 			
 		return isRotateToAngleActive;
@@ -1348,7 +1348,7 @@ public class SRXDriveBase {
 					Timer.delay(0.2);
 				}
 				// testStepFunction(double _stepFunctionPower, double _stepFunctionTimeSec, boolean _isTestForRightDrive)
-				if(!testStepFunction(.3, 2, true)){
+				if(!testStepFunction(.3, 2, false)){
 					isTestMethodSelectionActive = false;
 					isTestBtnActive = false;
 					if(isLoggingDataEnabled){
@@ -1866,7 +1866,7 @@ public class SRXDriveBase {
 		} else if(!magicMove(mgmvRightCruiseVel, mgmvRightAccel, mgmvRightDistance, mgmvLeftCruiseVel,	mgmvLeftAccel, mgmvLeftDistance)){
 			isSRXMoveMagicActive = false;
 			methodTime = Timer.getFPGATimestamp() - methodStartTime;
-			msg("SRXCal Std Trap Move Magic(Sec) = " + methodTime);
+			msg("SRXMove Magic(Sec) = " + methodTime);
 			msg("END MOTION MAGIC CALCULATIONS AND MOVE================");
 		}
 			
@@ -1945,7 +1945,7 @@ public class SRXDriveBase {
 			motionMagicRightPos = driveRightMasterMtr.getActiveTrajectoryPosition();
 			motionMagicRightVel = driveRightMasterMtr.getActiveTrajectoryVelocity();
 			
-			if ((Math.abs(motionMagicLeftPos) >= Math.abs(_leftDistance)) && (Math.abs(motionMagicRightPos) >= Math.abs(_rightDistance))) {
+			if ((Math.abs(motionMagicLeftPos) >= (Math.abs(_leftDistance)-10)) && (Math.abs(motionMagicRightPos) >= (Math.abs(_rightDistance)-10))) {
 				driveRightMasterMtr.set(ControlMode.MotionMagic, 0); 
 				driveLeftMasterMtr.set(ControlMode.MotionMagic, 0);
 				isSRXMagicMoveActive = false;

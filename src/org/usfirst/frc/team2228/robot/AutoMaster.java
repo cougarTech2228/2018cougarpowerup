@@ -6,7 +6,6 @@ import org.usfirst.frc.team2228.commands.MoveTo;
 import org.usfirst.frc.team2228.commands.PneumaticGrabber;
 import org.usfirst.frc.team2228.commands.RotateTo;
 import org.usfirst.frc.team2228.commands.StringCommand;
-import org.usfirst.frc.team2228.commands.Switch;
 import org.usfirst.frc.team2228.commands.TurnTo;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -126,7 +125,6 @@ public class AutoMaster {
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
 				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, false, 1.0), 3);
 				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
-				Cg.addParallel(new Switch(elevator, 2.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");
@@ -153,8 +151,6 @@ public class AutoMaster {
 //				Cg.addParallel(new MoveTo(base, 3, speed / 2, false, 2.0));
 				Cg.addParallel(new PneumaticGrabber(pneu, false, 2.0));
 				Cg.addParallel(new ElevatorAuto(elevator, 4.0));
-				Cg.addParallel(new Switch(elevator, 2.0));
-
 			} else {
 				System.out.println("Incorrect game data");
 			}
@@ -180,7 +176,6 @@ public class AutoMaster {
 				Cg.addParallel(new ElevatorAuto(elevator, 2.0));
 				Cg.addParallel(new MoveTo(base, 19, speed / 2, false, false, 1.0));
 				Cg.addSequential(new PneumaticGrabber(pneu, false, 2.0));
-				Cg.addSequential(new Switch(elevator, 2.0));
 			} else {
 				// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 				System.out.println("Incorrect game data");

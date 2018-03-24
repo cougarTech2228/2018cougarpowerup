@@ -13,7 +13,7 @@ public class TeleopController {
 	//================================
 	// SWITCHES
 	
-	private boolean isTeleopConsoleDataEnabled = false;
+	private boolean isTeleopConsoleDataEnabled = true;
 	private boolean isJoyStick2SRXDriveBaseDisabled = false;
 	private boolean isStopCheckToggleActive = false;
 	
@@ -291,15 +291,15 @@ public class TeleopController {
 					smoothFactorValue = kLowSmoothFactor;
 				}
 			// high smoothing factor if driver accelerates from stop - to stop a wheelie
-			if(Math.abs(accelFltrThrottleValue) < .2 && isrobotAccelerating){
-				driveBase.setDriveTrainRamp(2);
-				smoothFactorValue = kHighSmoothFactor;
-			}
-			
-			if(Math.abs(accelFltrThrottleValue) > .2){
-				driveBase.setDriveTrainRamp(0);
-				smoothFactorValue = kLowSmoothFactor;
-			}
+//			if(Math.abs(accelFltrThrottleValue) < .25 && isrobotAccelerating){
+//				driveBase.setDriveTrainRamp(3);
+//				smoothFactorValue = kHighSmoothFactor;
+//			}
+//			
+//			if(Math.abs(accelFltrThrottleValue) > .25){
+//				driveBase.setDriveTrainRamp(0);
+//				smoothFactorValue = kLowSmoothFactor;
+//			}
 			// RUN THROUGH SMOOTHING FILTER
 			// Exponential Avg Filter (EMA) is a recursive low pass filter that can change it's gain to address filter response
 			// newAverage = alpha*presentValue + (1-alpha)*lastValue or:
