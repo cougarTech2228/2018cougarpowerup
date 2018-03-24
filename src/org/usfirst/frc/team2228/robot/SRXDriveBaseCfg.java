@@ -11,17 +11,17 @@ public class SRXDriveBaseCfg {
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
 		// SET MOTOR DIRECTION
-		public static boolean isDriveRightMasterMtrReversed = true;
-		public static boolean isDriveRightFollowerMtrReversed = true;
-		public static boolean isDriveLeftMasterMtrReversed = false;
-		public static boolean isDriveLeftFollowerMtrReversed = false;
+		public static boolean isDriveRightMasterMtrReversed = false;
+		public static boolean isDriveRightFollowerMtrReversed = false;
+		public static boolean isDriveLeftMasterMtrReversed = true;
+		public static boolean isDriveLeftFollowerMtrReversed = true;
 				
 		// =======
 		// FEEDBACK SENSOR - ENCODER DIRECTION
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir => is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = false;
+		public static boolean isRightEncoderSensorReversed = true;
 		public static boolean isLeftEncoderSensorReversed = true;
 		
 		//========
@@ -106,16 +106,16 @@ public class SRXDriveBaseCfg {
 		
 		// =======
 		// SRX CLOSE LOOP SETUP PARAMETERS
-		public static double kdriveRightMstrFeedForwardGain = 1.8; //2
-		public static double kdriveRightMstrProportionalGain = 3; //2
+		public static double kdriveRightMstrFeedForwardGain = 1.5; //2
+		public static double kdriveRightMstrProportionalGain = 2; //2
 		public static double kdriveRightMstrIntegralGain = 0;
 		public static double kdriveRightMstrDerivativeGain = 10; //10
 		public static int    kdriveRightMstrIzone = 0;
 		public static int    kdriveRightMstrRampRate = 0;
 		public static int    kdriveRightMstrProfile = 0;
 		
-		public static double kdriveLeftMstrFeedForwardGain = 1.8; //2
-		public static double kdriveLeftMstrProportionalGain = 3; //2
+		public static double kdriveLeftMstrFeedForwardGain = 1.5; //2
+		public static double kdriveLeftMstrProportionalGain = 2; //2
 		public static double kdriveLeftMstrIntegralGain = 0;
 		public static double kdriveLeftMstrDerivativeGain = 10; //10
 		public static int    kdriveleftMstrIzone = 0;
