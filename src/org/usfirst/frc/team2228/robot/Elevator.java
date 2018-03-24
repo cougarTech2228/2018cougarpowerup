@@ -100,14 +100,14 @@ public class Elevator {
 	}
 
 	public void teleopInit() {
-		if (leftLimitSwitch.get() || rightLimitSwitch.get()) {
+		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
 	}
 
 	public void teleopPeriodic() {
 		double b = .7666333420;
-		if (!leftLimitSwitch.get()) {
+		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
 		SlowRobot();
@@ -150,7 +150,7 @@ public class Elevator {
 		} else {
 			winch.set(0);
 		}
-		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
+		SmartDashboard.putBoolean("Limit Switch:", rightLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		System.out.println("Elevator Encoder cts: " + elevator.getSensorCollection().getQuadraturePosition());
 		// System.out.println("Elevator Encoder Velocity: " +

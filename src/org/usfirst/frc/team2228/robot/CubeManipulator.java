@@ -94,7 +94,7 @@ public class CubeManipulator {
 			right.set(0);
 			triggered2 = false;
 		}
-		if(triggered3 && !triggered) {
+		if(triggered3 && !triggered2) {
 			System.out.println("Attempting stop");
 			if(Timer.getFPGATimestamp() - initTime >= 1) {
 				left.set(0);

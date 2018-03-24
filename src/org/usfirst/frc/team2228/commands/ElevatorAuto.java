@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ElevatorAuto extends Command {
 	Elevator elevator;
 	boolean done = false;
-
-	public ElevatorAuto(Elevator _elevator, double time) {
+	private double speed;
+	public ElevatorAuto(Elevator _elevator, double speed, double time) {
 		super(time);
 		elevator = _elevator;
-
+		this.speed = speed;
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 	}
@@ -28,7 +28,7 @@ public class ElevatorAuto extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		elevator.elevatorSet(.3);
+		elevator.elevatorSet(speed);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
