@@ -1529,7 +1529,7 @@ public class SRXDriveBase {
 					isTestBtnActive = true;
 			 
 			  //SRXRotateMagic(double _SRXRotateAngleDeg, double _SRXRotatePercentVel)
-		      } else if(!SRXRotateMagic(90, .3)){	
+		      } else if(!SRXRotateMagic(90, .25)){	
 					isTestMethodSelectionActive = false;
 					isTestBtnActive = false;
 					SmartDashboard.putBoolean("TstBtn-MagicMotionRotate:", false);
@@ -1956,6 +1956,10 @@ public class SRXDriveBase {
 				msg("END MOTION MAGIC ========================");
 			}
 		}
+		
+		
+		
+		
 		// Output commands to SRX's
 		driveRightFollowerMtr.set(ControlMode.Follower, driveRightMasterMtr.getDeviceID());
 		driveLeftFollowerMtr.set(ControlMode.Follower, driveLeftMasterMtr.getDeviceID());
@@ -1971,6 +1975,26 @@ public class SRXDriveBase {
 								motionMagicLeftPos,
 								motionMagicRightVel,
 								motionMagicRightPos);
+		}
+		//Safety check exceeds stop distance
+		if((Math.abs(leftSensorPositionRead) > (Math.abs(_leftDistance) + 100)) 
+			|| (Math.abs(rightSensorPositionRead) > (Math.abs(_rightDistance) + 100))){
+			
+			setStopMotors();
+			isSRXMagicMoveActive = false;
+			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+			msg("Motion Magic(Sec) = " + methodTime);
+			msg("END MOTION MAGIC ========================");
+		}
+		// Safety check right side slide/left side encoder delta to high 
+		if((Math.abs(leftSensorPositionRead) > (Math.abs(rightSensorPositionRead) + 100)) 
+			|| (Math.abs(rightSensorPositionRead) > (Math.abs(leftSensorPositionRead) +100))){
+			
+			setStopMotors();
+			isSRXMagicMoveActive = false;
+			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+			msg("Motion Magic(Sec) = " + methodTime);
+			msg("END MOTION MAGIC ========================");
 		}
 		return isSRXMagicMoveActive;
 	}
