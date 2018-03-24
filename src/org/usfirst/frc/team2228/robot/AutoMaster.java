@@ -29,8 +29,6 @@ public class AutoMaster {
 	private String autoSelected;
 	private String input = "";
 	private CommandGroup Cg = null;
-	private CommandGroup rightSwitch = null;
-	private CommandGroup driveElevator = null;
 	private SendableChooser<String> chooser = new SendableChooser<>();
 	private Elevator elevator;
 	private CubeManipulator cube;
@@ -83,8 +81,6 @@ public class AutoMaster {
 	public void init() {
 		Scheduler.getInstance().removeAll();
 		Cg = new CommandGroup();
-		rightSwitch = new CommandGroup();
-		driveElevator = new CommandGroup();
 
 		base.setSRXDriveBaseInit();
 		autoSelected = chooser.getSelected();
@@ -117,18 +113,9 @@ public class AutoMaster {
 		} else if (secondIndex.equalsIgnoreCase("R")) {
 			scaleData = GameData2.secondIndexR;
 		}
-		driveElevator.addParallel(new ElevatorAuto(elevator, .5, 2.0));
-		driveElevator.addParallel(new MoveTo(base, 19, speed / 2, false, 1.0));
 		switch (autoSelected) {
 		case "Baseline":
-			// Cg.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
-			// System.out.println("Baseline selected");
-			// // Adds movement to the auto sequence
-			Cg.addSequential(new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed,
-					false, 3.0));
-			Cg.addSequential(new PneumaticGrabber(cube, true, 0.5));
-			System.out.println("Left Encoders: " + base.getLeftEncoderPosition() + " Right Encoders: "
-					+ base.getRightEncoderPosition());
+		cmdSet.baseline(speed, Cg);
 			break;
 
 		case "Left Switch":
