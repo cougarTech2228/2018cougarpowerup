@@ -1975,6 +1975,7 @@ public class SRXDriveBase {
 								motionMagicLeftPos,
 								motionMagicRightVel,
 								motionMagicRightPos);
+		//MEMES
 		}
 		//Safety check exceeds stop distance
 		if((Math.abs(leftSensorPositionRead) > (Math.abs(_leftDistance) + 100)) 
