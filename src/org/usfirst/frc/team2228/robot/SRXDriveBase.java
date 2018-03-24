@@ -107,7 +107,7 @@ public class SRXDriveBase {
 	
 		
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = false;
+	private boolean isConsoleDataEnabled = true;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	private boolean isVelMoveToPositionActive = false;
@@ -1848,7 +1848,7 @@ public class SRXDriveBase {
 			isSRXMoveMagicActive = true;
 			mgmvLeftDistance = (_SRXMoveDistanceIn / SRXDriveBaseCfg.kInchesPerCount);
 			mgmvLeftCruiseVel = (int)(_moveMagicToPositionPwrLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits) ;			
-			mgmvLeftAccel = ((int)mgmvLeftCruiseVel*2);
+			mgmvLeftAccel = ((int)mgmvLeftCruiseVel/2);
 			
 			mgmvRightDistance = mgmvLeftDistance;
 			mgmvRightCruiseVel = mgmvLeftCruiseVel;
@@ -1881,7 +1881,7 @@ public class SRXDriveBase {
 			// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)			                                
 			mgmvLeftDistance = (int)(Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kEncoderCountsPerIn * (_SRXRotateAngleDeg / 360));;
 			mgmvLeftCruiseVel = (int)(_rotateMagicPowerLevel * SRXDriveBaseCfg.MaxVel_VelNativeUnits) ;	
-			mgmvLeftAccel = ((int)mgmvLeftCruiseVel*2);
+			mgmvLeftAccel = ((int)mgmvLeftCruiseVel/2);
 			
 			
 			//if(_SRXRotateAngleDeg >= 0){

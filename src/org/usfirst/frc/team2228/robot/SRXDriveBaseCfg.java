@@ -6,22 +6,22 @@ public class SRXDriveBaseCfg {
 		public static boolean isSRXClosedLoopEnabled = true;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = false;
-		public static boolean isMotionMagicEnabled = false;
+		public static boolean isMotionMagicEnabled = true;
 		
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
 		// SET MOTOR DIRECTION
-		public static boolean isDriveRightMasterMtrReversed = false;
-		public static boolean isDriveRightFollowerMtrReversed = false;
-		public static boolean isDriveLeftMasterMtrReversed = true;
-		public static boolean isDriveLeftFollowerMtrReversed = true;
+		public static boolean isDriveRightMasterMtrReversed = true;
+		public static boolean isDriveRightFollowerMtrReversed = true;
+		public static boolean isDriveLeftMasterMtrReversed = false;
+		public static boolean isDriveLeftFollowerMtrReversed = false;
 				
 		// =======
 		// FEEDBACK SENSOR - ENCODER DIRECTION
 		
 		// The following changes the encoder sign internal to the SRX only
 		// If direct read of encoder is negative in fwd dir => is----EncoderSensorReversed = true
-		public static boolean isRightEncoderSensorReversed = true;
+		public static boolean isRightEncoderSensorReversed = false;
 		public static boolean isLeftEncoderSensorReversed = true;
 		
 		//========
@@ -35,54 +35,54 @@ public class SRXDriveBaseCfg {
 		
 		// AndyMark tough box mini (50.0/14.0)*(48.0/16.0)
 		// CIMCoder and 2018 drive train gear ratio 72/11
-		public static double kGearRatio =8.459;
+		public static double kGearRatio =6.5454;
 				//6.5454;
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;
 		
 		// !!!!!!!!!!!!!!!!!!!!!! This is measured with a tape measure
-		public static double kTrackWidthIn = 21.5;
+		public static double kTrackWidthIn = 24.125;
 				//22.875;
 		
 		// !!!!!!!!!!!!!!!!!!!!!! This is measured with a thin tape measure - use mm and convert to in
-		public static double kMeasuredRgtWheelCircum = 18.937;
+		public static double kMeasuredRgtWheelCircum = 18.8976;
 				//12.678;
-		public static double kMeasuredLftWheelCircum = 18.937;
+		public static double kMeasuredLftWheelCircum = 19.0551;
 				//12.678;
 		
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
 		// kDriveEncoderCyclesPerRev = (cycles/rev) * (gearRatio) = 20*8.459
-				public static double kDriveEncoderCyclesPerRev = 169.18;
+				public static double kDriveEncoderCyclesPerRev = 130.9;
 				
 		// kCountsPerRevolution = quadrature(4) * kDriveEncoderCyclesPerRev = 4*169.18
 		public static double kCountsPerRevolution = 676.72;
 				//523.63;
 		
 		// kWheelCircumIn = (kMeasuredRgtWheelCircum + kMeasuredLftWheelCircum)/2
-		public static double kWheelCircumIn = 18.678;
+		public static double kWheelCircumIn = 18.97635;
 		
 		// kInchesPerCount = kWheelCircumIn / kCountsPerRevolution; 1/kInchesPerCount
-		public static double kInchesPerCount = 0.0276;
+		public static double kInchesPerCount = 0.036;
 				//18.0242;
-		public static double kEncoderCountsPerIn = 36.231;
+		public static double kEncoderCountsPerIn = 27.778;
 				//41.302;
 		
 		//==========
 		//INFO CALCULATIONS
 		// Diameter = WheelCircum / Pi
-		public static double kRgtWheelDiameter = 4.035;
-		public static double kLftWheelDiameter = 4.035;
+		public static double kRgtWheelDiameter = 6.0153;
+		public static double kLftWheelDiameter = 6.0654;
 		
 		// kRightInchesPerCount = kMeasuredRgtWheelCircum / kCountsPerRevolution; 1/kRightInchesPerCount
-		public static double kRightInchesPerCount = 0.0242; 
-		public static double kRightEncoderCountsPerIn = 41.302;
+		public static double kRightInchesPerCount = 0.0361; 
+		public static double kRightEncoderCountsPerIn = 27.855;
 		
 		// kLeftInchesPerCount = kMeasuredLftWheelCircum / kCountsPerRevolution; 1/kLeftInchesPerCount
-		public static double kLeftInchesPerCount = 0.0242; 
-		public static double kLeftEncoderCountsPerIn = 41.302;
+		public static double kLeftInchesPerCount = 0.0359; 
+		public static double kLeftEncoderCountsPerIn = 27.701;
 
 		//===============================================
 		// SRX CLOSED LOOP VELOCITY CALCULATIONS
@@ -90,10 +90,10 @@ public class SRXDriveBaseCfg {
 		// Use RoboRio web dashboard: Run at high speed and read Output % and nativeUnit velocity - calculate max
 		// MaxVel_VelNativeUnits = RPM * 1/60sec * 1/[10 => 100ms samples/sec] * kCountsPerRevolution = counts/100ms
 		//From RoboRio WebDashBoard:
-		public static double MaxVel_VelNativeUnits = 662.164;
+		public static double MaxVel_VelNativeUnits = 563.69;
 	
 		// kTopRPM = (vel[measureVelPeriod->100ms] * 600) / kCountsPerRevolution
-		public static double kTopRPM = 587.72;
+		public static double kTopRPM = 645.9;
 		
 		
 		
@@ -160,10 +160,10 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightFwdCorrection = 1.035; // Hard floor correction 0.87;
+		public static double kDriveStraightFwdCorrection = 1.02; // Hard floor correction 0.87;
 		public static double kDriveStraightRevCorrection = 1.02;
 		
-		public static double kRotateCWDriveStraightCorrection = 0.94;// fwd-.93
+		public static double kRotateCWDriveStraightCorrection = 0.75;// fwd-.93
 		public static double kRotateCCWDriveStraightCorrection = 0.75;
 		
 		public static double kTurnRightDriveStraightCorrection = 1;
