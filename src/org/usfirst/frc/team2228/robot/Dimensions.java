@@ -25,6 +25,7 @@ public class Dimensions {
 	public static final double POWER_CUBE_ZONE_WIDTH = 42;
 	public static final double TOTAL_FIELD_LENGTH = 648;
 	public static final double TOTAL_FIELD_WIDTH = 324;
+	public static final double ALLIANCE_WALL_TO_SCALE = 299.648;
 	
 	//Scale Dimensions
 	public static final double SCALE_HIGHEST_POSITION = 72;
@@ -36,6 +37,7 @@ public class Dimensions {
 	public static final double SCALE_PLATFORM_WIDTH = 36;
 	public static final double SCALE_PLATFORM_LENGTH = 48;
 	public static final double END_OF_SCALE_TO_OTHER_END = 180;
+	
 	
 	//Tower and Rungs Dimensions
 	public static final double TOWER_WIDTH = 17;

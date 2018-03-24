@@ -50,6 +50,7 @@ public class CubeManipulator {
 		//System.out.println(brake.get());
 		if (!driverIF.squeezeToggle() && lastButton3 && triggered3 == false) {
 			initTime = Timer.getFPGATimestamp();
+			System.out.println("initTime" + initTime);
 			squeezies.set(true);
 			triggered3  = true;
 		}
@@ -93,11 +94,13 @@ public class CubeManipulator {
 			right.set(0);
 			triggered2 = false;
 		}
-		if(squeezies.get() && triggered) {
+		if(triggered3 && !triggered) {
+			System.out.println("Attempting stop");
 			if(Timer.getFPGATimestamp() - initTime >= 1) {
 				left.set(0);
 				right.set(0);
 				triggered = false;
+				System.out.println("Stopping spin");
 			}
 		}
 		

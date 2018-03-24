@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // 
 public class TeleopController {
 	
-	private boolean isTeleopConsoleDataEnabled = true;
+	private boolean isTeleopConsoleDataEnabled = false;
 	
 	private DriverIF DriverIF;
 	private SRXDriveBase driveBase;

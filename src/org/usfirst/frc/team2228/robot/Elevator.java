@@ -26,7 +26,7 @@ public class Elevator {
 	double currentHeight;
 	int heightCount = 0;
 	private boolean lastButtonUp;
-//	DMC60 rearConveyor;
+	// DMC60 rearConveyor;
 	double previousHeight;
 	boolean raising;
 	boolean lowering;
@@ -71,7 +71,7 @@ public class Elevator {
 		elevator.setNeutralMode(NeutralMode.Brake);
 		System.out.println(ElevatorHeights.BOTTOM.height);
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
-//		rearConveyor = new DMC60(RobotMap.PWM_PORT_2);
+		// rearConveyor = new DMC60(RobotMap.PWM_PORT_2);
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putBoolean("Elevator backwards", elevatorBackwards);
@@ -80,34 +80,34 @@ public class Elevator {
 		triggered = false;
 		triggered2 = false;
 		timer = new Timer();
-		//elevator.configOpenloopRamp(2, 0);
-		
+		// elevator.configOpenloopRamp(2, 0);
 
 	}
+
 	public void SlowRobot() {
 		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
-		if(encoders < -15000000 ) {
-			if(!cube.lift.get())
+		if (elevator.getSensorCollection().getQuadraturePosition() > -1500000) {
+			if (!cube.lift.get())
 				tc.SetMaxThrottlePower(0.5);
 			else
 				tc.SetMaxThrottlePower(0.75);
+		} else {
+			tc.SetMaxThrottlePower(0.2);
+			tc.SetMaxTurnPower(.3);
+			System.out.println("Limiting Speed");
 		}
-		else {
-		tc.SetMaxThrottlePower(0.2);
-		System.out.println("Limiting Speed");
-		}
-//		System.out.println("Encoder Counts: " + encoders);
 	}
+
 	public void teleopInit() {
-		if(leftLimitSwitch.get() || rightLimitSwitch.get()) {
+		if (leftLimitSwitch.get() || rightLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
 	}
 
 	public void teleopPeriodic() {
 		double b = .7666333420;
-		if(!leftLimitSwitch.get()) {
+		if (!leftLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
 		SlowRobot();
@@ -124,54 +124,21 @@ public class Elevator {
 
 		if (driverIF.RaiseElevator()) {
 			cube.brakeSet(off);
-//			cube.squeezeSet(false);
+			// cube.squeezeSet(false);
 			elevator.set(b);
-			// if(elevator.getSelectedSensorPosition(0) == -1){
-			// elevator.set(0);
-			//
-			// }
 
 		} else if (driverIF.LowerElevator()) {
 			cube.brakeSet(off);
 			slowElevator(-0.8);
-			if(!cube.lift.get()) {
-				cube.squeezeSet(false);	
-			}
-			if (!leftLimitSwitch.get() || rightLimitSwitch.get()) {
+			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);
 			}
-			// if(!limitSwitch.get()){
-			// elevator.set(0);
-			// }
 		} else {
 			elevator.set(0.11);
 			cube.brakeSet(on);
 		}
 
-		double e = .85;
-		// SmartDashboard.getNumber("front conveyor:", 0);
-		// hya
-
-//		if (!driverIF.conveyorsForward() && lastButton1 && triggered == false) {
-//			rearConveyor.set(e);
-//			triggered = true;
-//			// System.out.println("Suck in");
-//		} else if (!driverIF.conveyorsForward() && lastButton1 && triggered == true) {
-//			rearConveyor.set(0);
-//			triggered = false;
-//			// System.out.println("Co");
-//		}
-//
-//		else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == false) {
-//			rearConveyor.set(-e);
-//			triggered2 = true;
-//			// System.out.println("Suck in");
-//		} else if (!driverIF.conveyorsBackward() && lastButton2 && triggered2 == true) {
-//			rearConveyor.set(0);
-//			triggered2 = false;
-//			// System.out.println("Co");
-//		}
 		lastButton1 = driverIF.conveyorsForward();
 		lastButton2 = driverIF.conveyorsBackward();
 		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
@@ -186,21 +153,21 @@ public class Elevator {
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		System.out.println("Elevator Encoder cts: " + elevator.getSensorCollection().getQuadraturePosition());
-		System.out.println("Elevator Encoder Velocity: " + elevator.getSensorCollection().getQuadratureVelocity());
+		// System.out.println("Elevator Encoder Velocity: " +
+		// elevator.getSensorCollection().getQuadratureVelocity());
 	}
 
 	public void slowElevator(double speed) {
-		if (elevator.getSensorCollection().getQuadraturePosition() < -200000) {
+		if (elevator.getSensorCollection().getQuadraturePosition() < -1000000) {
 			elevator.set(speed);
 			System.out.println("up");
 		} else {
 			elevator.set(-0.2);
 			System.out.println("Slowing elevator");
 		}
-		if(elevator.getSensorCollection().getQuadraturePosition() > 0) {
+		if (elevator.getSensorCollection().getQuadraturePosition() > 0) {
 			elevatorBackwards = true;
-		}
-		else {
+		} else {
 			elevatorBackwards = false;
 		}
 		SmartDashboard.putBoolean("Elevator backwards", elevatorBackwards);
@@ -220,7 +187,8 @@ public class Elevator {
 		}
 		return false;
 	}
-	public void elevatorSet(double speed){
+
+	public void elevatorSet(double speed) {
 		elevator.set(speed);
 	}
 

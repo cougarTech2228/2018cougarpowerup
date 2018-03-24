@@ -99,7 +99,7 @@ public class SRXDriveBase {
 	private double methodTime = 0;
 	
 	//  Program flow switches
-	private boolean isConsoleDataEnabled = true;
+	private boolean isConsoleDataEnabled = false;
 	private boolean isLoggingDataEnabled = false;
 	private boolean islogSRXDriveActive = false;
 	
