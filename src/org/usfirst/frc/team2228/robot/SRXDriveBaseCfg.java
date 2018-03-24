@@ -3,10 +3,10 @@ package org.usfirst.frc.team2228.robot;
 public class SRXDriveBaseCfg {
 		//=======================================
 		// SRXDRIVEBASE CONTROL FLAGS
-		public static boolean isSRXClosedLoopEnabled = false;
+		public static boolean isSRXClosedLoopEnabled = true;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = false;
-		public static boolean isMotionMagicEnabled = false;
+		public static boolean isMotionMagicEnabled = true;
 		
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
@@ -35,54 +35,54 @@ public class SRXDriveBaseCfg {
 		
 		// AndyMark tough box mini (50.0/14.0)*(48.0/16.0)
 		// CIMCoder and 2018 drive train gear ratio 72/11
-		public static double kGearRatio =8.459;
+		public static double kGearRatio =6.5454;
 				//6.5454;
 		
 		// CIMcode magnetic quadrature 20 cycles per revolution
 		public static int EncoderCyclesPerRev = 20;
 		
 		// !!!!!!!!!!!!!!!!!!!!!! This is measured with a tape measure
-		public static double kTrackWidthIn = 21.5;
+		public static double kTrackWidthIn = 24.125;
 				//22.875;
 		
 		// !!!!!!!!!!!!!!!!!!!!!! This is measured with a thin tape measure - use mm and convert to in
-		public static double kMeasuredRgtWheelCircum = 18.937;
+		public static double kMeasuredRgtWheelCircum = 18.8976;
 				//12.678;
-		public static double kMeasuredLftWheelCircum = 18.937;
+		public static double kMeasuredLftWheelCircum = 19.0551;
 				//12.678;
 		
 		// =============================================================
 		// DRIVE TRAIN CALCULATIONS
 		
 		// kDriveEncoderCyclesPerRev = (cycles/rev) * (gearRatio) = 20*8.459
-				public static double kDriveEncoderCyclesPerRev = 169.18;
+				public static double kDriveEncoderCyclesPerRev = 130.9;
 				
 		// kCountsPerRevolution = quadrature(4) * kDriveEncoderCyclesPerRev = 4*169.18
 		public static double kCountsPerRevolution = 676.72;
 				//523.63;
 		
 		// kWheelCircumIn = (kMeasuredRgtWheelCircum + kMeasuredLftWheelCircum)/2
-		public static double kWheelCircumIn = 18.678;
+		public static double kWheelCircumIn = 18.97635;
 		
 		// kInchesPerCount = kWheelCircumIn / kCountsPerRevolution; 1/kInchesPerCount
-		public static double kInchesPerCount = 0.0276;
+		public static double kInchesPerCount = 0.036;
 				//18.0242;
-		public static double kEncoderCountsPerIn = 36.231;
+		public static double kEncoderCountsPerIn = 27.778;
 				//41.302;
 		
 		//==========
 		//INFO CALCULATIONS
 		// Diameter = WheelCircum / Pi
-		public static double kRgtWheelDiameter = 4.035;
-		public static double kLftWheelDiameter = 4.035;
+		public static double kRgtWheelDiameter = 6.0153;
+		public static double kLftWheelDiameter = 6.0654;
 		
 		// kRightInchesPerCount = kMeasuredRgtWheelCircum / kCountsPerRevolution; 1/kRightInchesPerCount
-		public static double kRightInchesPerCount = 0.0242; 
-		public static double kRightEncoderCountsPerIn = 41.302;
+		public static double kRightInchesPerCount = 0.0361; 
+		public static double kRightEncoderCountsPerIn = 27.855;
 		
 		// kLeftInchesPerCount = kMeasuredLftWheelCircum / kCountsPerRevolution; 1/kLeftInchesPerCount
-		public static double kLeftInchesPerCount = 0.0242; 
-		public static double kLeftEncoderCountsPerIn = 41.302;
+		public static double kLeftInchesPerCount = 0.0359; 
+		public static double kLeftEncoderCountsPerIn = 27.701;
 
 		//===============================================
 		// SRX CLOSED LOOP VELOCITY CALCULATIONS
@@ -90,10 +90,10 @@ public class SRXDriveBaseCfg {
 		// Use RoboRio web dashboard: Run at high speed and read Output % and nativeUnit velocity - calculate max
 		// MaxVel_VelNativeUnits = RPM * 1/60sec * 1/[10 => 100ms samples/sec] * kCountsPerRevolution = counts/100ms
 		//From RoboRio WebDashBoard:
-		public static double MaxVel_VelNativeUnits = 662.164;
+		public static double MaxVel_VelNativeUnits = 563.69;
 	
 		// kTopRPM = (vel[measureVelPeriod->100ms] * 600) / kCountsPerRevolution
-		public static double kTopRPM = 587.72;
+		public static double kTopRPM = 645.9;
 		
 		
 		
