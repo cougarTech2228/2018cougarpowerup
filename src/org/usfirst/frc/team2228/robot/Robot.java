@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
 	//	auto.init();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
-		base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit(1);
 		//command.start();
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -119,7 +119,7 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		//angleIF.zeroYaw();
 		System.out.println("teleopInit() fi!");
-		base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit(2);
 		chessyDrive.teleopInit();
 		System.out.println("Teleop Init done");
 	}
@@ -152,7 +152,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testInit() {
-		base.setSRXDriveBaseInit();
+		base.setSRXDriveBaseInit(3);
 	}
 	
 	/**

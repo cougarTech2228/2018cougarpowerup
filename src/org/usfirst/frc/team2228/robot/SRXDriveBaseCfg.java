@@ -6,6 +6,7 @@ public class SRXDriveBaseCfg {
 		public static boolean isSRXClosedLoopEnabled = false;
 		public static boolean isMasterEncodersPresent = true;
 		public static boolean isDriveStraightAssistEnabled = false;
+		public static boolean isMotionMagicEnabled = false;
 		
 		//!!!!!!!!!!!!!!!!!!!- MOTOR FWD -> ENCODER INCREASES COUNT AND POSITIVE -> SENSOR READ IS POSITIVE
 		// =======================================
