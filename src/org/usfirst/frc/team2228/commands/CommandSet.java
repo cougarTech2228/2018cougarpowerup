@@ -22,9 +22,9 @@ public class CommandSet {
 	}
 
 	public void baseline(double speed, CommandGroup cmdGrp) {
+		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(
 				new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
-		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 	}
 
 	public void driveElevator(double speed, CommandGroup cmdGrp) {

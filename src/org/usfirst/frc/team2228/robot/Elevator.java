@@ -147,10 +147,11 @@ public class Elevator {
 		}
 		if (driverIF.winchWindUp()) {
 			winch.set(1);
-			driverIF.rumbleSet(.5);
+			driverIF.rumbleSet(true,.5);
 			
 		} else {
 			winch.set(0);
+			driverIF.rumbleSet(false, .5);
 		}
 		SmartDashboard.putBoolean("Limit Switch:", rightLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
