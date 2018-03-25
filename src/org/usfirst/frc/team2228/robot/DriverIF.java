@@ -124,5 +124,9 @@ public class DriverIF {
 	public boolean camSwitch() {
 		return xboxIF.POV_LEFT();
 	}
+	public void rumbleSet(double rumbleSpeed) {
+		xboxIF.RUMBLE(rumbleSpeed);
+		
+	}
 
 }

@@ -3,6 +3,7 @@ package org.usfirst.frc.team2228.robot;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class XboxIF {
 	private XboxController xbox;
@@ -103,5 +104,9 @@ public class XboxIF {
 		} else {
 			return false;
 		}
+	}
+	public void RUMBLE(double rumbleSpeed) {
+		xbox.setRumble(RumbleType.kLeftRumble, rumbleSpeed);
+		xbox.setRumble(RumbleType.kRightRumble, rumbleSpeed);
 	}
 }

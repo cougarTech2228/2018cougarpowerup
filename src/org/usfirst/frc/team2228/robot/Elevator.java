@@ -147,6 +147,8 @@ public class Elevator {
 		}
 		if (driverIF.winchWindUp()) {
 			winch.set(1);
+			driverIF.rumbleSet(.5);
+			
 		} else {
 			winch.set(0);
 		}

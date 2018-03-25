@@ -157,7 +157,7 @@ public class SRXDriveBaseCfg {
 		//isDriveStraightAssistEnabled is not related to kDriveStraightCorrection!
 		// This value is determined by testDriveStraightCalibration method
 
-		public static double kDriveStraightCorrection = 1.01;
+		public static double kDriveStraightCorrection = 1.09;
 		public static double kRotateDriveStraightCorrection = 1.00;	
 		public static double kRotateCWDriveStraightCorrection = 1.00;
 		public static double kRotateCCWDriveStraightCorrection = 1.00;
