@@ -194,6 +194,13 @@ public class Elevator {
 	public void elevatorSet(double speed) {
 		elevator.set(speed);
 	}
+	public void lowerElevator(double speed) {
+		elevator.set(speed);
+		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
+			System.out.println("Limit Switch Triggered");
+			elevator.set(0);
+		}
+	}
 
 	public boolean elevatorPortalSet() {
 		timer.start();

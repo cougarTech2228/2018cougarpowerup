@@ -123,6 +123,7 @@ public class AutoMaster {
 			if (data == GameData.firstIndexL) {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
+				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
 
@@ -135,6 +136,7 @@ public class AutoMaster {
 				cmdSet.rightSwitch(Cg, speed);
 			} else {
 				System.out.println("Incorrect game data");
+				cmdSet.backUp(Cg, 18.0, speed / 2);
 			}
 
 			// Scale cube command
@@ -144,17 +146,20 @@ public class AutoMaster {
 			if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
+				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Scale cube command
 			break;
 		case leftScale:
-			cmdSet.leftScaleInit(Cg);
 			if (scaleData == GameData2.secondIndexL) {
+				cmdSet.leftScaleInit(Cg);
 				cmdSet.leftScaleTurn(Cg, speed);
 			} else if (data == GameData.firstIndexL) {
+				cmdSet.leftSwitchInit(Cg, speed);
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
+				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
@@ -166,6 +171,7 @@ public class AutoMaster {
 			} else if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
+				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
 			break;

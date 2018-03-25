@@ -10,6 +10,7 @@ public class MoveTo extends Command {
 	private boolean isDone;
 	private double moveIn, movePwr;
 	private boolean isCascade;
+	private boolean isReversed;
 	private SRXDriveBase base;
 	private Object startTime;
 	private double startLeftCounts;
@@ -19,12 +20,41 @@ public class MoveTo extends Command {
 	private double endTime;
 	private double timeOut;
 	
+	/**
+	 * 
+	 * @param base
+	 * @param _MoveToPositionIn
+	 * @param _MoveToPositionPwrLevel
+	 * @param _isCascadeMove
+	 * @param _timeOut
+	 * Assumes isReversed = false
+	 */
 	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isCascadeMove, double _timeOut) {
 		super(_timeOut);
 		this.base = base;
 		moveIn = _MoveToPositionIn;
 		movePwr = _MoveToPositionPwrLevel;
 		isCascade = _isCascadeMove;
+		isReversed = false;
+	
+	}
+	/**
+	 * 
+	 * @param base
+	 * @param _MoveToPositionIn
+	 * @param _MoveToPositionPwrLevel
+	 * @param _isReversed
+	 * @param _isCascadeMove
+	 * @param _timeOut
+	 * Does not assume isReversed
+	 */
+	public MoveTo(SRXDriveBase base, double _MoveToPositionIn, double _MoveToPositionPwrLevel, boolean _isReversed, boolean _isCascadeMove, double _timeOut) {
+		super(_timeOut);
+		this.base = base;
+		moveIn = _MoveToPositionIn;
+		movePwr = _MoveToPositionPwrLevel;
+		isCascade = _isCascadeMove;
+		isReversed = _isReversed;
 	
 	}
 	
@@ -38,7 +68,7 @@ public class MoveTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.velMoveToPosition(moveIn, movePwr, false, isCascade);
+		isDone = !base.velMoveToPosition(moveIn, movePwr, isReversed, isCascade);
 //		isDone = !base.testDriveStraightCalibration(moveIn, movePwr);
 //		base.SetDriveTrainCmdLevel(.2, .2);
 	}
