@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CommandSet {
-	private CommandGroup command;
 	private Elevator elevator;
 	private SRXDriveBase base;
 	private CubeManipulator cube;
@@ -22,9 +21,9 @@ public class CommandSet {
 	}
 
 	public void baseline(double speed, CommandGroup cmdGrp) {
+		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(
 				new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
-		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 	}
 
 	public void driveElevator(double speed, CommandGroup cmdGrp) {
