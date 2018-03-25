@@ -38,7 +38,7 @@ public class MoveTo extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	public void execute() {
-		isDone = !base.velMoveToPosition(moveIn, movePwr, isCascade);
+		isDone = !base.velMoveToPosition(moveIn, movePwr, false, isCascade);
 //		isDone = !base.testDriveStraightCalibration(moveIn, movePwr);
 //		base.SetDriveTrainCmdLevel(.2, .2);
 	}

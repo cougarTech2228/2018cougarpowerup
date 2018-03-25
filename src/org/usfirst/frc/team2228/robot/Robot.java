@@ -51,10 +51,9 @@ public class Robot extends IterativeRobot {
 		auto = new AutoMaster(base, elevator, cube);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
-		base.setAngleIF(angleIF);
 //		pdp = new PDP(0);
 		
-//		base.setCorrectionSensor(3); // navx
+		base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
 //		backCamera = new UsbCamera("Back Camera", 1);
@@ -81,6 +80,7 @@ public class Robot extends IterativeRobot {
 		// Gets everything from Autonomous Init from the AutoMaster class
 		angleIF.zeroYaw();
 		auto.init();
+		base.setSRXDriveBaseInit(1);
 	}
 
 	/**
@@ -95,6 +95,10 @@ public class Robot extends IterativeRobot {
 	
 	public void teleopInit() {
 		angleIF.zeroYaw();
+		System.out.println("teleopInit() fi!");
+		base.setSRXDriveBaseInit(2);
+		chessyDrive.teleopInit();
+		System.out.println("Teleop Init done");
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -120,12 +124,21 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putNumber("Elevator Current", pdp.getCurrent(0));
 
 	}
-
+	
+	/**
+	 * This function is called once during test mode
+	 */
+	@Override
+	public void testInit() {
+		base.setSRXDriveBaseInit(3);
+	}
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
 	@Override
 	public void testPeriodic() {
+		base.testMethodSelection();
 	}
 	
 }

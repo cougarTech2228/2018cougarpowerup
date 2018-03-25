@@ -82,7 +82,7 @@ public class AutoMaster {
 		Scheduler.getInstance().removeAll();
 		Cg = new CommandGroup();
 
-		base.setSRXDriveBaseInit();
+//		base.setSRXDriveBaseInit();
 		autoSelected = chooser.getSelected();
 		String gameData = "";
 		gameData += DriverStation.getInstance().getGameSpecificMessage();
