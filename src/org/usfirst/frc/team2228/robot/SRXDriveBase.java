@@ -1970,6 +1970,48 @@ public class SRXDriveBase {
 								motionMagicRightVel,
 								motionMagicRightPos);
 		}
+		
+		if (isConsoleDataEnabled){
+			System.out.printf("LftEnc:%-8.0f ==RgtEnc:%-8.0f ==LftSRXVel:%-8.2f ==LftSRXPos:%-8.2f ==RgtSRXVel:%-8.2f ==RgtSRXPos:%-8.2f %n", 
+								leftSensorPositionRead, 
+								rightSensorPositionRead,
+								motionMagicLeftVel,
+								motionMagicLeftPos,
+								motionMagicRightVel,
+								motionMagicRightPos);
+		//MEMES
+		}
+		//Safety check exceeds stop distance
+		if((Math.abs(leftSensorPositionRead) > (Math.abs(_leftDistance) + 100)) 
+			|| (Math.abs(rightSensorPositionRead) > (Math.abs(_rightDistance) + 100))){
+			
+			setStopMotors();
+			isSRXMagicMoveActive = false;
+			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+			msg("Motion Magic(Sec) = " + methodTime);
+			msg("END MOTION MAGIC ========================");
+		}
+		// Safety check right side slide/left side encoder delta to high 
+		if((Math.abs(leftSensorPositionRead) > (Math.abs(rightSensorPositionRead) + 100)) 
+			|| (Math.abs(rightSensorPositionRead) > (Math.abs(leftSensorPositionRead) +100))){
+			
+			setStopMotors();
+			isSRXMagicMoveActive = false;
+			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+			msg("Motion Magic(Sec) = " + methodTime);
+			msg("END MOTION MAGIC ========================");
+			
+		}
+		// Safety check right side output voltage/left side output voltage 
+		if((Math.abs(driveLeftMasterMtr.getMotorOutputVoltage()) > 9.0)
+				|| (Math.abs(driveRightMasterMtr.getMotorOutputVoltage()) > (Math.abs(9.0)))){
+				
+				setStopMotors();
+				isSRXMagicMoveActive = false;
+				methodTime = Timer.getFPGATimestamp() - methodStartTime;
+				msg("Motion Magic(Sec) = " + methodTime);
+				msg("END MOTION MAGIC ========================");
+		}
 		return isSRXMagicMoveActive;
 	}
 }

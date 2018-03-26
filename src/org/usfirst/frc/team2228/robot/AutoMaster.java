@@ -159,6 +159,7 @@ public class AutoMaster {
 				cmdSet.leftSwitchInit(Cg, speed);
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
+				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
@@ -171,6 +172,7 @@ public class AutoMaster {
 			} else if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
+				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
