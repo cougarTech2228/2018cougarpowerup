@@ -116,6 +116,8 @@ public class AutoMaster {
 		switch (autoSelected) {
 		case "Baseline":
 		cmdSet.baseline(speed, Cg);
+		cmdSet.rotateCube(Cg);
+		cmdSet.clawOpen(Cg);
 			break;
 
 		case "Left Switch":
@@ -124,6 +126,7 @@ public class AutoMaster {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
 				cmdSet.rotateCube(Cg);
+				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 
@@ -137,6 +140,7 @@ public class AutoMaster {
 			} else {
 				System.out.println("Incorrect game data");
 				cmdSet.backUp(Cg, 18.0, speed / 2);
+				cmdSet.clawOpen(Cg);
 			}
 
 			// Scale cube command
@@ -147,6 +151,7 @@ public class AutoMaster {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
 				cmdSet.rotateCube(Cg);
+				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Scale cube command
@@ -161,6 +166,7 @@ public class AutoMaster {
 			} else {
 				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
+				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
@@ -174,6 +180,7 @@ public class AutoMaster {
 			} else {
 				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
+				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 			break;

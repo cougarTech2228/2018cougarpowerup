@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Relay;
 public class Elevator {
 	boolean on = false, off = true;
 	DriverIF driverIF;
-	WPI_TalonSRX elevator;
+	private WPI_TalonSRX elevator;
 	WPI_TalonSRX winch;
 	Relay hook;
 	Spark hookDown;
@@ -80,7 +80,6 @@ public class Elevator {
 		triggered = false;
 		triggered2 = false;
 		timer = new Timer();
-		// elevator.configOpenloopRamp(2, 0);
 
 	}
 
@@ -88,15 +87,14 @@ public class Elevator {
 		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
 		if (elevator.getSensorCollection().getQuadraturePosition() > -1500000) {
-			if (!cube.lift.get())
-				tc.SetMaxThrottlePower(0.5);
-			else
-				tc.SetMaxThrottlePower(0.75);
+			tc.SetMaxThrottlePower(0.75);
+			tc.SetMaxTurnPower(1);
 		} else {
 			tc.SetMaxThrottlePower(0.2);
-			tc.SetMaxTurnPower(.3);
+			tc.SetMaxTurnPower(0.5);
 			System.out.println("Limiting Speed");
 		}
+		// 
 	}
 
 	public void teleopInit() {
@@ -106,7 +104,7 @@ public class Elevator {
 	}
 
 	public void teleopPeriodic() {
-		double b = .7666333420;
+		double b = 1;
 		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
@@ -115,9 +113,9 @@ public class Elevator {
 		// b is the speed of the
 
 		if (driverIF.hookForward() && hookArmUpwards.get()) {
-			hookDown.set(.4);
+			hookDown.set(.5);
 		} else if (driverIF.hookBackward() && hookArmDownwards.get()) {
-			hookDown.set(-.4);
+			hookDown.set(-.5);
 		} else {
 			hookDown.set(0);
 		}
@@ -129,7 +127,7 @@ public class Elevator {
 
 		} else if (driverIF.LowerElevator()) {
 			cube.brakeSet(off);
-			slowElevator(-0.8);
+			slowElevator(-1);
 			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
 				elevator.set(0);

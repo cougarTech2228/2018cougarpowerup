@@ -137,4 +137,7 @@ public class CommandSet {
 	public void rotateCube(CommandGroup cmdGrp) {
 		cmdGrp.addSequential(new CubeRotate(cube, true));
 	}
+	public void clawOpen( CommandGroup cmdGrp){
+		cmdGrp.addSequential(new PneumaticGrabber(cube, false, .5));
+	}
 }

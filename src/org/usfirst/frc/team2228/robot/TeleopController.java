@@ -34,8 +34,8 @@ public class TeleopController {
     private static double kTurnSensitivityGain = 0.3;
 	
 	// Range of smoothFactorValue is .5 to .9999; (no smoothing-0), (high smoothing-.99999)
-	private static double kLowSmoothFactor = 0.4;
-	private static double kHighSmoothFactor = 0.7;
+	private static double kLowSmoothFactor = 0.5;
+	private static double kHighSmoothFactor = 0.8;
 	//public static double kTransitionSmoothFactor = 0.7;
 	
 	// determination of max throttle delta values are determined by testing
