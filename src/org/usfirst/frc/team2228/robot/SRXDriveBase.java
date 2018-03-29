@@ -827,7 +827,8 @@ public class SRXDriveBase {
 			}
 		
 		// Run magic move method
-		} else if (!isVelMoveToPositionActive) {
+		} else {
+			if (!isVelMoveToPositionActive) {
 			isVelMoveToPositionActive = true;
 			methodStartTime = Timer.getFPGATimestamp();
 			msg("START VELOCITY MOTION MAGIC MOVE===========================");
@@ -840,6 +841,8 @@ public class SRXDriveBase {
 				msg("Vel move to position Time(Sec) = " + methodTime);
 				msg("VELOCITY MOTION MAGIC MOVE COMPLETE=======================");
 			}
+			
+		}
 		return isVelMoveToPositionActive;
 	}
 
@@ -847,6 +850,7 @@ public class SRXDriveBase {
 	// ROTATE TO ANGLE
 	//====================================
 	public boolean rotateToAngle(double _rotateToAngle, double _rotatePowerLevel) {
+		System.out.println("SKURT SKURT ROTATE GOING");
 		if(!SRXDriveBaseCfg.isMotionMagicEnabled){
 			leftSensorPositionRead = getLeftSensorPosition();
 			rightSensorPositionRead = getRightSensorPosition();
@@ -866,7 +870,7 @@ public class SRXDriveBase {
 				// rotationEncoderStopCount = C(=>PI*D) * (angle as a fraction of C)
 				rotationEncoderStopCount = (Math.PI*(SRXDriveBaseCfg.kTrackWidthIn) * SRXDriveBaseCfg.kEncoderCountsPerIn * (Math.abs(_rotateToAngle) / 360))
 				                                 - SRXDriveBaseCfg.kAutoRotateCoastToStopCounts;
-				
+			System.out.println("ENCODER CALCULATION OF STOP");	
 				// use left encoder to mark rotation distance
 			} else if ((Math.abs(leftSensorPositionRead) >= rotationEncoderStopCount) || (Math.abs(rightSensorPositionRead) >= rotationEncoderStopCount)){
 					msg("ROTATE TO ANGLE IS AT STOP===========================");
@@ -896,8 +900,9 @@ public class SRXDriveBase {
 										rightSensorPositionRead);
 			}
 			
-		// Run magic rotate method
-		} else if (!isRotateToAngleActive) {
+			// Run magic rotate method
+		} else {
+			if (!isRotateToAngleActive) {
 			isRotateToAngleActive = true;
 			methodStartTime = Timer.getFPGATimestamp();
 			msg("ROTATE TO ANGLE MOTION MAGIC IS ACTIVE===========================");
@@ -909,7 +914,7 @@ public class SRXDriveBase {
 				msg("Rotate to angle Time(Sec) = " + methodTime);
 				msg("ROTATE TO ANGLE IS MAGIC MOTION DONE=========================");
 			}		
-			
+		}
 		return isRotateToAngleActive;
 	} 
 	//===================================
@@ -1951,7 +1956,7 @@ public class SRXDriveBase {
 				isSRXMagicMoveActive = false;
 				methodTime = Timer.getFPGATimestamp() - methodStartTime;
 				msg("Motion Magic(Sec) = " + methodTime);
-				msg("END MOTION MAGIC ========================");
+				msg("END MOTION MAGIC (MOTION MAGIC POSITION) ========================");
 			}
 		}
 		// Output commands to SRX's
@@ -1982,15 +1987,15 @@ public class SRXDriveBase {
 		//MEMES
 		}
 		//Safety check exceeds stop distance
-		if((Math.abs(leftSensorPositionRead) > (Math.abs(_leftDistance) + 100)) 
-			|| (Math.abs(rightSensorPositionRead) > (Math.abs(_rightDistance) + 100))){
-			
-			setStopMotors();
-			isSRXMagicMoveActive = false;
-			methodTime = Timer.getFPGATimestamp() - methodStartTime;
-			msg("Motion Magic(Sec) = " + methodTime);
-			msg("END MOTION MAGIC ========================");
-		}
+//		if((Math.abs(leftSensorPositionRead) > (Math.abs(_leftDistance) + 100)) 
+//			|| (Math.abs(rightSensorPositionRead) > (Math.abs(_rightDistance) + 100))){
+//			
+//			setStopMotors();
+//			isSRXMagicMoveActive = false;
+//			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+//			msg("Motion Magic(Sec) = " + methodTime);
+//			msg("END MOTION MAGIC (EXCEEDS STOP DISTANCE) ========================");
+//		}
 		// Safety check right side slide/left side encoder delta to high 
 		if((Math.abs(leftSensorPositionRead) > (Math.abs(rightSensorPositionRead) + 100)) 
 			|| (Math.abs(rightSensorPositionRead) > (Math.abs(leftSensorPositionRead) +100))){
@@ -1999,7 +2004,7 @@ public class SRXDriveBase {
 			isSRXMagicMoveActive = false;
 			methodTime = Timer.getFPGATimestamp() - methodStartTime;
 			msg("Motion Magic(Sec) = " + methodTime);
-			msg("END MOTION MAGIC ========================");
+			msg("END MOTION MAGIC (ENCODER DELTA TOO HIGH) ========================");
 			
 		}
 		// Safety check right side output voltage/left side output voltage 
@@ -2010,7 +2015,7 @@ public class SRXDriveBase {
 				isSRXMagicMoveActive = false;
 				methodTime = Timer.getFPGATimestamp() - methodStartTime;
 				msg("Motion Magic(Sec) = " + methodTime);
-				msg("END MOTION MAGIC ========================");
+				msg("END MOTION MAGIC (VOLTAGE TOO HIGH) ========================");
 		}
 		return isSRXMagicMoveActive;
 	}

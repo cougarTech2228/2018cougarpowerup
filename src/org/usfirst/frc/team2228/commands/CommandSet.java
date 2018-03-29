@@ -40,7 +40,6 @@ public class CommandSet {
 		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_MID_SWITCH - Dimensions.LENGTH_OF_ROBOT),
 				speed, false, 4.0));
-		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 	}
 
 	public void leftSwitchTurn(CommandGroup cmdGrp, double speed) {

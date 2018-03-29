@@ -22,7 +22,7 @@ public class RotateTo extends Command {
 	protected void initialize() {
 		//base.setLeftEncPositionToZero();
 		//base.setRightEncPositionToZero();
-		System.out.println("initialized");
+		System.out.println("Turn initialized");
 	}
 
 	// Called repeatedly when this Command is scheduled to run

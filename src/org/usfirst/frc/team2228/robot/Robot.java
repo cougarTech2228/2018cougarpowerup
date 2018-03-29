@@ -94,6 +94,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void teleopInit() {
+		hug();
 		angleIF.zeroYaw();
 		System.out.println("teleopInit() fi!");
 		base.setSRXDriveBaseInit(2);
@@ -139,6 +140,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		base.testMethodSelection();
+	}
+	private void hug() {
+		System.out.println("I love you mu!!!");
 	}
 	
 }
