@@ -210,5 +210,10 @@ public class Elevator {
 		}
 		return false;
 	}
-
+	public void limitSwitchCheck() {
+		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
+			
+			System.out.println("Limit Switch Triggered");
+		}
+	}
 }

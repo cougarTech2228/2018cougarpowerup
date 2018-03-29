@@ -10,9 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class CubeRotate extends Command {
 	private CubeManipulator cube;
 	private boolean state;
-    public CubeRotate(CubeManipulator cube, boolean state) {
+	private double timeOut;
+    public CubeRotate(CubeManipulator cube, boolean state, double timeOut) {
+    	super(timeOut);
     	this.cube = cube;
     	this.state = state;
+    	this.timeOut = timeOut;
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -28,10 +31,7 @@ public class CubeRotate extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(cube.lift.get() == state) {
-    		return true;
-    	}
-        return false;
+    	return isTimedOut();
     }
 
     // Called once after isFinished returns true

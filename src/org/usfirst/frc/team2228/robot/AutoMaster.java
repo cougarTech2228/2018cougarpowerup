@@ -82,7 +82,7 @@ public class AutoMaster {
 		Scheduler.getInstance().removeAll();
 		Cg = new CommandGroup();
 
-//		base.setSRXDriveBaseInit();
+		// base.setSRXDriveBaseInit();
 		autoSelected = chooser.getSelected();
 		String gameData = "";
 		gameData += DriverStation.getInstance().getGameSpecificMessage();
@@ -115,9 +115,7 @@ public class AutoMaster {
 		}
 		switch (autoSelected) {
 		case "Baseline":
-		cmdSet.baseline(speed, Cg);
-		cmdSet.rotateCube(Cg);
-		cmdSet.clawOpen(Cg);
+			cmdSet.baseline(speed, Cg);
 			break;
 
 		case "Left Switch":
@@ -126,11 +124,8 @@ public class AutoMaster {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
 				cmdSet.rotateCube(Cg);
-				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
-
-			// Scale cube command
 			break;
 
 		case "Right Switch":
@@ -140,10 +135,9 @@ public class AutoMaster {
 			} else {
 				System.out.println("Incorrect game data");
 				cmdSet.backUp(Cg, 18.0, speed / 2);
-				cmdSet.clawOpen(Cg);
+				cmdSet.rotateCube(Cg);
 			}
 
-			// Scale cube command
 			break;
 		case "Right Switch Turn":
 			cmdSet.rightSwitchTurnInit(Cg, speed);
@@ -151,10 +145,8 @@ public class AutoMaster {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
 				cmdSet.rotateCube(Cg);
-				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
-			// Scale cube command
 			break;
 		case leftScale:
 			if (scaleData == GameData2.secondIndexL) {
@@ -166,7 +158,6 @@ public class AutoMaster {
 			} else {
 				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
-				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
@@ -178,16 +169,14 @@ public class AutoMaster {
 			} else if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
-				cmdSet.baseline(speed, Cg);
 				cmdSet.rotateCube(Cg);
-				cmdSet.clawOpen(Cg);
 				System.out.println("Incorrect game data");
 			}
 			break;
 		}
 		Cg.start();
 	}
-	
+
 	public void run() {
 		// Runs the sequence made in auto init
 		Scheduler.getInstance().run();
