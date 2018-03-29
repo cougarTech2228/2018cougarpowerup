@@ -119,23 +119,22 @@ public class AutoMaster {
 			break;
 
 		case "Left Switch":
-			cmdSet.leftSwitchInit(Cg, speed);
+			cmdSet.switchInit(Cg, speed);
 			if (data == GameData.firstIndexL) {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
-				cmdSet.rotateCube(Cg);
+				cmdSet.backOff(Cg, speed);
 				System.out.println("Incorrect game data");
 			}
 			break;
 
 		case "Right Switch":
-			cmdSet.rightSwitchInit(Cg, speed);
+			cmdSet.switchInit(Cg, speed);
 			if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitch(Cg, speed);
 			} else {
+				cmdSet.backOff(Cg, speed);
 				System.out.println("Incorrect game data");
-				cmdSet.backUp(Cg, 18.0, speed / 2);
-				cmdSet.rotateCube(Cg);
 			}
 
 			break;
@@ -153,7 +152,7 @@ public class AutoMaster {
 				cmdSet.leftScaleInit(Cg);
 				cmdSet.leftScaleTurn(Cg, speed);
 			} else if (data == GameData.firstIndexL) {
-				cmdSet.leftSwitchInit(Cg, speed);
+				cmdSet.switchInit(Cg, speed);
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
 				cmdSet.baseline(speed, Cg);

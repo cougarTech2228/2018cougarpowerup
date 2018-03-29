@@ -73,6 +73,7 @@ public class Elevator {
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
 		// rearConveyor = new DMC60(RobotMap.PWM_PORT_2);
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
+		SmartDashboard.putBoolean("Reset encoders", false);
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putBoolean("Elevator backwards", elevatorBackwards);
 		raising = false;
@@ -105,6 +106,9 @@ public class Elevator {
 
 	public void teleopPeriodic() {
 		double b = 1;
+		if(SmartDashboard.getBoolean("Reset encoders", false)) {
+			elevator.getSensorCollection().setQuadraturePosition(0, 10);
+		}
 		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
