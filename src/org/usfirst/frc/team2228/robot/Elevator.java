@@ -20,6 +20,8 @@ public class Elevator {
 	Relay hook;
 	Spark hookDown;
 	DigitalInput limitSwitch, leftLimitSwitch, rightLimitSwitch, hookArmDownwards, hookArmUpwards;
+	Toggler t;
+	Toggler Encoder;
 	FeedbackDevice encoder;
 	private boolean lastButtonDown;
 	private boolean triggered;
@@ -39,7 +41,7 @@ public class Elevator {
 	CubeManipulator cube;
 
 	public enum ElevatorHeights {
-		BOTTOM(0), PORTAL(100), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
+		BOTTOM(0), PORTAL(-703219), SCALE_LOW(-1349826), SCALE_NEUTRAL(-1489334), SCALE_HIGH(-2637075);
 		public final double height;
 
 		ElevatorHeights(double encoderVal) {
@@ -71,7 +73,6 @@ public class Elevator {
 		elevator.setNeutralMode(NeutralMode.Brake);
 		System.out.println(ElevatorHeights.BOTTOM.height);
 		elevator.getSensorCollection().setQuadraturePosition(0, 15);
-		// rearConveyor = new DMC60(RobotMap.PWM_PORT_2);
 		SmartDashboard.putBoolean("Limit Switch:", leftLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putBoolean("Elevator backwards", elevatorBackwards);
@@ -80,7 +81,7 @@ public class Elevator {
 		triggered = false;
 		triggered2 = false;
 		timer = new Timer();
-		// elevator.configOpenloopRamp(2, 0);
+		t = new Toggler(5, false);
 
 	}
 
@@ -123,12 +124,10 @@ public class Elevator {
 		}
 
 		if (driverIF.RaiseElevator()) {
-			cube.brakeSet(off);
 			// cube.squeezeSet(false);
 			elevator.set(b);
 
 		} else if (driverIF.LowerElevator()) {
-			cube.brakeSet(off);
 			slowElevator(-0.8);
 			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
 				System.out.println("Limit Switch Triggered");
@@ -136,23 +135,27 @@ public class Elevator {
 			}
 		} else {
 			elevator.set(0.11);
-			cube.brakeSet(on);
 		}
-
-		lastButton1 = driverIF.conveyorsForward();
-		lastButton2 = driverIF.conveyorsBackward();
-		double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
-		if (LaunchValue == 1) {
-			hook.set(Relay.Value.kOff);
-		}
-		if (driverIF.winchWindUp()) {
-			winch.set(1);
-			driverIF.rumbleSet(true,.5);
-			
-		} else {
-			winch.set(0);
-			driverIF.rumbleSet(false, .5);
-		}
+		// int d = Encoder.state;
+		// int e = Encoder.toggle(driverIF.elevatorToggleUp(),
+		// driverIF.elevatorToggleDown());
+		// if (d != e) {
+		// MoveElevator(e, 0.5, 100000);
+		// }
+		// lastButton1 = driverIF.conveyorsForward();
+		// lastButton2 = driverIF.conveyorsBackward();
+		// double LaunchValue = SmartDashboard.getNumber("Launch:", 0);
+		// if (LaunchValue == 1) {
+		// hook.set(Relay.Value.kOff);
+		// }
+		// if (driverIF.winchWindUp()) {
+		// winch.set(1);
+		// driverIF.rumbleSet(true,.5);
+		//
+		// } else {
+		// winch.set(0);
+		// driverIF.rumbleSet(false, .5);
+		// }
 		SmartDashboard.putBoolean("Limit Switch:", rightLimitSwitch.get());
 		SmartDashboard.putNumber("Elevator Encoder Cts:", elevator.getSensorCollection().getQuadraturePosition());
 		System.out.println("Elevator Encoder cts: " + elevator.getSensorCollection().getQuadraturePosition());
@@ -168,6 +171,10 @@ public class Elevator {
 			elevator.set(-0.2);
 			System.out.println("Slowing elevator");
 		}
+		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
+			elevator.set(0);
+			elevator.getSensorCollection().setQuadraturePosition(0, 10);
+		}
 		if (elevator.getSensorCollection().getQuadraturePosition() > 0) {
 			elevatorBackwards = true;
 		} else {
@@ -176,24 +183,10 @@ public class Elevator {
 		SmartDashboard.putBoolean("Elevator backwards", elevatorBackwards);
 	}
 
-	public boolean elevatorSet(double height, double speed) {
-		cube.brakeSet(off);
-		elevator.set(speed);
-		if (raising = true && elevator.getSensorCollection().getQuadraturePosition() >= height) {
-			elevator.set(0);
-			cube.brakeSet(on);
-			return true;
-		} else if (elevator.getSensorCollection().getQuadraturePosition() <= height) {
-			elevator.set(0);
-			cube.brakeSet(on);
-			return true;
-		}
-		return false;
-	}
-
 	public void elevatorSet(double speed) {
 		elevator.set(speed);
 	}
+
 	public void lowerElevator(double speed) {
 		elevator.set(speed);
 		if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
@@ -211,6 +204,96 @@ public class Elevator {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param encoderCount
+	 *            - the encoderCount that the motor is supposed to go to
+	 * @param speed
+	 *            -speed of the motor
+	 * @param Error
+	 *            -the margin of error (encoder counts) acceptable (should be quite
+	 *            large)
+	 * @return -true if the action is completed, false if otherwise
+	 */
+	public boolean EncoderSet(double encoderCount, double speed, int Error) {
+		if (Encoder.state == 0) {
+			// pneu.brakeSet(false);
+			if (elevator.getSensorCollection().getQuadraturePosition() > encoderCount + Error) {
+				elevator.set(speed);
+				return false;
+			} else if (elevator.getSensorCollection().getQuadraturePosition() < encoderCount - Error) {
+				elevator.set(-speed);
+				return false;
+			} else {
+				elevator.set(0.15);
+				Encoder.toggle(true);
+				return true;
+			}
+
+		} else {
+			// pneu.brakeSet(true);
+			return true;
+		}
+
+	}
+
+	public void EncoderReset() {
+		Encoder.state = 0;
+	}
+
+	/**
+	 * @param state
+	 *            -the index of the state in the enum elevatorheights
+	 * @param speed
+	 *            -speed of the motor
+	 * @param error
+	 *            -the margin of error (encoder counts) acceptable (should be quite
+	 *            large)
+	 * @return -true if the action is completed, false if otherwise
+	 */
+	public boolean MoveElevator(int state, double speed, int error) {
+		boolean done = false;
+		switch (state) {
+		case 0:
+			done = EncoderSet(ElevatorHeights.BOTTOM.height, speed, error);
+			break;
+		case 1:
+			done = EncoderSet(ElevatorHeights.PORTAL.height, speed, error);
+			break;
+		case 2:
+			done = EncoderSet(ElevatorHeights.SCALE_LOW.height, speed, error);
+			break;
+		case 3:
+			done = EncoderSet(ElevatorHeights.SCALE_NEUTRAL.height, speed, error);
+			break;
+		case 4:
+			done = EncoderSet(ElevatorHeights.SCALE_HIGH.height, speed, error);
+			break;
+		}
+		// System.out.println("Encoder counts: " +
+		// elevator.getSensorCollection().getQuadraturePosition());
+		return done;
+	}
+
+	public void manual(double b) {
+		if (driverIF.RaiseElevator()) {
+			cube.brakeSet(off);
+			// cube.squeezeSet(false);
+			elevator.set(b);
+
+		} else if (driverIF.LowerElevator()) {
+			cube.brakeSet(off);
+			slowElevator(-0.8);
+			if (!leftLimitSwitch.get() || !rightLimitSwitch.get()) {
+				System.out.println("Limit Switch Triggered");
+				elevator.set(0);
+			}
+		} else {
+			elevator.set(0.11);
+			cube.brakeSet(on);
+		}
+
 	}
 
 }

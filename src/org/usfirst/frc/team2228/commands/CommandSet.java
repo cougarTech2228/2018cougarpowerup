@@ -48,7 +48,6 @@ public class CommandSet {
 	}
 
 	/**
-	 * 
 	 * @param cmdGrp
 	 * @param speed
 	 *            Initialize the straight right switch auto command
