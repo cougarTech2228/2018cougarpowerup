@@ -129,7 +129,7 @@ public class AutoMaster {
 			break;
 
 		case "Right Switch":
-			cmdSet.switchInit(Cg, speed);
+			cmdSet.straightSwitchInit(Cg, speed);
 			if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitch(Cg, speed);
 			} else {

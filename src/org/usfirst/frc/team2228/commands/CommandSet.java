@@ -36,9 +36,14 @@ public class CommandSet {
 
 	public void switchInit(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
-		System.out.println("Left Switch selected");
 		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_MID_SWITCH - Dimensions.LENGTH_OF_ROBOT),
+				speed, false, 4.0));
+	}
+	public void straightSwitchInit(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
+		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
+		cmdGrp.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH - Dimensions.LENGTH_OF_ROBOT),
 				speed, false, 4.0));
 	}
 
