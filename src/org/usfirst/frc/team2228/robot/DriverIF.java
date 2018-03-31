@@ -11,19 +11,11 @@ public class DriverIF {
 		xboxIF2 = new XboxIF(2);
 	}
 
-	public boolean conveyorsForward() {
-		if (xboxIF.Y_BUTTON() || xboxIF2.Y_BUTTON())
-			return true;
-		else
-			return false;
+	public boolean fastSpeed() {
+		return xboxIF.Y_BUTTON();
 	}
-
-	public boolean conveyorsBackward() {
-		if (xboxIF.X_BUTTON() || xboxIF2.X_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean lowerSpeed() {
+		return xboxIF.X_BUTTON();
 	}
 
 	public boolean hookForward() {

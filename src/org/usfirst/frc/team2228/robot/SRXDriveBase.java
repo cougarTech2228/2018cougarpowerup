@@ -1997,16 +1997,16 @@ public class SRXDriveBase {
 //			msg("END MOTION MAGIC (EXCEEDS STOP DISTANCE) ========================");
 //		}
 		// Safety check right side slide/left side encoder delta to high 
-		if((Math.abs(leftSensorPositionRead) > (Math.abs(rightSensorPositionRead) + 100)) 
-			|| (Math.abs(rightSensorPositionRead) > (Math.abs(leftSensorPositionRead) +100))){
-			
-			setStopMotors();
-			isSRXMagicMoveActive = false;
-			methodTime = Timer.getFPGATimestamp() - methodStartTime;
-			msg("Motion Magic(Sec) = " + methodTime);
-			msg("END MOTION MAGIC (ENCODER DELTA TOO HIGH) ========================");
-			
-		}
+//		if((Math.abs(leftSensorPositionRead) > (Math.abs(rightSensorPositionRead) + 100)) 
+//			|| (Math.abs(rightSensorPositionRead) > (Math.abs(leftSensorPositionRead) +100))){
+//			
+//			setStopMotors();
+//			isSRXMagicMoveActive = false;
+//			methodTime = Timer.getFPGATimestamp() - methodStartTime;
+//			msg("Motion Magic(Sec) = " + methodTime);
+//			msg("END MOTION MAGIC (ENCODER DELTA TOO HIGH) ========================");
+//			
+//		}
 		// Safety check right side output voltage/left side output voltage 
 		if((Math.abs(driveLeftMasterMtr.getMotorOutputVoltage()) > 9.0)
 				|| (Math.abs(driveRightMasterMtr.getMotorOutputVoltage()) > (Math.abs(9.0)))){

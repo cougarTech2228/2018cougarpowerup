@@ -59,8 +59,8 @@ public class Robot extends IterativeRobot {
 //		backCamera = new UsbCamera("Back Camera", 1);
 //		frontCamera = CameraServer.getInstance().startAutomaticCapture();
 //		backCamera = CameraServer.getInstance().startAutomaticCapture();
-		 LED = new CANLED();
-		 LED.colorInit();
+//		 LED = new CANLED();
+//		 LED.colorInit();
 		// angle = new AngleIF();
 	}
 
@@ -78,6 +78,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// Gets everything from Autonomous Init from the AutoMaster class
+		elevator.autoInit();
 		angleIF.zeroYaw();
 		auto.init();
 		base.setSRXDriveBaseInit(1);
@@ -116,7 +117,7 @@ public class Robot extends IterativeRobot {
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
-		 LED.rainbowShift();
+//		 LED.rainbowShift();
 		//au.roundTo(0.0001);
 		// System.out.println(au.getDistance1());
 		SmartDashboard.putNumber("Sensor1", au.getDistance1());

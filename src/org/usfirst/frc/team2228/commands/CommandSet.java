@@ -49,7 +49,8 @@ public class CommandSet {
 
 	public void leftSwitchTurn(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 90, speed));
-		cmdGrp.addSequential(new MoveTo(base, 19, speed / 1.5, false, 2.0));
+		cmdGrp.addSequential(new WaitCommand(.5));
+		cmdGrp.addSequential(new MoveTo(base, 19, speed / 2, false, 2.0));
 		score(cmdGrp);
 	}
 
@@ -139,8 +140,10 @@ public class CommandSet {
 		cmdGrp.addSequential(new PneumaticGrabber(cube, false, .5));
 	}
 	public void backOff(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new WaitCommand(1));
 		backUp(cmdGrp, 18.0, speed);
 		rotateCube(cmdGrp);
 		clawOpen(cmdGrp);
+		//18
 	}
 }
