@@ -78,12 +78,6 @@ public class CommandSet {
 		score(cmdGrp);
 	}
 
-	public void leftScaleInit(CommandGroup cmdGrp) {
-		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
-		System.out.println("Left Scale selected");
-		// Adds movement to the auto sequence
-		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
-	}
 
 	public void leftScaleTurn(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(
@@ -101,7 +95,7 @@ public class CommandSet {
 		cmdGrp.addSequential(new ElevatorAuto(elevator, -.4, 2.0));
 	}
 
-	public void rightScaleInit(CommandGroup cmdGrp) {
+	public void scaleInit(CommandGroup cmdGrp) {
 		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 		System.out.println("Right Scale selected");
 		// Adds movement to the auto sequence
@@ -113,12 +107,13 @@ public class CommandSet {
 				new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SCALE - Dimensions.LENGTH_OF_ROBOT), speed, false, 8.0));
 		cmdGrp.addSequential(new RotateTo(base, -45, speed));
 		cmdGrp.addSequential(new ElevatorAuto(elevator, .7, 5.0));
+		cmdGrp.addSequential(new MoveTo(base, 10, speed / 2, false, false, 2.0));
 		cmdGrp.addSequential(new CubeRotate(cube, true, .5));
 		cmdGrp.addSequential(new PneumaticGrabber(cube, false, 1.0));
 		cmdGrp.addSequential(new WaitCommand(1.5));
 		cmdGrp.addSequential(new MoveTo(base, 18, speed / 2, true, false, 2.0));
 		cmdGrp.addSequential(new CubeRotate(cube, false, .5));
-		cmdGrp.addSequential(new ElevatorAuto(elevator, -.7, 4.0));
+		cmdGrp.addSequential(new ElevatorAuto(elevator, -.7, 2.9));
 	}
 
 	public void score(CommandGroup cmdGrp) {

@@ -120,12 +120,12 @@ public class Elevator {
 			tc.SetMaxTurnPower(0.5);
 			System.out.println("Limiting Speed");
 		}
-		else if (!driverIF.fastSpeed() && lastButton2) {
+		else if (!driverIF.fastSpeed(false) && lastButton2) {
 			tc.SetMaxThrottlePower(0.75);
 			tc.SetMaxTurnPower(1);
 		}
 		lastButton = driverIF.lowerSpeed();
-		lastButton2 = driverIF.fastSpeed();
+		lastButton2 = driverIF.fastSpeed(false);
 //		SlowRobot(softLimitMid);
 		// SmartDashboard.getNumber("Elevator Speed:", 0);
 		// b is the speed of the

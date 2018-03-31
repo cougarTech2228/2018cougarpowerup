@@ -5,14 +5,24 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class DriverIF {
 	XboxIF xboxIF;
 	XboxIF xboxIF2;
-
+	Toggler toggler;
 	public DriverIF() {
 		xboxIF = new XboxIF(1);
 		xboxIF2 = new XboxIF(2);
+		toggler = new Toggler(2);
 	}
 
-	public boolean fastSpeed() {
+	public boolean fastSpeed(boolean toggle) {
+		if(!toggle) {
 		return xboxIF.Y_BUTTON();
+		}
+		else {
+			Toggler toggler = new Toggler(2);
+			if(toggler.toggle(xboxIF.Y_BUTTON()) == 1) {
+			return true;
+			}
+		}
+		return false;
 	}
 	public boolean lowerSpeed() {
 		return xboxIF.X_BUTTON();

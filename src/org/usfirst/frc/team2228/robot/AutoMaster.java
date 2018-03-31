@@ -149,7 +149,7 @@ public class AutoMaster {
 			break;
 		case leftScale:
 			if (scaleData == GameData2.secondIndexL) {
-				cmdSet.leftScaleInit(Cg);
+				cmdSet.scaleInit(Cg);
 				cmdSet.leftScaleTurn(Cg, speed);
 			} else if (data == GameData.firstIndexL) {
 				cmdSet.switchInit(Cg, speed);
@@ -162,7 +162,7 @@ public class AutoMaster {
 			// Cg.addSequential(new MoveTo(base, -6.0, speed, false));
 			break;
 		case rightScale:
-			cmdSet.rightScaleInit(Cg);
+			cmdSet.scaleInit(Cg);
 			if (scaleData == GameData2.secondIndexR) {
 				cmdSet.rightScaleTurn(Cg, speed);
 			} else if (data == GameData.firstIndexR) {
