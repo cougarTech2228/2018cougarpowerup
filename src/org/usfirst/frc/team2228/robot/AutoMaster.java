@@ -25,6 +25,7 @@ public class AutoMaster {
 	final String rightSwitchTurnAuto = "Right Switch Turn";
 	final String leftScale = "Left Scale";
 	final String rightScale = "Right Scale";
+	final String variableSwitch = "Variable Switch";
 	private SRXDriveBase base;
 	private String autoSelected;
 	private String input = "";
@@ -58,6 +59,7 @@ public class AutoMaster {
 		chooser.addObject("Right Switch Turn", rightSwitchTurnAuto);
 		chooser.addObject(leftScale, leftScale);
 		chooser.addObject(rightScale, rightScale);
+		chooser.addObject(variableSwitch, variableSwitch);
 		SmartDashboard.putData("Auto choices", chooser);
 		SmartDashboard.putNumber("Wait Time", 0);
 		cmdSet = new CommandSet(elevator, base, cube);
@@ -137,6 +139,17 @@ public class AutoMaster {
 				System.out.println("Incorrect game data");
 			}
 
+			break;
+		case variableSwitch:
+			if (data == GameData.firstIndexL) {
+				System.out.println("Running left Variable Switch");
+				cmdSet.leftVariableSwitch(Cg, speed);
+				cmdSet.leftVariableSwitchEnd(Cg, speed);
+			} else if (data == GameData.firstIndexR) {
+				System.out.println("Running right Variable Switch");
+				cmdSet.rightVariableSwitch(Cg, speed);
+				cmdSet.rightVariableSwitchEnd(Cg, speed);
+			}
 			break;
 		case "Right Switch Turn":
 			cmdSet.rightSwitchTurnInit(Cg, speed);

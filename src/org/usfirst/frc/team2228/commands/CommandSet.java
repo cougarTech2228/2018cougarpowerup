@@ -53,6 +53,36 @@ public class CommandSet {
 		cmdGrp.addSequential(new MoveTo(base, 19, speed / 2, false, 2.0));
 		score(cmdGrp);
 	}
+	public void leftTurn45(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new RotateTo(base, -45, speed));
+	}
+	public void rightTurn45(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new RotateTo(base, 45, speed));
+	}
+	public void leftVariableSwitch(CommandGroup cmdGrp, double speed) {
+		leftTurn45(cmdGrp, speed);
+		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
+		rightTurn45(cmdGrp, speed);
+		cmdGrp.addSequential(new MoveTo(base, 12, speed, false, 5));
+		
+	}
+	public void rightVariableSwitch(CommandGroup cmdGrp, double speed) {
+		rightTurn45(cmdGrp, speed);
+		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
+		leftTurn45(cmdGrp, speed);
+		cmdGrp.addSequential(new MoveTo(base, 12, speed, false, 5));
+		
+	}
+	public void leftVariableSwitchEnd(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new RotateTo(base, 90, speed));
+		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
+		score(cmdGrp);
+	}
+	public void rightVariableSwitchEnd(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new RotateTo(base, 90, speed));
+		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
+		score(cmdGrp);
+	}
 
 	/**
 	 * 
