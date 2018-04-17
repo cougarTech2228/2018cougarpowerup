@@ -59,26 +59,26 @@ public class CommandSet {
 	public void rightTurn45(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 45, speed));
 	}
-	public void leftVariableSwitch(CommandGroup cmdGrp, double speed) {
-		leftTurn45(cmdGrp, speed);
-		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
+	public void leftVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_STRAIGHT_1, speed, false, 3));
+		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_1, speed));
+		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_DIAGONAL, speed, false, 8));
+		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_2, speed));
+		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_STRAIGHT_2, speed, false, 5));
+	}
+	public void rightVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
 		rightTurn45(cmdGrp, speed);
+		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
+		leftTurn45(cmdGrp, speed);
 		cmdGrp.addSequential(new MoveTo(base, 12, speed, false, 5));
 		
 	}
-	public void rightVariableSwitch(CommandGroup cmdGrp, double speed) {
-		rightTurn45(cmdGrp, speed);
-		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
-		leftTurn45(cmdGrp, speed);
-		cmdGrp.addSequential(new MoveTo(base, 12, speed, false, 5));
-		
-	}
-	public void leftVariableSwitchEnd(CommandGroup cmdGrp, double speed) {
+	public void leftVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 90, speed));
 		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
 		score(cmdGrp);
 	}
-	public void rightVariableSwitchEnd(CommandGroup cmdGrp, double speed) {
+	public void rightVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 90, speed));
 		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
 		score(cmdGrp);

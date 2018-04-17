@@ -8,7 +8,18 @@ public class Dimensions {
 	 * 	Information from game manual, Section 3 Arcade 3.1-
 	 *  Link to source: https://firstfrc.blob.core.windows.net/frc2018/Manual/Sections/03-Arcade.pdf
 	 */
-
+	
+	//NEW AUTO DIMENSIONS
+	//Stright foward
+	public static final double VA_STRAIGHT_FULL = 140;
+	//To opposite side of switch
+	public static final double VA_STRAIGHT_1 = 20;
+	public static final double VA_DIAGONAL = 136;
+	public static final double VA_STRAIGHT_2 = 40;
+	public static final double VA_TURN_1 = -54;
+	public static final double VA_TURN_2 = 54;
+	
+	
 	//Robot dimensions
 	public static final double LENGTH_OF_ROBOT = 27 + 2 * 3.75;
 	
