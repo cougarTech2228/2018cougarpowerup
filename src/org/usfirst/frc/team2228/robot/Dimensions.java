@@ -14,8 +14,8 @@ public class Dimensions {
 	public static final double VA_STRAIGHT_FULL = 140;
 	//To opposite side of switch
 	public static final double VA_STRAIGHT_1 = 20;
-	public static final double VA_DIAGONAL = 136;
-	public static final double VA_STRAIGHT_2 = 40;
+	public static final double VA_DIAGONAL = 165;
+	public static final double VA_STRAIGHT_2 = 46;
 	public static final double VA_TURN_1 = -54;
 	public static final double VA_TURN_2 = 54;
 	

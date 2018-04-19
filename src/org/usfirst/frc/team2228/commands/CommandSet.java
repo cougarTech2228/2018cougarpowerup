@@ -60,9 +60,9 @@ public class CommandSet {
 		cmdGrp.addSequential(new RotateTo(base, 45, speed));
 	}
 	public void leftVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
-		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_STRAIGHT_1, speed, false, 3));
+		cmdGrp.addSequential(new MoveTo(base, 14, speed, false, 3));
 		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_1, speed));
-		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_DIAGONAL, speed, false, 8));
+		cmdGrp.addSequential(new MoveTo(base, (Dimensions.VA_DIAGONAL - Dimensions.LENGTH_OF_ROBOT), speed, false, 8));
 		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_2, speed));
 		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_STRAIGHT_2, speed, false, 5));
 	}
@@ -74,8 +74,6 @@ public class CommandSet {
 		
 	}
 	public void leftVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
-		cmdGrp.addSequential(new RotateTo(base, 90, speed));
-		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
 		score(cmdGrp);
 	}
 	public void rightVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {

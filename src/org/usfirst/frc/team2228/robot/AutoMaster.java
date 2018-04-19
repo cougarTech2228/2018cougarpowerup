@@ -144,11 +144,11 @@ public class AutoMaster {
 			if (data == GameData.firstIndexL) {
 				System.out.println("Running left Variable Switch");
 				cmdSet.leftVariableSwitchTurn(Cg, speed);
-				cmdSet.leftVariableSwitchTurnEnd(Cg, speed);
+//				cmdSet.leftVariableSwitchTurnEnd(Cg, speed);
 			} else if (data == GameData.firstIndexR) {
-				System.out.println("Running right Variable Switch");
-				cmdSet.rightVariableSwitchTurn(Cg, speed);
-				cmdSet.rightVariableSwitchTurnEnd(Cg, speed);
+				System.out.println("Running Straight Right Switch");
+				cmdSet.straightSwitchInit(Cg, speed);
+//				cmdSet.score(Cg);
 			}
 			else {
 				cmdSet.baseline(speed, Cg);
