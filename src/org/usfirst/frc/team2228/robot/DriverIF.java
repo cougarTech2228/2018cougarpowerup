@@ -6,10 +6,14 @@ public class DriverIF {
 	XboxIF xboxIF;
 	XboxIF xboxIF2;
 	Toggler toggler;
+	Toggler[] toggles;
 	public DriverIF() {
 		xboxIF = new XboxIF(1);
 		xboxIF2 = new XboxIF(2);
 		toggler = new Toggler(2);
+		toggles = new Toggler[11];
+		for(int i = 0; i < toggles.length; i++)
+			toggles[i] = new Toggler(2);
 	}
 
 	public boolean fastSpeed(boolean toggle) {
@@ -24,48 +28,54 @@ public class DriverIF {
 		}
 		return false;
 	}
-	public boolean lowerSpeed() {
-		return xboxIF.X_BUTTON();
-	}
-
-	public boolean hookForward() {
-		if (xboxIF.POV_UP() || xboxIF2.POV_UP()) {
-			return true;
-		} else {
-			return false;
+	public boolean lowerSpeed(boolean Toggle) {
+		boolean button = xboxIF.X_BUTTON();
+		if(Toggle) {
+			return (toggles[0].toggle(button) == 1) ? true : false;	
 		}
+		else
+			return button;
 	}
 
-	public boolean hookBackward() {
-		if (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN()) {
-			return true;
-		} else {
-			return false;
+	public boolean hookForward(boolean Toggle) {
+		boolean button = (xboxIF.POV_UP() || xboxIF2.POV_UP());
+		if(Toggle) {
+			return (toggles[1].toggle(button) == 1) ? true : false;	
 		}
+		else
+			return button;
 	}
 
-	public boolean cubeRotateToggle() {
-		if (xboxIF.A_BUTTON() || xboxIF2.A_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean hookBackward(boolean Toggle) {
+		boolean button = (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN());
+		if(Toggle)
+			return (toggles[2].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean expulsion() {
-		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean cubeRotateToggle(boolean Toggle) {
+		boolean button = (xboxIF.A_BUTTON() || xboxIF2.A_BUTTON());
+		if(Toggle)
+			return (toggles[3].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean collectionToggle() {
-		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}//
+	public boolean expulsion(boolean Toggle) {
+		boolean button = (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON());
+		if(Toggle)
+			return (toggles[4].toggle(button) == 1) ? true : false;	
+		else
+			return button;
+	}
+
+	public boolean collectionToggle(boolean Toggle) {
+		boolean button = (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON());
+		if(Toggle)
+			return (toggles[5].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
 	public double Turn() {
@@ -91,40 +101,44 @@ public class DriverIF {
 			return false;
 	}
 
-	public boolean squeezeToggle() {
-		if (xboxIF.RB_BUTTON() || xboxIF2.RB_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean squeezeToggle(boolean Toggle) {
+		boolean button = (xboxIF.RB_BUTTON() || xboxIF2.RB_BUTTON());
+		if(Toggle)
+			return (toggles[6].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean winchWindUp() {
-		if (xboxIF.START_BUTTON() || xboxIF2.START_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean winchWindUp(boolean Toggle) {
+		boolean button = (xboxIF.START_BUTTON() || xboxIF2.START_BUTTON());
+		if(Toggle)
+			return (toggles[7].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean elevatorToggleUp() {
-		if (xboxIF.POV_UP() || xboxIF2.POV_UP()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean elevatorToggleUp(boolean Toggle) {
+		boolean button = (xboxIF.POV_UP() || xboxIF2.POV_UP());
+		if(Toggle)
+			return (toggles[8].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean elevatorToggleDown() {
-		if (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN()) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean elevatorToggleDown(boolean Toggle) {
+		boolean button = (xboxIF.POV_DOWN() || xboxIF2.POV_DOWN());
+		if(Toggle)
+			return (toggles[9].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 
-	public boolean camSwitch() {
-		return xboxIF.POV_LEFT();
+	public boolean camSwitch(boolean Toggle) {
+		boolean button = xboxIF.POV_LEFT();
+		if(Toggle)
+			return (toggles[10].toggle(button) == 1) ? true : false;	
+		else
+			return button;
 	}
 	public void rumbleSet(boolean on, double rumbleSpeed) {
 		if(on) {
