@@ -11,22 +11,18 @@ public class DriverIF {
 		xboxIF = new XboxIF(1);
 		xboxIF2 = new XboxIF(2);
 		toggler = new Toggler(2);
-		toggles = new Toggler[11];
+		toggles = new Toggler[12];
 		for(int i = 0; i < toggles.length; i++)
 			toggles[i] = new Toggler(2);
 	}
 
-	public boolean fastSpeed(boolean toggle) {
-		if(!toggle) {
-		return xboxIF.Y_BUTTON();
+	public boolean fastSpeed(boolean Toggle) {
+		boolean button = xboxIF.Y_BUTTON();
+		if(Toggle) {
+			return (toggles[11].toggle(button) == 1) ? true : false;	
 		}
-		else {
-			Toggler toggler = new Toggler(2);
-			if(toggler.toggle(xboxIF.Y_BUTTON()) == 1) {
-			return true;
-			}
-		}
-		return false;
+		else
+			return button;
 	}
 	public boolean lowerSpeed(boolean Toggle) {
 		boolean button = xboxIF.X_BUTTON();
