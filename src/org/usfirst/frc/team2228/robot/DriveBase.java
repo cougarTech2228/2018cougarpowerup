@@ -77,4 +77,15 @@ public class DriveBase {
 		RightMaster.Set(ControlMode.Velocity, Right * SRXDriveBaseCfg.MaxVel_VelNativeUnits);
 		LeftMaster.Set(ControlMode.Velocity, Left * SRXDriveBaseCfg.MaxVel_VelNativeUnits);
 	}
+	public void ZeroMotors() {
+		RightMaster.SetEncoderToZero();
+		LeftMaster.SetEncoderToZero();
+	}
+//	public void autoMove(){
+//		ZeroMotors();
+//		while(RightMaster){
+//			
+//		}
+//	}
+	
 }

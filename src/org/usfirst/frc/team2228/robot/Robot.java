@@ -50,6 +50,7 @@ public class Robot extends IterativeRobot {
 		cam = new CameraController();
 		elevator = new Elevator(driverIF, cube, driverIF);
 		//auto = new AutoMaster(base, elevator, cube);
+		
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
 		dBase = new DriveBase();
@@ -83,7 +84,9 @@ public class Robot extends IterativeRobot {
 		// Gets everything from Autonomous Init from the AutoMaster class
 		elevator.autoInit();
 		angleIF.zeroYaw();
-		auto.init();
+		dBase.ZeroMotors();
+//		dBase.autoMove();
+//		auto.init();
 		//base.setSRXDriveBaseInit(1);
 	}
 
@@ -94,7 +97,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// Gets everything from the Autonomous Periodic from the AutoMaster
 		// class
-		auto.run();
+//		auto.run();
+		//dBase.autoMove();
 	}
 	
 	public void teleopInit() {
