@@ -160,8 +160,8 @@ public class SRXDriveBaseCfg {
 		// DRIVING STRAIGHT
 		
 		// This value is determined by testDriveStraightCalibration method
-		public static double kDriveStraightFwdCorrection = 1.02; // Hard floor correction 0.87;
-		public static double kDriveStraightRevCorrection = 1.02;
+		public static double kDriveStraightFwdCorrection = 1.048; // Hard floor correction 0.87;
+		public static double kDriveStraightRevCorrection = 1.048;
 		
 		public static double kRotateCWDriveStraightCorrection = 0.75;// fwd-.93
 		public static double kRotateCCWDriveStraightCorrection = 0.75;

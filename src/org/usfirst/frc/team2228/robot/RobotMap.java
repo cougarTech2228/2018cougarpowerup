@@ -15,6 +15,12 @@ public class RobotMap {
 	public final static int CAN_ID_2 = 2;
 	public final static int CAN_ID_3 = 3;
 	public final static int CAN_ID_4 = 4;
+	
+	public final static int RIGHT_MASTER = 1;
+	public final static int RIGHT_FOLLOWER = 2;
+	public final static int LEFT_MASTER = 3;
+	public final static int LEFT_FOLLOWER = 4;
+	
 	// CAN 5 is used for the elevator
 	public final static int CAN_ID_5 = 5;
 	// CAN 6 used for the winch

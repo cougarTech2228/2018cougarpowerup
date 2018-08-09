@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2228.robot;
+/*package org.usfirst.frc.team2228.robot;
 
 import com.mindsensors.CANLight;
 
@@ -98,4 +98,4 @@ public class CANLED {
 		}
 
 	}
-}
+}*/

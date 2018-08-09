@@ -341,7 +341,7 @@ public class SRXDriveBase {
 			if(robotMode == 2){
 				driveRightMasterMtr.config_kP(SRXDriveBaseCfg.kPIDLoopIDx, 0, SRXTimeoutValueMs);
 				driveRightMasterMtr.config_kI(SRXDriveBaseCfg.kPIDLoopIDx, 0, SRXTimeoutValueMs); 
-				driveRightMasterMtr.config_kD(SRXDriveBaseCfg.kPIDLoopIDx, 0, SRXTimeoutValueMs);	
+				driveRightMasterMtr.config_kD(SRXDriveBaseCfg.kPIDLoopIDx, 0, SRXTimeoutValueMs);
 			} else {
 				driveRightMasterMtr.config_kP(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveRightMstrProportionalGain, SRXTimeoutValueMs);
 				driveRightMasterMtr.config_kI(SRXDriveBaseCfg.kPIDLoopIDx, SRXDriveBaseCfg.kdriveRightMstrIntegralGain, SRXTimeoutValueMs); 
@@ -669,7 +669,7 @@ public class SRXDriveBase {
 	 //======================== THIS HAS NOT BEEN TESTED ==========================
 	public void WPISetThrottleTurn(double _WPIThrottleValue, double _WPITurnValue) {
 		// parms: move, turn, squared inputs
-		driveStyle.arcadeDrive(_WPIThrottleValue, _WPITurnValue, false);	
+		driveStyle.arcadeDrive(_WPIThrottleValue, _WPITurnValue, false);
 	}
 
 	// ======================================

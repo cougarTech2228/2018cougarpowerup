@@ -37,7 +37,7 @@ public class Elevator {
 	boolean softLimitDown = false;
 	boolean softLimitUp = false;
 	boolean softLimitMid = false;
-	TeleopController tc;
+	DriverIF df;
 	Timer timer;
 	CubeManipulator cube;
 	private boolean lastButton;
@@ -51,10 +51,10 @@ public class Elevator {
 		}
 	}
 
-	public Elevator(DriverIF _driverIF, CubeManipulator _cube, TeleopController _tc) {
+	public Elevator(DriverIF _driverIF, CubeManipulator _cube, DriverIF _df) {
 		driverIF = _driverIF;
 		cube = _cube;
-		tc = _tc;
+		df = _df;
 		elevator = new WPI_TalonSRX(RobotMap.CAN_ID_5);
 		winch = new WPI_TalonSRX(RobotMap.CAN_ID_6);
 		// limitSwitch = new DigitalInput(RobotMap.DIO_PORT_0);
@@ -91,14 +91,6 @@ public class Elevator {
 	public void SlowRobot(boolean condition) {
 		double power = 1.0;
 		int encoders = elevator.getSensorCollection().getQuadraturePosition();
-		if (driverIF.lowerSpeed()) {
-			tc.SetMaxThrottlePower(0.2);
-			tc.SetMaxTurnPower(0.5);
-			System.out.println("Limiting Speed");
-		} else {
-			tc.SetMaxThrottlePower(0.75);
-			tc.SetMaxTurnPower(1);
-		}
 	}
 	public void autoInit() {
 		elevator.getSensorCollection().setQuadraturePosition(0, 10);
@@ -115,15 +107,7 @@ public class Elevator {
 		if(SmartDashboard.getBoolean("Reset encoders", false)) {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
-		if (!driverIF.lowerSpeed() && lastButton) {
-			tc.SetMaxThrottlePower(0.2);
-			tc.SetMaxTurnPower(0.5);
-			System.out.println("Limiting Speed");
-		}
-		else if (!driverIF.fastSpeed(false) && lastButton2) {
-			tc.SetMaxThrottlePower(0.75);
-			tc.SetMaxTurnPower(1);
-		}
+
 		lastButton = driverIF.lowerSpeed();
 		lastButton2 = driverIF.fastSpeed(false);
 //		SlowRobot(softLimitMid);

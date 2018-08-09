@@ -20,15 +20,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	private SRXDriveBase base;
+	private DriveBase dBase;
+	//     private SRXDriveBase base;
 	private CubeManipulator cube;
 	private DriverIF driverIF;
-	private TeleopController chessyDrive;
+	//private TeleopController chessyDrive;
 	private AutoMaster auto;
 	private Elevator elevator;
 	private AnalogUltrasonic au;
 	private CameraController cam;
-	private CANLED LED;
+	//private CANLED LED;
 	private AngleIF angleIF;
 //	private PDP pdp;
 //	private UsbCamera backCamera;
@@ -43,17 +44,19 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		driverIF = new DriverIF();
-		base = new SRXDriveBase();
+		//base = new SRXDriveBase();
 		cube = new CubeManipulator(driverIF);
-		chessyDrive = new TeleopController(driverIF, base);
+		//chessyDrive = new TeleopController(driverIF, base);
 		cam = new CameraController();
-		elevator = new Elevator(driverIF, cube, chessyDrive);
-		auto = new AutoMaster(base, elevator, cube);
+		elevator = new Elevator(driverIF, cube, driverIF);
+		//auto = new AutoMaster(base, elevator, cube);
 		au = new AnalogUltrasonic();
 		angleIF = new AngleIF();
+		dBase = new DriveBase();
+		
 //		pdp = new PDP(0);
 		
-		base.setCorrectionSensor(3); // navx
+		//base.setCorrectionSensor(3); // navx
 		
 //		frontCamera = new UsbCamera("Front Camera", 0);
 //		backCamera = new UsbCamera("Back Camera", 1);
@@ -81,7 +84,7 @@ public class Robot extends IterativeRobot {
 		elevator.autoInit();
 		angleIF.zeroYaw();
 		auto.init();
-		base.setSRXDriveBaseInit(1);
+		//base.setSRXDriveBaseInit(1);
 	}
 
 	/**
@@ -98,9 +101,10 @@ public class Robot extends IterativeRobot {
 		hug();
 		angleIF.zeroYaw();
 		System.out.println("teleopInit() fi!");
-		base.setSRXDriveBaseInit(2);
-		chessyDrive.teleopInit();
+		//base.setSRXDriveBaseInit(2);
+		//chessyDrive.teleopInit();
 		System.out.println("Teleop Init done");
+		dBase.TeleopInit();
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -110,10 +114,11 @@ public class Robot extends IterativeRobot {
 		// Gets everything from the generic drivebase, the CubeManipulator
 		// class, the Pneumatic class and the Elevatorclass for the teleop
 		// period
-		chessyDrive.teleopPeriodic();
-		cube.teleopPeriodic();
-		elevator.teleopPeriodic();
-		cam.cameraCommand();
+		dBase.TeleopMove(driverIF);
+		//chessyDrive.teleopPeriodic();
+		//cube.teleopPeriodic();
+		//elevator.teleopPeriodic();
+		//cam.cameraCommand();
 
 		// LED.allianceColorLED();
 		// LED.autonomousColorInit();
@@ -132,7 +137,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testInit() {
-		base.setSRXDriveBaseInit(3);
+		//base.setSRXDriveBaseInit(3);
 	}
 	
 	/**
@@ -140,7 +145,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		base.testMethodSelection();
+		//base.testMethodSelection();
 	}
 	private void hug() {
 		System.out.println("I love you mu!!!");
