@@ -29,7 +29,6 @@ public class SRXDriveBase {
 	// AngleIF robotAngle = _angle;
 	// DistanceIF robotDistance = _distance;
 	
-	
 	// DifferentialDrive or tank motors
 	private WPI_TalonSRX driveRightMasterMtr;
 	private WPI_TalonSRX driveRightFollowerMtr;
@@ -104,7 +103,6 @@ public class SRXDriveBase {
 	private double magicMoveDistance = 0;
 	private double methodAutoTime =0;
 	private double moveStopTime = 0;
-	
 		
 	//  Program flow switches
 	private boolean isConsoleDataEnabled = true;
@@ -138,9 +136,7 @@ public class SRXDriveBase {
 	private String logString = " ";
 	
 	// SRXDriveBase Class Constructor
-	public SRXDriveBase() {
-	
-		
+	public SRXDriveBase() {		
 		// Create CAN SRX motor controller objects
 		driveRightMasterMtr = new WPI_TalonSRX(RobotMap.CAN_ID_1);
 		driveRightFollowerMtr = new WPI_TalonSRX(RobotMap.CAN_ID_2);
@@ -2020,4 +2016,3 @@ public class SRXDriveBase {
 		return isSRXMagicMoveActive;
 	}
 }
-
