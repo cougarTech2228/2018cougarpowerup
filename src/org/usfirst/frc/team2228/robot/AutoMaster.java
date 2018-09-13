@@ -122,6 +122,7 @@ public class AutoMaster {
 
 		case "Left Switch":
 			cmdSet.switchInit(Cg, speed);
+			Cg.addSequential(new WaitCommand(.25));
 			if (data == GameData.firstIndexL) {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
@@ -132,6 +133,7 @@ public class AutoMaster {
 
 		case "Right Switch":
 			cmdSet.straightSwitchInit(Cg, speed);
+			Cg.addSequential(new WaitCommand(.25));
 			if (data == GameData.firstIndexR) {
 				cmdSet.rightSwitch(Cg, speed);
 			} else {
@@ -143,12 +145,13 @@ public class AutoMaster {
 		case variableSwitch:
 			if (data == GameData.firstIndexL) {
 				System.out.println("Running left Variable Switch");
-				cmdSet.leftVariableSwitchTurn(Cg, speed);
-//				cmdSet.leftVariableSwitchTurnEnd(Cg, speed);
+				//turns from the right side of the switch to the left
+				cmdSet.rightVariableSwitchTurn(Cg, speed);
+				cmdSet.rightVariableSwitchTurnEnd(Cg, speed);
 			} else if (data == GameData.firstIndexR) {
-				System.out.println("Running Straight Right Switch");
+				System.out.println("Running Straight Right Variable Switch");
 				cmdSet.straightSwitchInit(Cg, speed);
-//				cmdSet.score(Cg);
+				cmdSet.score(Cg);
 			}
 			else {
 				cmdSet.baseline(speed, Cg);
@@ -182,9 +185,10 @@ public class AutoMaster {
 			if (scaleData == GameData2.secondIndexR) {
 				cmdSet.rightScaleTurn(Cg, speed);
 			} else if (data == GameData.firstIndexR) {
+				cmdSet.rightSwitchTurnInit(Cg, speed);
 				cmdSet.rightSwitchTurnTurn(Cg, speed);
 			} else {
-				cmdSet.rotateCube(Cg);
+				cmdSet.baseline(speed, Cg);
 				System.out.println("Incorrect game data");
 			}
 			break;

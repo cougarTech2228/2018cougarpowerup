@@ -22,6 +22,7 @@ public class CommandSet {
 	}
 
 	public void baseline(double speed, CommandGroup cmdGrp) {
+		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(
 				new MoveTo(base, (Dimensions.AUTOLINE_TO_ALLIANCE - Dimensions.LENGTH_OF_ROBOT), speed, false, 3.0));
@@ -59,24 +60,25 @@ public class CommandSet {
 	public void rightTurn45(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 45, speed));
 	}
-	public void leftVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
+	public void rightVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
 		cmdGrp.addSequential(new MoveTo(base, 14, speed, false, 3));
 		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_1, speed));
 		cmdGrp.addSequential(new MoveTo(base, (Dimensions.VA_DIAGONAL - Dimensions.LENGTH_OF_ROBOT), speed, false, 8));
 		cmdGrp.addSequential(new RotateTo(base, Dimensions.VA_TURN_2, speed));
 		cmdGrp.addSequential(new MoveTo(base, Dimensions.VA_STRAIGHT_2, speed, false, 5));
 	}
-	public void rightVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
+	public void leftVariableSwitchTurn(CommandGroup cmdGrp, double speed) {
 		rightTurn45(cmdGrp, speed);
 		cmdGrp.addSequential(new MoveTo(base, 100, speed, false, 8));
 		leftTurn45(cmdGrp, speed);
 		cmdGrp.addSequential(new MoveTo(base, 12, speed, false, 5));
 		
 	}
-	public void leftVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
+	public void rightVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
 		score(cmdGrp);
 	}
-	public void rightVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
+	public void leftVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, 90, speed));
 		cmdGrp.addSequential(new MoveTo(base, 8, speed, false, 3));
 		score(cmdGrp);
@@ -111,7 +113,7 @@ public class CommandSet {
 		cmdGrp.addSequential(
 				new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SCALE - Dimensions.LENGTH_OF_ROBOT) + 8, speed, false, 8.0));
 		cmdGrp.addSequential(new ElevatorAuto(elevator, .7, 5.0));
-		cmdGrp.addSequential(new RotateTo(base, 60, speed));
+		cmdGrp.addSequential(new RotateTo(base, 45, speed));
 //		cmdGrp.addSequential(new CubeRotate(cube, true));
 //		cmdGrp.addSequential(new AutoRollers(cube, 1.0, 1.0));
 		cmdGrp.addSequential(new MoveTo(base, 12, speed / 2, false, 3.0));
@@ -165,8 +167,8 @@ public class CommandSet {
 	public void backOff(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new WaitCommand(1));
 		backUp(cmdGrp, 18.0, speed);
-		rotateCube(cmdGrp);
-		clawOpen(cmdGrp);
+//		rotateCube(cmdGrp);
+//		clawOpen(cmdGrp);
 		//18
 	}
 }

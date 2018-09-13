@@ -116,7 +116,7 @@ public class Elevator {
 			elevator.getSensorCollection().setQuadraturePosition(0, 10);
 		}
 		if (!driverIF.lowerSpeed() && lastButton) {
-			tc.SetMaxThrottlePower(0.2);
+			tc.SetMaxThrottlePower(0.25);
 			tc.SetMaxTurnPower(0.5);
 			System.out.println("Limiting Speed");
 		}
