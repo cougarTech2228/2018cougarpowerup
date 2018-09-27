@@ -50,13 +50,13 @@ public class DriverIF {
 		}
 	}
 
-	public boolean cubeRotateToggle() {
-		if (xboxIF.A_BUTTON() || xboxIF2.A_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	public boolean cubeRotateToggle() {
+//		if (xboxIF.A_BUTTON() || xboxIF2.A_BUTTON()) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 	public boolean cubeLiftToggle() {
 		liftToggle.toggle(xboxIF.LB_BUTTON());
 		return liftToggle.getBool();
@@ -73,30 +73,32 @@ public class DriverIF {
 		
 		if(prev_a == a && prev_b != b) {
 			wheelState = -b;
+			wheelForward.state = 0;
 		}
 		else if(prev_b == b && prev_a != a) {
 			wheelState = a;
+			wheelBackward.state = 0;
 		}
 		
 		return wheelState;//wheelState;
 	}
 	
 
-	public boolean expulsion() {
-		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean collectionToggle() {
-		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
-			return true;
-		} else {
-			return false;
-		}//
-	}
+//	public boolean expulsion() {
+//		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+//
+//	public boolean collectionToggle() {
+//		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
+//			return true;
+//		} else {
+//			return false;
+//		}//
+//	}
 
 	public double Turn() {
 		return xboxIF.RIGHT_JOYSTICK_X();

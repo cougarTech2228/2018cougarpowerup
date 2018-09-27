@@ -54,7 +54,6 @@ public class CubeManipulator {
 		if(driverIF.wheelState() == -1) {
 			rollerSet(-1);
 		}
-			
 		else if(driverIF.wheelState() == 1) {
 			rollerSet(1);
 		}
