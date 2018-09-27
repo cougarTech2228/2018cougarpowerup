@@ -17,6 +17,9 @@ public class Toggler {
 		on = true;
 		
 	}
+	public boolean getBool() {
+		return state >= 1;
+	}
 	public int get() {
 		return state;
 	}

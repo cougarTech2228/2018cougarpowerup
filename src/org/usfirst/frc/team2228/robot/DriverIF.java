@@ -6,10 +6,16 @@ public class DriverIF {
 	XboxIF xboxIF;
 	XboxIF xboxIF2;
 	Toggler toggler;
+	Toggler liftToggle, squeezeToggle, wheelForward, wheelBackward;
+	int wheelState;
 	public DriverIF() {
 		xboxIF = new XboxIF(1);
 		xboxIF2 = new XboxIF(2);
 		toggler = new Toggler(2);
+		liftToggle = new Toggler(2);
+		squeezeToggle = new Toggler(2);
+		wheelForward = new Toggler(2);
+		wheelBackward = new Toggler(2);
 	}
 
 	public boolean fastSpeed(boolean toggle) {
@@ -51,6 +57,30 @@ public class DriverIF {
 			return false;
 		}
 	}
+	public boolean cubeLiftToggle() {
+		liftToggle.toggle(xboxIF.LB_BUTTON());
+		return liftToggle.getBool();
+	}
+	public boolean cubeGrapToggle() {
+		squeezeToggle.toggle(xboxIF.RB_BUTTON());
+		return squeezeToggle.getBool();
+	}
+	public int wheelState() {
+		int prev_a = wheelForward.state;
+		int prev_b = wheelBackward.state;
+		int a = wheelForward.toggle(xboxIF.A_BUTTON());
+		int b = wheelBackward.toggle(xboxIF.B_BUTTON());
+		
+		if(prev_a == a && prev_b != b) {
+			wheelState = -b;
+		}
+		else if(prev_b == b && prev_a != a) {
+			wheelState = a;
+		}
+		
+		return wheelState;//wheelState;
+	}
+	
 
 	public boolean expulsion() {
 		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {

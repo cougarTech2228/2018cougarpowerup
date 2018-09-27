@@ -19,21 +19,13 @@ public class CubeManipulator {
 	
 	public boolean pressureSwitch = c.getPressureSwitchValue();
 	boolean lastButton3 = false;
-	private boolean lastButton4 = false;
-	private boolean triggered3 = false;
-	private boolean triggered4 = false;
 	private Spark left;
 	private Spark right;
-	private double cubeCollectionValue;
-	private double cubeExpulsionValue;
-	private boolean triggered = false;
-	boolean triggered2 = false;
-	private boolean lastButton = false;
 	boolean lastButton2 = false;
-	double initTime;
+	//double initTime;
 	public CubeManipulator(DriverIF _driverIF) {
 		driverIF = _driverIF;
-		brakeSet(false);
+		brake.set(false);
 		left = new Spark(RobotMap.PWM_PORT_0);
 		right = new Spark(RobotMap.PWM_PORT_1);
 		
@@ -49,68 +41,28 @@ public class CubeManipulator {
 	public void teleopPeriodic() {
 		c.setClosedLoopControl(true);
 		//System.out.println(brake.get());
-		if (!driverIF.squeezeToggle() && lastButton3 && triggered3 == false) {
-			initTime = Timer.getFPGATimestamp();
-			System.out.println("initTime" + initTime);
+		if(driverIF.cubeGrapToggle()) {
 			squeezies.set(true);
-			triggered3  = true;
 		}
-		else if (!driverIF.squeezeToggle() && lastButton3 && triggered3 == true) {
-			squeezies.set(false);
-			triggered3 = false;
-		}
-		lastButton3 = driverIF.squeezeToggle();
-		//Tests to see if button is pressed, and then actuates on the release
-		if (!driverIF.cubeRotateToggle() && lastButton4 && triggered4 == false) {
-			lift.set(false);
-			triggered4 = true;
-			System.out.println("cubeRotateUp toggle active");
-		}
-		else if (!driverIF.cubeRotateToggle() && lastButton4 && triggered4 == true) {
-			lift.set(true);
-			triggered4 = false;
-			System.out.println("cubeRotatedown toggle active");
-		}
-		lastButton4 = driverIF.cubeRotateToggle();
-		cubeCollectionValue = SmartDashboard.getNumber("CollectionValue", 0.8);
-		cubeExpulsionValue = SmartDashboard.getNumber("ExpulsionValue", -0.8);
-		if (!driverIF.collectionToggle() && lastButton && triggered == false) {
-			left.set(cubeCollectionValue);
-			right.set(cubeCollectionValue);
-			triggered = true;
-			System.out.println("Suck in");
-		}
-		else if (!driverIF.collectionToggle() && lastButton && triggered == true) {
-			left.set(0);
-			right.set(0);
-			triggered = false;
-		}
-		if (!driverIF.expulsion() && lastButton2 && triggered2 == false) {
-			left.set(cubeExpulsionValue);
-			right.set(cubeExpulsionValue);
-			triggered2 = true;
-		}
-		else if (!driverIF.expulsion() && lastButton2 && triggered2 == true) {
-			left.set(0);
-			right.set(0);
-			triggered2 = false;
-		}
-		if(triggered3 && !triggered2) {
-			System.out.println("Attempting stop");
-			if(Timer.getFPGATimestamp() - initTime >= 1) {
-				left.set(0);
-				right.set(0);
-				triggered = false;
-				System.out.println("Stopping spin");
-			}
-		}
+		else squeezies.set(false);
 		
-//		else if(driverIf.expulsion()){
-//		left.set(cubeExpulsionValue);
-//		right.set(cubeExpulsionValue);
-//		}
-		lastButton = driverIF.collectionToggle();
-		lastButton2 = driverIF.expulsion();
+		if(driverIF.cubeLiftToggle()) {
+			 lift.set(true);
+		}
+		else lift.set(false);
+		
+		if(driverIF.wheelState() == -1) {
+			rollerSet(-1);
+		}
+			
+		else if(driverIF.wheelState() == 1) {
+			rollerSet(1);
+		}
+		else {
+			left.stopMotor();
+			right.stopMotor();
+		}
+
 	}
 	public void liftSet(boolean state){
 		lift.set(state);
