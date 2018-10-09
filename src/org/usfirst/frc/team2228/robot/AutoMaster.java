@@ -175,7 +175,7 @@ public class AutoMaster {
 				cmdSet.leftSwitchTurn(Cg, speed);
 			} else {
 				cmdSet.baseline(speed, Cg);
-				cmdSet.rotateCube(Cg);
+//				cmdSet.rotateCube(Cg);
 				System.out.println("Incorrect game data");
 			}
 			// Cg.addSequential(new MoveTo(base, -6.0, speed, false));

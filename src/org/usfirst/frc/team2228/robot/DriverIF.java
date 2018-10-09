@@ -58,7 +58,7 @@ public class DriverIF {
 //		}
 //	}
 	public boolean cubeLiftToggle() {
-		liftToggle.toggle(xboxIF.LB_BUTTON());
+		liftToggle.toggle(xboxIF.A_BUTTON());
 		return liftToggle.getBool();
 	}
 	public boolean cubeGrapToggle() {
@@ -68,7 +68,7 @@ public class DriverIF {
 	public int wheelState() {
 		int prev_a = wheelForward.state;
 		int prev_b = wheelBackward.state;
-		int a = wheelForward.toggle(xboxIF.A_BUTTON());
+		int a = wheelForward.toggle(xboxIF.LB_BUTTON());
 		int b = wheelBackward.toggle(xboxIF.B_BUTTON());
 		
 		if(prev_a == a && prev_b != b) {
@@ -84,13 +84,13 @@ public class DriverIF {
 	}
 	
 
-//	public boolean expulsion() {
-//		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
+	public boolean expulsion() {
+		if (xboxIF.B_BUTTON() || xboxIF2.B_BUTTON()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 //
 //	public boolean collectionToggle() {
 //		if (xboxIF.LB_BUTTON() || xboxIF2.LB_BUTTON()) {
