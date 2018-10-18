@@ -147,7 +147,7 @@ public class Elevator {
 
 		} else if (driverIF.LowerElevator()) {
 //			slowElevator(-1);
-			elevator.set(-.6);
+			elevator.set(-.7);
 //			if (softLimitDown) {
 //				elevator.set(0);
 //			}

@@ -44,8 +44,10 @@ public class CommandSet {
 	public void straightSwitchInit(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new WaitCommand(SmartDashboard.getNumber("Wait Time", 0)));
 		cmdGrp.addSequential(new PneumaticGrabber(cube, true, 0.5));
+		cmdGrp.addParallel(new ElevatorAuto(elevator, .5, 2.0));
 		cmdGrp.addSequential(new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SWITCH - Dimensions.LENGTH_OF_ROBOT),
 				speed, false, 4.0));
+
 	}
 
 	public void leftSwitchTurn(CommandGroup cmdGrp, double speed) {
@@ -76,6 +78,7 @@ public class CommandSet {
 		
 	}
 	public void rightVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addSequential(new ElevatorAuto(elevator, .35, 2.0));
 		score(cmdGrp);
 	}
 	public void leftVariableSwitchTurnEnd(CommandGroup cmdGrp, double speed) {
@@ -104,6 +107,7 @@ public class CommandSet {
 
 	public void rightSwitchTurnTurn(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(new RotateTo(base, -90, speed));
+		cmdGrp.addSequential(new ElevatorAuto(elevator, .75, 1.5));
 		cmdGrp.addSequential(new MoveTo(base, 19, speed / 2, false, 2.0));
 		score(cmdGrp);
 	}
@@ -134,7 +138,7 @@ public class CommandSet {
 
 	public void rightScaleTurn(CommandGroup cmdGrp, double speed) {
 		cmdGrp.addSequential(
-				new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SCALE - Dimensions.LENGTH_OF_ROBOT), speed, false, 8.0));
+				new MoveTo(base, (Dimensions.ALLIANCE_WALL_TO_SCALE - Dimensions.LENGTH_OF_ROBOT) + 8, speed, false, 8.0));
 		cmdGrp.addSequential(new RotateTo(base, -60, speed));
 		cmdGrp.addSequential(new ElevatorAuto(elevator, .7, 5.0));
 		cmdGrp.addSequential(new MoveTo(base, 10, speed / 2, false, false, 2.0));
@@ -147,12 +151,11 @@ public class CommandSet {
 	}
 
 	public void score(CommandGroup cmdGrp) {
-		cmdGrp.addSequential(new ElevatorAuto(elevator, .5, 2.0));
 		cmdGrp.addParallel(new CubeRotate(cube, true, .5));
 		cmdGrp.addSequential(new PneumaticGrabber(cube, false, 1.0));
-		cmdGrp.addSequential(new WaitCommand(1.5));
+//		cmdGrp.addSequential(new WaitCommand(1.5));
 		cmdGrp.addSequential(new CubeRotate(cube, false, .5));
-		cmdGrp.addSequential(new ElevatorAuto(elevator, -.35, 2.0));
+		cmdGrp.addSequential(new ElevatorAuto(elevator, -.35, 1.0));
 	}
 	public void backUp(CommandGroup cmdGrp, double distance, double speed) {
 		System.out.println("Backing up");
@@ -165,6 +168,7 @@ public class CommandSet {
 		cmdGrp.addSequential(new PneumaticGrabber(cube, false, .5));
 	}
 	public void backOff(CommandGroup cmdGrp, double speed) {
+		cmdGrp.addParallel(new ElevatorAuto(elevator, -.5, 2.0));
 		cmdGrp.addSequential(new WaitCommand(1));
 		backUp(cmdGrp, 18.0, speed);
 //		rotateCube(cmdGrp);
