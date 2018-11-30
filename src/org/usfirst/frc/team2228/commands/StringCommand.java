@@ -17,7 +17,8 @@ public class StringCommand extends Command {
 	protected void initialize() {
 		System.out.println("String initialized");
 		System.out.println(myLine);
-		// what if I change this file?
+		// and make another change on the new branch
+		// and yet another
 	}
 
 	// Called repeatedly when this Command is scheduled to run
